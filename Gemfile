@@ -10,6 +10,7 @@ group :development do
   gem 'pygments.rb', group: [:jekyll_plugins]
   gem 'jekyll-compose', group: [:jekyll_plugins]
   gem 'kramdown', group: [:jekyll_plugins]
+  gem 'colorator', '~> 0.1'
   gem 'json', '~> 2'
   gem 'jekyll-gist'
   gem 'jekyll-auto-image'
