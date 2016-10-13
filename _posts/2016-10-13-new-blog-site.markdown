@@ -1,3 +1,29 @@
+---
+title: New Blog Site
+layout: post
+date: 2016-10-13 16:55:51
+type: post
+published: true
+comments: true
+status: publish
+categories:
+    - Web Design
+    - CSS
+    - HTML5
+    - Markdown
+tags:
+    - Jekyll
+    - GitHub
+---
+Over the last week I have been experimenting with Jekyll per the recommendation of my colleague [Nick Kline](https://github.com/ndkline "Nick's GitHub") to move away from WordPress and its ads. So far, things have been great and I'm liking the way Jekyll works. I was able to perform an export from WordPress of all my posts but I still had to do some cleanup of the posts in order for them to display properly. Here are some of the issues that were the most trying:
+
+- A lot of line breaks that needed removed from the posts
+- The code that was in wordpress needed restructured (Previous issue applies too)
+- The metadata from the WordPress posts caused a bunch of useless information to display alongside the date<br/><br/>
+
+After going through all of my individual posts and rectifying these issues I then chose to use the [end2end](https://github.com/nandomoreirame/end2end "End2End Theme") which presented its own challenged. Since the CSS is developed by someone else, I had to go through and determine how to make certain things display correctly such as using **rouge** instead of **pygments**. This was especially tricky as everything was being moved to one side. There were also some issues with the gist line numbers displaying. To remedy these issue, I modified the **_syntax.scss** file. I also changed the theme to the [Friendly](https://raw.githubusercontent.com/jwarby/pygments-css/master/friendly.css "Friendly Pygments Theme (Works with rouge)"). Listed below is my SCSS file for your use:
+
+{% highlight scss linenos %}
 .highlight {
   @extend %clearfix;
   padding: 0;
@@ -117,3 +143,6 @@
     width:5% !important;
   }
 }
+{% endhighlight %}
+
+I still have a few more things to fix as I migrated my WordPress comments to [Disqus](http://disqus.com "Disqus") but they don't seem to show up in the corresponding posts. Not a deal breaker but it would be nice to have a complete and full migration. Hopefully with this migration it will get me to actually makes posts more often as well as document.

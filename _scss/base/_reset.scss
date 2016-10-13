@@ -31,11 +31,17 @@ footer, header, hgroup, menu, nav, section {
 body {
   line-height: 1;
 }
-ol, ul {
-  list-style: none;
-}
 blockquote, q {
   quotes: none;
+}
+ul, ol {
+  list-style-type:square;
+  li {
+    font-weight:300;
+  }
+}
+strong {
+  font-weight:bold;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
