@@ -1,0 +1,106 @@
+---
+layout: post
+title: Configuring TeamViewer Host 9 to be deployable with Munki
+date: 2014-04-16 11:13:53.000000000 -04:00
+type: post
+published: true
+comments: true
+image: images/TeamViewer Host.png
+status: publish
+categories:
+- Configuration
+- Munki
+tags:
+- OS X
+- TeamViewer
+---
+<p>TeamViewer has released version 9 and made a few changes which require us to change some of our script in Munki. After testing and help from Erwin and <a title="Robert" href="http://gravatar.com/rrhpph" target="_blank">Robert</a>, it has been determined that TeamViewer 9 now has a new encryption that will prevent our previous method of inserting the password using the <em style="font-weight:bold; font-style:normal">defaults write</em> command to insert the password via a data binary for the key <em style="font-weight:bold; font-style:normal">SecurityPasswordAES</em>. The new key is now <em style="font-weight:bold; font-style:normal">PermanentPassword</em> which creates a unique data binary string in the new plist file <em style="font-weight:bold; font-style:normal">com.teamviewer.teamviewer9.plist</em>. If you change the password manually it will work however we would like to use Munki to automate this process. After many tests I have determined the best way to do this is to upgrade from TeamViewer 8 to TeamViewer 9.</p>
+
+<p>When upgrading from TeamViewer 8 to TeamViewer 9 your current password will be converted from the old encryption method to the new encryption method. To perform this you will want to always have TeamViewer 8 install <em style="font-weight:bold; font-style:normal">FIRST</em> and then use the <em style="font-weight:bold; font-style:normal">update_for</em> key in TeamViewer 9 to define that it is an update for TeamViewer 8. Upon completing this method your systems should then be able to use the password we defined in TeamViewer 8 with TeamViewer 9. Please see below on how to set this up:</p>
+<p>To configure TeamViewer 9 for use in Munki please follow the following:</p>
+<p>Please read through the previous post of <a title="Configuring TeamViewer Host 8 to be deployable via Munki" href="{{ site.baseurl }}/blog/2013/configuring-teamviewer-host-to-be-deployable-via-managed-software-update-munki-on-mac-os-x/" target="_blank">Configuring TeamViewer Host 8 to be deployable with Munki</a></p>
+
+<p>Once you have read through this we will start our package for TeamViewer 9.  You can download the latest version of TeamViewer 9 from their website. Also it is worth noting that if you recently purchased TeamViewer you should still be able to download TeamViewer 8 Host and use the method described in the article above as your license is attached to your user account and not the host application. We will <em style="font-weight:bold; font-style:normal">NOT</em> need to define a preinstall_script as this information should carry over from version 8. If you would like to define something I would suggest defining it in the version 8 script to avoid any issues.  We will still define a <em style="font-weight:bold; font-style:normal">post_install</em> script as with this method the TeamViewer 8 settings file is left behind as well as a conversion file that it uses called <em style="font-weight:bold; font-style:normal">com.TeamViewer9.Settings.plist</em>. Listed below is a script you can use to remove these extra files as well as the customizations that may be left behind from TeamViewer 8.</p>
+
+<p><em style="font-weight:bold; font-style:normal">Post Install Script</em></p>
+{% highlight bash linenos %}
+#!/bin/bash
+# Post Instal Script to remove extra files from TeamViewer
+# Upgrade by Joshua D. Miller May 16, 2014
+# Remove old TeamViewer Settings File and lockfile if it exists
+test -f /Library/Preferences/com.TeamViewer8.Settings.plist && rm -f /Library/Preferences/com.TeamViewer8.Settings.plist
+test -f /Library/Preferences/com.TeamViewer8.Settings.plist.lockfile && rm -f /Library/Preferences/com.TeamViewer8.Settings.plist.lockfile
+test -f /Library/Preferences/com.TeamViewer9.Settings.plist.lockfile && rm -f /Library/Preferences/com.TeamViewer9.Settings.plist.lockfile
+# Remove TeamViewer 8 folder in Applications if it exists
+test -d /Applications/TeamViewer\ 8/ && rm -rf /Applications/TeamViewer\ 8/
+exit 0
+{% endhighlight %}
+
+<p>Keep in mind that if you are using this with Munki you will need to replace <em style="font-weight:bold; font-style:normal">&</em> with <em style="font-weight:bold; font-style:normal">&amp;&amp;</em> so that the script can be used in a pkginfo file.</p>
+
+<p>I also write a postuninstall_script should we ever need to remove TeamViewer from the system which just basically removes the configuration file.</p>
+
+<p><em style="font-weight:bold; font-style:normal">Post Uninstall Script</em></p>
+
+{% highlight bash linenos %}
+#!bin/bash
+rm -rf /Library/Preferences/com.teamviewer.teamviewer9.plist
+exit 0
+{% endhighlight %}
+
+<p>Now that TeamViewer will install properly we will want to configure our extra configuration DMG like we did for version 8. We will once again make use of the <em style="font-weight:bold; font-style:normal">update_for</em> key to make it an update for TeamViewer 9 Host. One of the notable changes is the <em style="font-weight:bold; font-style:normal">logo_host.tiff</em> file is now <em style="font-weight:bold; font-style:normal">logo_host.png</em> so you will want to convert this file (You can use Preview). Also you will want to modify the new <em style="font-weight:bold; font-style:normal">MainMenuHost.nib</em> and <em style="font-weight:bold; font-style:normal">Localizable.strings</em> files as new variables have been added. Once you have changed these files accordingly place them in a DMG (If you need help with this pleas let me know) and use <em style="font-weight:bold; font-style:normal">makepkginfo -f</em> on each file in the DMG to get the <em style="font-weight:bold; font-style:normal">MD5</em> for use with Munki.  To get the installer hash you will want to use <em style="font-weight:bold; font-style:normal">shasum -a256 yourdmg.dmg</em>. You can copy your previously made pkginfo and change the MD5, installer hash, logo_host file and installer path.</p>
+
+<p>The other thing I noticed was that our customization package would attempt to install even though TeamViewer 9 had been installed since our customization package uses the installs key in Munki to install the files. To remedy this issue, I removed the installs key and used an installcheck_script written in python which will check for the correct TeamViewer installed and then if version 8 is installed compare the MD5 hashes. Please see the script listed below:</p>
+
+{% highlight python linenos %}
+#!/usr/bin/python
+# Joshua D. Miller - josh@psu.edu
+# July 9, 2014
+'''Determines if TeamViewer 9 is installed
+and if so makes sure that the TeamViewer 8
+customization package is not installed.'''
+
+# Import Libraries
+import os
+import hashlib
+
+# Set Variables
+TeamViewerHost8='/Applications/TeamViewer 8/TeamViewerHost.app'
+TeamViewerHost9='/Applications/TeamViewerHost.app'
+Logo='/Contents/Resources/logo_host.tiff'
+Localizable='/Contents/Resources/en.lproj/Localizable.strings'
+MainMenu='/Contents/Resources/MainMenuHost.nib'
+hashes = [
+			( TeamViewerHost8 + Logo, '33668e170cc7049095ca59618e67f939' ),
+			( TeamViewerHost8 + Localizable, '7be298c7319aa3f06295453db6d047bf' ),
+			( TeamViewerHost8 + MainMenu, '975bf29115b0c6763812394a72b17453' ),
+		 ]
+
+
+# MD5 Checksum Function
+def md5Checksum(filePath, md5sum):
+    if hashlib.md5(open(filePath).read()).hexdigest() == md5sum:
+    	return True
+    else:
+    	return False
+
+# Does TeamViewer 9 exist?
+if os.path.isfile(TeamViewerHost9 + '/Contents/Info.plist'):
+	print 'TeamViewer 9 is installed'
+	exit(1)
+
+# Does TeamViewer 8 exist?
+elif os.path.isfile(TeamViewerHost8 + '/Contents/Info.plist'):
+	print 'TeamViewer 8 is installed.  Checking customization files.....'
+	# Check Hashes of customization files
+	for file, md5 in hashes:
+		if not md5Checksum(file, md5):
+			print file + ' md5 doesn't match md5 ' + md5
+			print 'Package marked for install....'
+			exit(0)
+	print 'All customization files match.  Exiting....'
+	exit(1)
+else:
+	print 'TeamViewer is not installed'
+	exit(0)
+{% endhighlight %}

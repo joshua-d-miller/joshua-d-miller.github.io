@@ -1,0 +1,106 @@
+---
+layout: post
+title: Deploying the MathType License
+date: 2015-05-06 16:25:56.000000000 -04:00
+type: post
+published: true
+comments: true
+image: images/MathType.png
+status: publish
+categories:
+- Configuration
+- Munki
+tags:
+- Automation
+- Mac Management
+---
+<p>I was able to deploy the license for MathType using Munki since the company that produces MathType offers site licenses. The only issue however is there is currently not a scripted way to deploy the license. In order to deploy the license I did some digging with everyone's favorite file and process monitor for OS X <a href="http://fernlightning.com/doku.php?id=software%3Afseventer%3Astart">fseventer</a>.</p>
+
+<p>Using <a href="http://fernlightning.com/doku.php?id=software%3Afseventer%3Astart">fseventer</a>, I was able to determine that when the license for MathType is activated, a hidden file in the MathType directory is modified. The name of the file is <em style="font-weight:bold; font-style:normal">.MT6.dsc</em>. Unfortunately this file seems to be encrypted and cannot be created using echo. Since I saw this file was being modified when activating the license I thought could this be where the licensing information is stored?</p>
+
+<p>To test I copied the <em style="font-weight:bold; font-style:normal">.MT6.dsc</em> file to a fresh install of MathType on a different system. Low and behold when launching MathType the software was already licensed. Now that we have figured out how MathType stores the license file we can now deploy this using Munki.</p>
+
+<p>First thing we need to do is remove the .MT6.dsc file that is created upon completion of install. Thanks to Alan for pointing this out. To do that I have a created a very simple <em style="font-weight:bold; font-style:normal">postinstall_script</em> listed below:</p>
+
+{% highlight bash linenos %}
+#!/bin/bash
+/bin/test -e '/Applications/MathType 6/.MT6.dsc' && /bin/rm -f '/Applications/MathType 6/.MT6.dsc'
+{% endhighlight %}
+
+<p>To deploy the file using Munki you first want to make it a visible file by renaming the file and removing the dot before the filename. Once you have done this you can create a new DMG file using disk utility and place the file into the new DMG file. Next you will want to format your new DMG file to be read-only. Now that is complete you will want to create a <em style="font-weight:bold; font-style:normal">pkginfo</em> file in Munki that can deploy this license. Listed below is a sample package info file that you can use for reference:</p>
+
+{% highlight xml linenos %}
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
+<plist version='1.0'>
+<dict>
+  <key>catalogs</key>
+  <array>
+    <string>testing</string>
+  </array>
+  <key>category</key>
+  <string>Mathematics</string>
+  <key>description</key>
+  <string>This package will isntall the license that is required to use MathType beyond 30 days. This license is registered to 'Your Company Here'</string>
+  <key>developer</key>
+  <string>You</string>
+  <key>display_name</key>
+  <string>MathType 6.7 License</string>
+  <key>installed_size</key>
+  <integer>2</integer>
+  <key>installer_item_hash</key>
+  <string>Your Installer HASH HERE</string>
+  <key>installer_item_location</key>
+  <string>MathType 6.7 License-1.0.dmg</string>
+  <key>installer_item_size</key>
+  <integer>27</integer>
+  <key>installer_type</key>
+  <string>copy_from_dmg</string>
+  <key>installs</key>
+  <array>
+    <dict>
+      <key>path</key>
+      <string>/Applications/MathType 6/.MT6.dsc</string>
+      <key>type</key>
+      <string>file</string>
+    </dict>
+  </array>
+  <key>items_to_copy</key>
+  <array>
+    <dict>
+      <key>destination_item</key>
+      <string>.MT6.dsc</string>
+      <key>destination_path</key>
+      <string>/Applications/MathType 6/</string>
+      <key>group</key>
+      <string>wheel</string>
+      <key>mode</key>
+      <string>a+rx</string>
+      <key>source_item</key>
+      <string>MT6.dsc</string>
+      <key>user</key>
+      <string>root</string>
+    </dict>
+  </array>
+  <key>name</key>
+  <string>MathType 6.7 License</string>
+  <key>update_for</key>
+  <array>
+    <string>MathType-6.7h</string>
+  </array>
+  <key>version</key>
+  <string>1.0</string>
+</dict>
+</plist>
+{% endhighlight %}
+
+<p>So as you can see above you will need to fill in a few things in order for your new DMG to work. Here are the things you will need to do:</p>
+
+<p><ol style="list-style-type:decimal">
+<li>Run this command on your DMG file to get the installer hash: <em style="font-weight:bold; font-style:normal">/usr/bin/shasum -a256 "Your DMG File Here"</em></li>
+<li>Make sure you make this package an update for MathType by using the <em style="font-weight:bold; font-style:normal">update_for</em> key.</li>
+<li>Notice that in my items to copy I'm copying it so that it once again renames the file to a hidden file. This is important as if you copy it as a visible file it <em style="font-weight:bold; font-style:normal">WILL NOT</em> work.</li>
+<li>Also notice that we are not using an MD5 sum for the installs file and are only checking for the existence of the file. This is because since there is a good chance that when preferences are modified they are saved to this file that it would then the MD5 sum would change thus the user would get prompts to install the license over and over.</li>
+</ol></p>
+
+<p>Once completed you will be able to deploy your volume license for MathType with your software. We have reached out to MathType who have confirmed the next version will be deployable using software deployment tools but this is a start if you can't wait for them to make that happen. As always if there are any questions please feel free to comment.</p>

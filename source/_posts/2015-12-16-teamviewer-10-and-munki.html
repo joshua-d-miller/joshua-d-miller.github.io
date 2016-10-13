@@ -1,0 +1,94 @@
+---
+layout: post
+title: TeamViewer 10 and Munki
+date: 2015-12-16 13:59:50.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/TeamViewer Host.png
+status: publish
+categories:
+- Configuration
+- Deployment
+- Munki
+tags: []
+---
+<p>I know it has been a little while since I posted anything but I got a request from Graham Gilbert to post a guide on deploying TeamViewer 10 via Munki. It took a little trial and error but I have been able to successfully deploy the software. There are a few improvements but unfortunately if you are like me and don't want your users to see a fun box that says "Click OK to allow X User to manage your system remotely via TeamViewer" then you will still have to add the ID manually to your list.</p>
+
+<p>To install TeamViewer this time around you want to log into your TeamViewer account and build your custom Host version as this will take care of the a lot of customizations we were making manually such as the host image and the text that displays in your status dialog. Once completed you are going to download the file from the link it provides you. What you will notice is that there is a fun little ID in the PKG name. We will get to that later.</p>
+
+<p>Now that you have your file we are going to import this into Munki with Munki Import. Make sure you have a test machine. After you import it into Munki you are going to go ahead and install this PKG manually on a system and run through the wizard to set the password. This is required so we can read out the password in TeamViewer's new encryption algorithm (I think). Once installed and the password is set, go ahead and use <em style="font-weight:bold; font-style:normal">/usr/bin/default read /Library/Preferences/com.teamviewer.teamviewer10.plist</em> to determine the host password which will be under the key <em style="font-weight:bold; font-style:normal">PermanentPassword</em>. The not so fun part is the data you get will need to have the spaces removed before you use your install script to insert the password. Now that we have our password, we are going to deploy TeamViewer.</p>
+
+<p>The keys you are going to modify are listed below using <em style="font-weight:bold; font-style:normal">/usr/bin/defaults write</em>:</p>
+
+<p><ul style="list-style-type:square">
+<li>PermanentPassword - (Access Password)</li>
+<li>ACFullAccessOnLoginScreen - (Get access when no one is logged in)</li>
+<li>General_DirectLAN - (Connect over LAN)</li>
+<li>UpdateCheckInterval - (When to check for updates)</li>
+<li>AutoUpdateMode - (Don't Check for Updates)</li>
+<li>Security_passwordStrength - (Strength of settings password)</li>
+<li>HostInfoDialog</li>
+<li>Device_Auto_Assigned_To_Account (This and the next two entries remove the prompt)</li>
+<li>OwningManagerAccountName</li>
+<li>OwningManagerCompanyName</li>
+<li>Security_Adminrights - (Require password to change settings)</li>
+<li>OptionaPasswordAES (The password in same form as Permanent)</li>
+<li>InstalledBy (Our tag so we know it is our settings file)</li>
+</ul></p>
+
+<p>Now that we have covered all that, we are going to generate our <em style="font-weight:bold; font-style:normal">preinstall_script</em> for Munki since these settings need to be there <em style="font-weight:bold; font-style:normal">BEFORE</em> TeamViewer launches. I have gone ahead and attached mine below for your copying ease. Side Note: I like to require a logout so that the software can install properly.</p>
+
+{% highlight bash linenos %}
+#!/bin/bash
+# This script will apply configuration settings for TeamViewer 10
+# Joshua D. Miller - josh@psu.edu - The Pennsylvania State University
+# Create TeamViewer 10 Plist file if it doesn't exist
+/bin/test -f /Library/Preferences/com.teamviewer.teamviewer10.plist || /usr/bin/touch /Library/Preferences/com.teamviewer.teamviewer10.plist
+# Permanent Password used to connect to systems
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 PermanentPassword -data YourPasswordHere Using method described above
+# Allow access from the Login Window
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 ACFullAccessOnLoginScreen -int 1
+# Allow access from local LAN
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 General_DirectLAN -int 2
+# Never Check for Updates
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 UpdateCheckInterval -int -1
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 AutoUpdateMode -int 3
+# No generated security passwords as we are setting one
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 Security_PasswordStrength -int 3
+# Don't show the initial screen
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 HostInfoDialog -int 0
+# Set who the computer should be assigned to
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 Device_Auto_Assigned_To_Account -int 1
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 OwningManagerAccountName One of your account names
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 OwningManagerCompanyName Your Organization
+# Require a password to change preferences for TeamViewer and set the password
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 Security_Adminrights -int 1
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 OptionsPasswordAES -data YourPasswordHere Using method described above
+# Mark the plist as we installed it
+/usr/bin/defaults write /Library/Preferences/com.teamviewer.teamviewer10 InstalledBy YourFunTagHere
+exit 0
+{% endhighlight %}
+
+<p>So as you may have noticed TeamViewer basically creates a new PLIST file every time a new version is released ex. 8, 9, 10. I want to remove these old PLIST files as they are no longer needed.  Removing these files is simple, so we are going to remove the old files using a <em style="font-weight:bold; font-style:normal">postinstall_script</em>. One thing you will notice in my script listed below however is that I am using <em style="font-weight:bold; font-style:normal">xattr.</em> Remember the weird ID at the end of your PKG file when you downloaded your custom made host? TeamViewer uses xattr on the TeamViewer application to accomplish getting the custom settings. If you are like me you probably want that in your script and not in the file name. If you don't care you can skip this step. Listed below you will see how to add that if you want to keep it out of your PKG name.</p>
+
+{% highlight bash linenos %}
+#!/bin/bash
+# Remove old TeamViewer Settings File and lockfile if it exist
+/bin/test -f /Library/Preferences/com.TeamViewer8.Settings.plist && /bin/rm -f /Library/Preferences/com.TeamViewer8.Settings.plist
+/bin/test -f /Library/Preferences/com.TeamViewer8.Settings.plist.lockfile && /bin/rm -f /Library/Preferences/com.TeamViewer8.Settings.plist.lockfile
+# Remove old TeamViewer 9 Settings File and lockfile if they exist
+/bin/test -f /Library/Preferences/com.teamviewer.teamviewer9.plist && /bin/rm -f /Library/Preferences/com.teamviewer.teamviewer9.plist
+/bin/test -f /Library/Preferences/com.teamviewer.teamviewer9.plist.lockfile && /bin/rm -f /Library/Preferences/com.teamviewer.teamviewer9.plist.lockfile
+# Remove TeamViewer 8 folder in Applications if it exists
+/bin/test -d /Applications/TeamViewer\ 8/ && /bin/rm -rf /Applications/TeamViewer\ 8/
+# Remove TeamViewer9.settings.plist as its created to convert the password
+/bin/test -f /Library/Preferences/com.TeamVIewer9.Settings.plist && /bin/rm -f /Library/Preferences/com.TeamViewer9.Settings.plist
+# Add ID of TeamViewer configuration for custom files
+/usr/bin/xattr -w 'com.TeamViewer.ConfigurationId' 'YourIDFromthePKGdownloadhere' '/Applications/TeamViewerHost.app'
+exit 0
+{% endhighlight %}
+
+<p>Now that we have the scripts and the PKG in Munki it is time to test. My tests were successful but I noticed one thing; Users could still "Exit TeamViewer" which since you are setting up unattended access, they shouldn't be able to do. So we have to revisit our old hack of modifying the <em style="font-weight:bold; font-style:normal">MainMenuHost.nib</em> file to disable those options and put it in a DMG file. You can follow my previous TeamViewer blog entries and accomplish this. You will need to create a DMG to put in Munki, a PKGINFO file, and generate a installer hash as well as the md5 of the file. Once completed, you would mark this install as a update for TeamViewer 10.</p>
+
+<p>With this method I am able to deploy TeamViewer 10 to systems the same way as version 8.  This is a slight improvement over 9 as version 9 required you to install 8 first then upgrade to 9. There is also the improvement of your logo and custom text in the status dialog so TeamViewer has definitely made some strides in deployment. The only thing however, is I still have to get the ID and add it to our list manually as I do NOT want our users to click OK to a dialog that says this person will be managing your system at all times. I think this should be done silently and I have voiced this to TeamViewer.  Maybe version 11 which I believe is either still in late beta or just left beta may provide this functionality. I hope everyone finds this helpful and of course if there are any questions please be sure to let me know.</p>

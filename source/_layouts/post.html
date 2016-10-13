@@ -1,0 +1,27 @@
+---
+layout: default
+---
+
+<article role="article" class="post">
+
+  <div class="card">
+    <header class="post-header">
+      {% if page.image %}
+        <div style="display:flex; justify-content:center; align-items:center;" class="header-with-image">
+        <img style="width:150px; height:150px" src="/{{ page.image }}">
+        <h1 class="post-title">{{ page.title }}</h1>
+        </div>
+      {% else %}
+        <h1 style="display:flex; justify-content:center; align-items:center" class="post-title">{{ page.title }}</h1>
+      {% endif %}
+      <p style="display:flex; justify-content:center; align-items:center" class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
+    </header>
+
+    <div class="post-content">
+      {{ content }}
+    </div>
+
+    {% include comments.html %}
+  </div>
+
+</article>

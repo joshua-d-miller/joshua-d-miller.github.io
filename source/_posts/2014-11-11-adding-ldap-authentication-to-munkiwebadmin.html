@@ -1,0 +1,59 @@
+---
+layout: post
+title: Adding LDAP Authentication to MunkiWebAdmin
+date: 2014-11-11 10:06:01.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/Munki.png
+status: publish
+categories:
+- Configuration
+- Munki
+- Munki Web Tools
+tags: []
+---
+<p>After messing around with the LDAP settings in MunkiWebAdmin I was able to allow it to authenticate against our Active Directory service to allow users to log into MunkiWebAdmin using AD credentials. I used built in groups within Active Directory which I found out the key to doing so is to use <em style="font-weight:bold; font-style:normal">CN</em> instead of <em style="font-weight:bold; font-style:normal">OU</em> on built in folders such as <em style="font-weight:bold; font-style:normal">Users</em>.</p>
+
+<p>Here I will show you a sample config that you can alter to use in your environment. If you have issues setting up this type of authentication in MunkiWebAdmin please let me know. This will be inserted into your <em style="font-weight:bold; font-style:normal">setup.py</em> file within the MunkiWebAdmin directory.</p>
+
+{% highlight python linenos %}
+USE_LDAP = True
+# LDAP authentication support
+if USE_LDAP:
+     import ldap, logging
+     from django_auth_ldap.config import LDAPSearch, ActiveDirectoryGroupType
+     logger = logging.getLogger('django_auth_ldap')
+     logger.addHandler(logging.StreamHandler())
+     logger.setLevel(logging.DEBUG)
+     # LDAP settings
+     AUTH_LDAP_SERVER_URI = 'ldaps://youradserver.domain.com'
+     AUTH_LDAP_PORT = 636
+     AUTH_LDAP_BIND_DN = 'CN=Binding User,CN=Users,DC=domain,DC=com,'
+     AUTH_LDAP_BIND_PASSWORD = 'It's a secret to Everybody!!!'
+     AUTH_LDAP_USER_SEARCH = LDAPSearch(
+     'OU=Your OU,DC=domain,DC=com',
+     ldap.SCOPE_SUBTREE, '(sAMAccountName=%(user)s)')
+     AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+     'CN=Your OU,DC=domain,DC=com',
+     ldap.SCOPE_SUBTREE, '(objectClass=*)')
+     AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
+     AUTH_LDAP_FIND_GROUP_PERMS = True
+     AUTH_LDAP_GLOBAL_OPTIONS = {
+     #The next line is crucial if you don't want the server to verify a cert with LDAPS
+     ldap.OPT_X_TLS_REQUIRE_CERT: False,
+     ldap.OPT_REFERRALS: False, }
+     AUTH_LDAP_REQUIRE_GROUP = 'CN=Domain Admins,CN=Users,DC=domain,DC=com'
+     AUTH_LDAP_USER_ATTR_MAP = {'first_name': 'givenName',
+     'last_name': 'sn',
+     'email': 'mail'}
+     # Cache group memberships for an hour to minimize LDAP traffic
+     # AUTH_LDAP_CACHE_GROUPS = True
+     # AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
+     AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+     'is_active': 'CN=Domain Admins,CN=Users,DC=domain,DC=com',
+     'is_staff': 'CN=Domain Admins,CN=Users,DC=domain,DC=com',
+     'is_superuser': 'CN=Enterprise Admins,CN=Users,DC=domain,DC=com'}
+{% endhighlight %}
+
+<p>The example shown here shows that Domain Admins can get to most things in MunkiWebAdmin but Enterprise Admins are the top level user within the interface. Not all environments are created equal so you can either create your own groups in AD to reference here or you can use other built in Active Directory groups if you wish.</p>

@@ -1,0 +1,53 @@
+---
+layout: post
+title: Java 7 Update 51 Global Exceptions list
+date: 2014-01-16 17:25:20.000000000 -05:00
+type: post
+published: true
+image: images/Oracle Java.png
+comments: true
+status: publish
+categories:
+- Configuration
+- Munki
+tags:
+- Java
+- OS X
+---
+<p>With the new version of Java, new settings were introduced which define new security requirements for browser plugins, applets and web start applications.  This can keep plugins from running, however Java now has an exceptions list which can be defined to allow these applets to run. This exceptions list is on a per user basis and could be very troublesome for each user to maintain.  In our environment, it made sense to define a global list which you can do by modifying the deployment.properties file of Java. This file is typically located:</p>
+
+<p><em style="font-weight:bold; font-style:normal">/Library/Application Support/Oracle/Java/Deployment/</em></p>
+
+<p>In this file you will want to add the following line:</p>
+
+<p><em style="font-weight:bold; font-style:normal">deployment.user.security.exception.sites=/Library/Application\ Support/Oracle/Java/Deployment/exception.sites</em></p>
+
+<p>However, if you want to allow all users to modify the exception.sites file you will need to set permissions on the file in a shared location as well as define it in a shared location.  I used /Users/Shared/Java</p>
+
+<p><em style="font-weight:bold; font-style:normal">deployment.user.security.exception.sites=/Users/Shared/Java/exception.sites</em></p>
+
+<p>This above lines will tell Java that the exception sites file is located in this location and apply it for all users. Since the first location cannot be modified by standard users they will NOT be able to add or remove exceptions.  Use the second version if you would like your users to have the ability to add their own exceptions. Lastly, you define the exceptions file which you can do manually with VI or you can use a Munki post install script.  Below you will find a fully automated post install script that I have created for Munki that will create the files and output the necessary options as well as allow all users to modify the <em style="font-weight:bold; font-style:normal">exception.sites</em> file.</p>
+
+{% highlight bash linenos %}
+#!/bin/sh
+# Java script to add the exception.sites in a shared location for the
+# new version of Java. Script created and updated by Josh Miller and
+# Matt Hansen. Last update January 20, 2014.
+# This command will check to see if the Java Deployment directory
+# exists. If not, it will create it for you.
+test -d /Library/Application\ Support/Oracle/Java/Deployment || mkdir -p /Library/Application\ Support/Oracle/Java/Deployment
+# This set of commands will check to see if the deployment.properties
+# file exists. If not it will create the file and then check for specific
+# properties in the file.
+test -e /Library/Application\ Support/Oracle/Java/Deployment/deployment.properties || touch /Library/Application\ Support/Oracle/Java/Deployment/deployment.properties
+grep -qi deployment.macosx.check.update=false '/Library/Application Support/Oracle/Java/Deployment/deployment.properties' || echo 'deployment.macosx.check.update=false' >> /Library/Application\ Support/Oracle/Java/Deployment/deployment.properties
+grep -qi deployment.user.security.exception.sites=/Users/Shared/Java/exception.sites '/Library/Application Support/Oracle/Java/Deployment/deployment.properties' || echo 'deployment.user.security.exception.sites=/Users/Shared/Java/exception.sites' >> /Library/Application\ Support/Oracle/Java/Deployment/deployment.properties
+# These commands will check to see if the exception.sites file exists and
+# if the sites we need are in the exception.sites. If the sites do not
+# exist they will be outputeed to the file.
+test -d /Users/Shared/Java/ || mkdir -p /Users/Shared/Java
+test -e /Users/Shared/Java/exception.sites || touch /Users/Shared/Java/exception.sites
+grep -qi https://cclibrary.skillport.com '/Users/Shared/Java/exception.sites' || echo 'https://cclibrary.skillport.com' >> /Users/Shared/Java/exception.sites
+{% endhighlight %}
+
+<p>Once this completed your site will then be an exception to Java's high security. The site you see listed here is a training website that we use that requires Java.</p>

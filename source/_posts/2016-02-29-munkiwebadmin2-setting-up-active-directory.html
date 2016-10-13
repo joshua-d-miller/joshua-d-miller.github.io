@@ -1,0 +1,28 @@
+---
+layout: post
+title: MunkiWebAdmin2 - Setting up Active Directory
+date: 2016-02-29 16:44:35.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/Munki.png
+status: publish
+categories:
+- Configuration
+- Munki
+- Munki Web Tools
+tags: []
+---
+<p>Greg Neagle has released early builds of MunkiWebAdmin2 which you can check out <a href="https://github.com/munki/mwa2" target="_blank">here</a>.  MWA2 forgoes reporting and sticks strictly to managing your Munki repository by providing the ability to edit <em style="font-weight:bold; font-style:normal">Manifests</em> and <em style="font-weight:bold; font-style:normal">pkginfo</em> files through the web.  For reporting, it is highly recommended that you either use <a href="https://github.com/salopensource/sal" target="_blank">Sal</a> or <a href="https://github.com/munkireport/munkireport-php" target="_blank">MunkiReport-PHP</a> (both of which are excellent).  In this post however I'm going to highlight setting up Active Directory authentication in MunkiWebAdmin2.  Check below for the process.</p>
+
+<p>To setup Active Directory in MunkiWebAdmin2 we are going to use Greg's start code in the <em style="font-weight:bold; font-style:normal">settings.py</em> file and make some modifications. We are also going to add some additional pieces so that the administration site is automatically setup for your groups.</p>
+
+{% gist joshua-d-miller/eee7cc933047c9c0799b8759df675295 %}
+
+<p>Now let's talk about this code. First of all you want to make sure you are searching for the correct users and groups. Secondly, you want to make sure that you require a certain group membership so not just anyone can log into MunkiWebAdmin. Lastly, The piece at the bottom, we can define who can access what part of administrative console. I like to provide AD integration for the admin console but you can of course use a local account in the Django database as well. In our environment, we actually do not utilize the "is staff" portion and only utilize "is active" and "is superuser" since we are a smaller unit. Now, since "is active" does not have any permissions to start you will want to log into the console with one of your superuser account and provide permissions for those users that login or you can create a local group in Django with the permissions you want and add them to that group.</p>
+
+<p>Also when running MunkiWebAdmin2 with Greg's instructions to use <em style="font-weight:bold; font-style:normal">runwsgiserver</em> pay close attention to the logging in the command line as it will provide useful information if your directory authentication is not working. Currently, I am using <em style="font-weight:bold; font-style:normal">runwsgiserver</em> as a production way of running MunkiWebAdmin2 since this site is only available internally to 4 people. You can of course specify an SSL certificate and private key to put the site in HTTPS mode which is great. Here is the command to perform that.</p>
+
+<p><em style="font-weight:bold; font-style:normal">python manage.py runwsgiserver host=0.0.0.0 port=8000 ssl_certificate='location of certificate file' ssl_private_key='location of private key file'</em></p>
+
+<p>So far testing of MunkiWebAdmin2 has been very positive and the ability to edit pkginfo files within the website is great. Also you can now see conditionals when editing manifests. If you have questions or comments please let me know.</p>

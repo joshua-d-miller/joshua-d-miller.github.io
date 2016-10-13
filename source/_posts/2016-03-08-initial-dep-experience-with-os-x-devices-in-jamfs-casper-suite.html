@@ -1,0 +1,33 @@
+---
+layout: post
+title: Initial DEP Experience with OS X devices in JAMF's Casper Suite
+date: 2016-03-08 12:06:31.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/Casper.png
+status: publish
+categories:
+- Casper
+- Deployment
+- Imaging
+tags: []
+---
+<p>Today I experimented with the use of Apple's Device Enrollment program with JAMF's Casper Suite. So far the experience has been mostly positive however there are few miscues that I'm hoping are addressed as the JSS is updated.  Currently, our environment could "almost" hand a Mac to a user and have them go through the setup assistant. Check below for the specifics.</p>
+
+<p>So for our first test with an OS X device in DEP, I went ahead and configured a set of laptops that came in that will be used in a lab environment. Using <em style="font-weight:bold; font-style:normal">Pre-Stage</em> Enrollment I was able to setup the devices to skip almost all of the setup assistant except for two very particular pieces:</p>
+
+<p><ul style="list-style-type:square">
+<li>Creation of a user account</li>
+<li>Location Services</li>
+</ul></p>
+
+<p>Creation of a user account is really detrimental to our environment as we use Active Directory and all users use cached network accounts. We would like to avoid prompting the user to create a user account however this is currently not possible. To continue testing I just created a local account with the same credentials as our local admin account. Once completed and logged in, I saw that all of the configuration profiles pertinent to this machine installed automatically. Now to take it one step further.</p>
+
+<p>I created a <em style="font-weight:bold; font-style:normal">Smart Group</em> in JAMF that will look to see if an OS X machine has a <em style="font-weight:bold; font-style:normal">Pre-Stage Enrollment</em> which means that the device was more than likely setup using the Device Enrollment Program. For this group I created a policy that will install Munki for software patches and installs and our local admin account so it has a nice profile picture. I set this policy to execute once enrollment has completed and ONLY for the Smart Group we created. I also made the Policy restart the machine no matter what since Munki will need to begin building the machine. When I saw this policy in action it installed the packages and did indeed restart the system.  Once the system restarted, it then began to build. This means that minus the two screens in DEP it was almost completely hands off.</p>
+
+<p>One minor issue I saw when using the same account as the local admin account is it will mess up the keychain for the local admin account which is a minor issue but still troublesome. As for a major issue, I attempted to do an internet recovery of the system (re-image) which took a very very long time.  Not really an issue but when compared against net booting and imaging a vanilla image the time is just not feasable.</p>
+
+<p>Another issue I ran into is when I attempted to image a system that is already in JAMF with a <em style="font-weight:bold; font-style:normal">Pre-Stage Enrollment</em> it would get stuck in a loop because our Policy that would install Munki would want to restart so the machine would never finish using the PKG install to enroll in JAMF. To remedy this I added additional logic to the <em style="font-weight:bold; font-style:normal">Smart Group</em> that would make sure the user name was not blank and that the package ID for Munki <em style="font-weight:bold; font-style:normal">com.googlecode.munki.app</em> did not exist. This would mean that the system was being setup with DEP and thus Munki would need installed. This resolved that issue.</p>
+
+<p>Overall, DEP is a great way to prepare a machine that is fresh out of the box but I don't believe it is a great way to prepare a machine that is being refreshed or re-imaged. Also it is my hope that JAMF allows you to also bypass the two screens that do currently show up so the machines can be prepared for use with Active Directory.</p>

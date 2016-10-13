@@ -1,0 +1,48 @@
+---
+layout: post
+title: Deploying a Dynamic IPSEC VPN Profile via Casper Suite
+date: 2014-07-28 13:58:39.000000000 -04:00
+type: post
+published: true
+comments: true
+image: images/Casper.png
+status: publish
+categories:
+- Casper
+- Configuration
+tags:
+- Casper Suite
+- Mac Management
+- OS X
+---
+<p>Would you like to be able to deploy the VPN profile for your business or university on single user systems without setting it up manually for each user or using a custom created package? With Casper we are able to deploy an IPSEC VPN Profile through a configuration profile. Read on for the details on how to perform this and save yourself a few extra steps with a new single user system.</p>
+
+<p>One of the reasons that we switched from Apple's Profile Manager to the Casper suite was to have the ability to deploy the deploy a dynamic VPN profile depending on the user assigned to the system. I have been able to create our university's Cisco VPN Profile which is added to the system once it has been imaged. The only issue however is what if a user is not assigned to the system?  The <em style="font-weight:bold; font-style:normal">$USERNAME</em> variable is then blank and the user cannot modify it.  Through the use of <em style="font-weight:bold; font-style:normal">Smart Groups</em> in Casper however you can address the issue by creating a Smart Group that has all computers that do not have a user assigned to them and then exclude that group from your VPN Profile.</p>
+
+<p>First thing we want to do is create <em style="font-weight:bold; font-style:normal">Smart Groups</em> which will determine which computers will receive the VPN Profile.  If you are unsure what <em style="font-weight:bold; font-style:normal">Smart Groups</em> are please check the Casper Administrators guide which can be downloaded from <em style="font-weight:bold; font-style:normal"><a title="Casper Administrator's Guide" href="http://www.jamfsoftware.com/resources/casper-suite-administrators-guide/" target="_blank">here</a></em>. I believe Smart Groups for computers are listed on page 198 of the guide. I use two groups. The first group is called Mac Laptops which will place any computer with the word <em style="font-weight:bold; font-style:normal">MacBook</em> in its model into the group as desktops always stay on campus and do not require the VPN. The second group I make is called <em style="font-weight:bold; font-style:normal">No User assigned</em> which I have two requirements. We have a dummy user for loaners named <em style="font-weight:bold; font-style:normal">loaner</em> which would not require the laptop to leave campus. The second requirement is if the user name is equal to blank or <em style="font-weight:bold; font-style:normal">NULL</em> which means a user has not been assigned to the laptop yet and thus the VPN is not required. Remember that these are just the settings that are useful in my education environment. No environment is the same and be sure to tweak the settings  Once we have these groups created it is now time to create your configuration profile.</p>
+
+<p>To create the VPN Profile first we will want to setup our settings within a configuration profile in Casper here:</p>
+
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/casper-menu.png"><img class="alignnone  wp-image-147" src="{{ site.baseurl }}/images/casper-menu.png" alt="Casper Menu" width="187" height="403" /></a></p>
+<p>Once we have begun creating a configuration profile we will want to then select VPN and configure:</p>
+
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/config-profile-vpn.png"><img class="alignnone size-full wp-image-148" src="{{ site.baseurl }}/images/config-profile-vpn.png" alt="Config Profile VPN" width="580" height="318" /></a></p>
+
+<p>Here you will enter your connection details for your VPN and the type.  You will want to leave the password field blank as you will want it to prompt the user each time but for the username field you want to use the payload variable <em style="font-weight:bold; font-style:normal">$USERNAME</em> which will dynamically insert the user name when it is deployed to the system. You can find more information on payload variables available in Casper in the Casper Administrator's guide.</p>
+
+<p>Now that your VPN Profile is configured we will want to pick the scope.  We will want to target <em style="font-weight:bold; font-style:normal">Mac Laptops</em> but exclude any machines that don't have user names assigned via the <em style="font-weight:bold; font-style:normal">No users assigned</em> Smart Group.</p>
+
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/vpn-target.png"><img class="alignnone  wp-image-150" src="{{ site.baseurl }}/images/vpn-target.png" alt="VPN Target" width="411" height="376" /></a></p>
+
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/vpn-exclusion.png"><img class="alignnone  wp-image-149" src="{{ site.baseurl }}/images/vpn-exclusion.png" alt="VPN Exclusion" width="415" height="363" /></a></p>
+
+<p>Once this is completed the configuration profile should deploy easily to each system that has a user assigned to it. This method is <em style="font-weight:bold; font-style:normal">ONLY</em> good for those who want to deploy the VPN to single user systems. The next step however is we would like to add the VPN item in the Menu bar so users can easily connect when needed. To perform this we would reopen our VPN configuration profile and add a custom settings file called <em style="font-weight:bold; font-style:normal">com.apple.mcx.menuExtras</em>. In this PLIST you want to define the following Keys:</p>
+
+{% highlight xml linenos %}
+<key>VPN.menu</key>
+<true/><br />
+<key>delaySeconds</key>
+<real>1</real>
+{% endhighlight %}
+
+<p>You can use <em style="font-weight:bold; font-style:normal">defaults write </em> to create this file anywhere on your system for upload or your favorite text editor.  Once you have created the file don't forget run the <em style="font-weight:bold; font-style:normal">plutil</em> command to convert it to <em style="font-weight:bold; font-style:normal">XML1</em> so you can upload it to the Casper configuration profile. Deploying this with the VPN profile will not only add the VPN profile to the user's system but also add the Menu bar item which will allow them to access your corporate or university VPN easily.  If you require assistance with setting this up please let me know.</p>

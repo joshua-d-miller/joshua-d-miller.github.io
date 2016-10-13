@@ -1,0 +1,46 @@
+---
+layout: post
+title: TeamViewer 11 (Again) - With Munki
+date: 2016-03-08 12:00:14.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/TeamViewer Host.png
+status: publish
+categories:
+- Configuration
+- Deployment
+- Munki
+tags: []
+---
+<p>I'm sure many of you read my previous post <a href="{{ stie.baseurl}}/2016/teamviewer-11-and-munki/">TeamViewer 11 and Munki</a> where I described what I thought was the best way to deploy TeamViewer 11 on OS X by installing Version 8, then Version 9 and finally Version 11. Last week I decided that there has to be a better way and began digging through some of the packages. What I found was an actual method to deploy TeamViewer 11 by using pre and post install scripts. I no longer have to rely on instilling previous versions of the software.</p>
+
+<p>So when I expanded the TeamViewer Host 9 package as this version would convert our password from version 8 to the new encryption method, I found that TeamViewer is running a post install script that does two things:</p>
+
+<p><ul style="list-style-type:square">
+<li>Renames <em style="font-weight:bold; font-style:normal">com.TeamViewer8.Settings.plist</em> to <em style="font-weight:bold; font-style:normal">com.teamviewer.teamviewer9.plist</em></li>
+<li>Using <em style="font-weight:bold; font-style:normal">/usr/bin/defaults</em> to write a simple <em style="font-weight:bold; font-style:normal">Date</em> key to the plist file before TeamViewer launches</li>
+</ul></p>
+
+<p>It seems that when TeamViewer detects this <em style="font-weight:bold; font-style:normal">Date</em> key in the plist file it will convert the key <em style="font-weight:bold; font-style:normal">SecurityPasswordAES</em> to <em style="font-weight:bold; font-style:normal">PermanentPassword</em> which is exactly what we are looking for since <em style="font-weight:bold; font-style:normal">PermanentPassword</em> is a "unique" data binary for each system.</p>
+
+<p>To test this theory I decided to use a test system that had never had TeamViewer installed on it. I then used pre and post install scripts that will create the plist file for TeamViewer 11 with the settings we would like to define and apply the attribute needed for customizations. Here are my pre and post install scripts:</p>
+
+<p><em style="font-weight:bold; font-style:normal">TeamViewer 11 Pre Install Script</em></p>
+
+{% gist joshua-d-miller/465352a8ab3a91a41c51cb967d0da51d %}
+
+<p><em style="font-weight:bold; font-style:normal">TeamViewer 11 Post Install Script</em></p>
+
+{% gist joshua-d-miller/6d197f69ac5ab0eb93ce0b1b6c5038a5 %}
+
+<p>Upon testing these scripts within Munki and a silent install, TeamViewer was able to correctly change the password. No longer, do we need to install previous versions before installing this version. Now that this install is finished you can apply your customization that we highlighted in the previous post. You can get the modified <em style="font-weight:bold; font-style:normal">MainMenuHost.NIB</em> file <a href="http://1drv.ms/21gUbLe" target="_blank">here</a>. Once you have this file you can build a DMG file for use within Munki. This file will remove the following from the TeamViewer Menu Bar item:</p>
+
+<p><ul style="list-style-type:square">
+<li>Check for Updates</li>
+<li>Activate License</li>
+<li>TeamViewer Website</li>
+<li>Exit TeamViewer</li>
+</ul></p>
+
+<p>With these two files, we can deploy TeamViewer silently to a system and efficiently. I always require a logout so nothing from TeamViewer is running when the install takes place just to be safe which also might be why I need to invoke the LaunchDaemon. Your experience may vary but if you have any questions please be sure to let me know. Also we need to let TeamViewer know that this kind of modification to make their product deployable isn't acceptable and they should provide the same type of deployment they offer for Windows for Mac.</p>

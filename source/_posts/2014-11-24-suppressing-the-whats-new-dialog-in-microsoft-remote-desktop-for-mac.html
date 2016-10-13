@@ -1,0 +1,71 @@
+---
+layout: post
+title: Suppressing the "What's New" dialog in Microsoft Remote Desktop for Mac
+date: 2014-11-24 15:02:15.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/Microsoft Remote Desktop.png
+status: publish
+categories:
+- Configuration
+- Munki
+tags:
+- Mac Management
+- Microsoft Remote Desktop
+- OS X
+---
+<p>Since our College is both Windows and Mac we install the Microsoft Remote Desktop tool for Mac onto all systems. Microsoft's latest edition is a welcomed change however one annoying thing happens with every update. Each user is prompted with a nice "What's New" dialog when they launch it. After doing some digging I found that this setting is actually stored in a "sandbox" container which means that each user has this setting.  Essentially if you have a system with multiple users, each one of them would have to press "Don't Show this Again" to make it go away. Well I'm a big fan of automation so I developed a quick Bash Script that will place a shell script and a Launch Agent on the system that will change this setting so users do not see that popup each time it updates.</p>
+
+{% highlight bash linenos %}
+#!/bin/bash
+# Microsoft Remote Desktop What's New
+# Dialog Box Supression Script
+# Joshua D. Miller - josh@psu.edu
+# The Pennsylvania State University
+
+# Make Blank Receipt to Prevent App Store Updates
+/bin/mkdir /Applications/Microsoft\ Remote\ Desktop.app/Contents/_MASReceipt
+/usr/bin/touch /Applications/Microsoft\ Remote\ Desktop.app/Contents/_MASReceipt/receipt
+RDCDir='/Users/$USER/Library/Containers/com.microsoft.rdc.mac'
+WorkDir='/Users/$USER/Library/Containers/com.microsoft.rdc.mac/Data/Library/Preferences'
+BundledVersion=`/usr/bin/defaults read /Applications/Microsoft\ Remote\ Desktop.app/Contents/Info CFBundleShortVersionString`
+
+# Create Scripts Directory if it does not exist
+/bin/test -d /Library/Scripts/EDUC || /bin/mkdir /Library/Scripts/EDUC
+
+# Create RDC Script
+/bin/rm -f /Library/Scripts/EDUC/MSRDC.sh
+/bin/echo '#!/bin/bash
+/bin/test -d '$RDCDir' || mkdir -p '$RDCDir'
+/usr/bin/defaults write '$WorkDir'/com.microsoft.rdc.mac show_whats_new_dialog -bool False
+/usr/bin/defaults write '$WorkDir'/com.microsoft.rdc.mac stored_version_number -string '$BundledVersion'' > /Library/Scripts/EDUC/MSRDC.sh
+
+# Create RDC LaunchDaemon
+if [ ! -e /Library/LaunchAgents/edu.psu.educ.MSRDC.plist ]
+then
+	/bin/echo '<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
+<plist version='1.0'>
+<dict>
+	<key>Label</key>
+	<string>edu.psu.educ.MSRDC</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/bin/sh</string>
+		<string>/Library/Scripts/EDUC/MSRDC.sh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+</dict>
+</plist>
+	' > /Library/LaunchAgents/edu.psu.educ.MSRDC.plist
+else
+	/bin/echo 'LaunchAgent exists.  Creation not needed.'
+fi
+exit 0
+{% endhighlight %}
+
+<p>So to summarize we are creating a launch agent which will run each time a user logs in and a script that will modify the user's plist file for Microsoft Remote Desktop to suppress the "What's New" dialog box. Comments are always welcomed and if there is a better way to do this I am definitely open to it. I have also submitted a bug report to Apple about making these settings deployable via a Configuration Profile.</p>
+
+<p><em style="font-weight:bold; font-style:normal">NOTE:</em> If you are deploying this with Munki remember that you will need to change the <em style="font-weight:bold; font-style:normal"><</em> and <em style="font-weight:bold; font-style:normal">></em> to <em style="font-weight:bold; font-style:normal">&amp;lt;</em> and <em style="font-weight:bold; font-style:normal">&amp;gt;</em> as you will have to escape XML.</p>

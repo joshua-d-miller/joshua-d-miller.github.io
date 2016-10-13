@@ -1,0 +1,269 @@
+---
+layout: post
+title: Configuring TeamViewer Host 8 to be deployable via Munki
+date: 2013-09-27 13:06:39.000000000 -04:00
+type: post
+image: images/TeamViewer Host.png
+published: true
+comments: true
+status: publish
+categories:
+- Configuration
+- Munki
+tags:
+- OS X
+- TeamViewer
+---
+<p>Over the past few weeks the College of Education purchased TeamViewer as it allows for us to remotely assist users on Macs and PCs from either a Mac or PC. The cross platform ability was a great asset for us however in order to accomplish this there were challenges. The first thing we noticed was that the TeamViewer Host version for Mac which runs all the time and will allow us to access corporate machines when there isn't a user logged in did not have a customizable version. This meant we would have to configure TeamViewer manually on each machine on the Mac side.  Thanks to Managed Software Update however, we were able to determine the best way to build a deployable version that would apply customizations for us. If you have not heard of Managed Software Update (Munki) please visit <a title="The Munki Project Website" href="http://github.com/munki/munki" target="_blank">http://github.com/munki/munki</a> which not only provides the open source software but also has a great Wiki on the use of the software.</p>
+
+<p>The first thing we did was download the latest TeamViewer Host version for Mac from TeamViewer's website and imported it into Munki by using the "munkiimport" command. Once this was completed we performed an install by adding it to a developer manifest to test the installation which was successful. Once installed we then configured TeamViewer just the way we liked it such as the password, updates, etc. Once completed, we determined that TeamViewer stores all of its settings in the following file:</p>
+
+<p>/Library/Preferences/com.TeamViewer8.Settings (If this was Version 7 you would substitute the 8).</p>
+
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/plist1.png"><img class="alignnone size-full wp-image-50" src="{{ site.baseurl }}/images/plist1.png" alt="plist" width="474" height="493" /></a></p>
+<p>Munki allows for you to perform pre-install, post-install and post-uninstall scripts. This meant that these settings could be written to the PLIST file during the install with the "defaults write" command. The passwords in TeamViewer are stored in the following:</p>
+
+<p style="padding-left:25px"><em style="font-weight:bold; font-style:normal">SecurityPasswordAES</em> - Password used to access the system<br />
+<em style="font-weight:bold; font-style:normal">OptionsPasswordAES</em> - Password to change settings</p>
+
+<p>These settings in the PLIST file when previewed are in a special format which can't be used by "defaults write", so at this point we head to the terminal to try a "defaults read".</p>
+
+<p>Once in terminal enter the following command: <em style="font-weight:bold; font-style:normal">defaults read /Library/Preferences/com.TeamViewer8.Settings.plist</em> and you will see the following information:</p>
+
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}defaultsread11.png"><img class="alignnone size-full wp-image-51" src="{{ site.baseurl }}/images/defaultsread11.png" alt="defaultsread1" width="474" height="245" /></a></p>
+
+<p>From this information we now have the the correct information to insert the passwords as they are data fields and data fields require hexadecimal in Mac OS X.  We can now build the Munki package to install TeamViewer with our settings.</p>
+
+<p>After performing vigorous trial and error I was able to determine in order for the passwords to be inserted into TeamViewer via an installation script they must be there BEFORE the install takes place.  This means that we will take advantage of Munki's preinstall_script.  With the pre_install script I was able to apply the passwords and access the systems after the install was completed.  We still however were lacking the customization to really make this product like the Windows version.</p>
+
+<p>The last thing we needed to do was change the logo in the host version, change the title, and the text to match the Windows side as well as disable the ability to close the host client.  The following files require modification in order to achieve this:</p>
+
+<p style="padding-left:25px"><em style="font-weight:bold; font-style:normal">logo_host.tiff</em> - The logo used by TeamViewer when showing the status dialog. - /Applications/TeamViewer 8/TeamViewerHost.app/Contents/Resources/logo_host.tiff<br />
+<em style="font-weight:bold; font-style:normal">Localizable.strings</em> - File that allows us to change the title and the description in the status window of TeamViewer Host. - /Applications/TeamViewer 8/TeamViewerHost.app/Contents/Resources/en.lproj/Localizable.strings<br />
+<em style="font-weight:bold; font-style:normal">MainMenuHost.nib</em> - File that allows us to disable Menu items when clicking the TeamViewer Host icon in the Menu Bar. (Disable the ability to Close TeamViewer). - /Applications/TeamViewer 8/TeamViewerHost.app/Contents/Resources/MainMenuHost.nib</p>
+
+<p>To replace these files I created a DMG file called TeamViewerCOE.dmg which is The College of Education's own branding for TeamViewer that contained modified versions of these files. Once the DMG was created I created a Munki pkginfo that would allow me to copy these files into TeamViewer after the install as this DMG was marked as an Update for TeamViewer which means that my customizations will install after TeamViewer so if an update for TeamViewer Host is added to Munki, then my customizations will still be applied to the new version. Changing the logo is pretty self explanatory however here are the pieces you will need to edit in the other files:</p>
+
+<p><em style="font-weight:bold; font-style:normal">Localizable.strings</em> - Applies customization to TeamViewer Status Window<br />
+<p style="padding-left:25px">- Change "IDS_TEAMVIEWER_HOST" = "Your Title Here" (Line 1143)<br />
+- Change "IDS_HM_EXPLANATION" = "Your Text Here" (Line 636)<br /></p>
+<em style="font-weight:bold; font-style:normal">MainMenuHost.nib</em> - Will disable the menu item if you change the string<br />
+<p style="padding-left:25px">- Change License to CompanyAcronymLicense (Disables License) (ex CETCLicense) (Line 1517)<br />
+- Change Logs to CompanyAcronymLogs (Disables Logs) (Line 1535)<br />
+- Change Exit to CompanyAcronymExit (Disables Exit) (Line 1571)<br />
+- Change Website to CompanyAcronymWebsite (Disables WebSite) (Line 1589)<br />
+- Change Update to CompanyAcronymUpdate (Disabled Update) (Line 1791)</p></p>
+
+<p>Once these changes have been made you can package the modified files in a DMG and have it update every time the TeamViewer Host is installed which will add your branding and customization to the product performing a real deployable version. The last piece however that I have yet been able to figure out with the product itself is how to report the IDs back to your Corporate License. For the time being PSU has IBM Endpoint Manager which I have worked with the Windows System Administrator to create an Analyses job that will look at the plist file after TeamViewer is launched on the remote system for the ID as the ID is placed in the PLIST file. Since we don't want personal TeamViewer IDs, we also added in the install script a PLIST entry that says it was installed by EDUC which we also look for when scanning for the IDs.  This portion is still manual but may not be for long. I have also had many conversations with TeamViewer and they have indicated that the next version (9) may possibly have a deployable version for Mac so you would not need to perform any of this. If you have any questions please feel free to let me know. Here are my final PKGInfo files for both the TeamViewer Host install and the additional settings. You will see under the uninstall_script that I remove our customized PLIST file which I highly recommend.</p>
+
+<p style="font-weight:bold; font-style:normal">TeamViewer Host PKGINFO</p>
+{% highlight xml linenos %}
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
+<plist version='1.0'>
+<dict>
+	<key>RestartAction</key>
+	<string>RequireLogout</string>
+	<key>autoremove</key>
+	<false/>
+	<key>catalogs</key>
+	<array>
+		<string>production</string>
+	</array>
+	<key>category</key>
+	<string>Administrative Tools</string>
+	<key>description</key>
+	<string>Your description Here.</string>
+	<key>developer</key>
+	<string>TeamViewer</string>
+	<key>display_name</key>
+	<string>TeamViewer Host</string>
+	<key>installed_size</key>
+	<integer>54814</integer>
+	<key>installer_item_hash</key>
+	<string>72a8e019f8779e4cd7288c430f419123f7d15a45a3de898f249335ac76820138</string>
+	<key>installer_item_location</key>
+	<string>Admin/TeamViewer Host-8.0.19823.dmg</string>
+	<key>installer_item_size</key>
+	<integer>16884</integer>
+	<key>minimum_os_version</key>
+	<string>10.5.0</string>
+	<key>name</key>
+	<string>TeamViewer Host</string>
+	<key>postuninstall_script</key>
+	<string>#!bin/bash
+	rm -rf /Library/Preferences/com.TeamViewer8.Settings.plist
+	exit 0
+	</string>
+	<key>preinstall_script</key>
+	<string>#!/bin/bash
+	defaults write /Library/Preferences/com.TeamViewer8.Settings SecurityPasswordAES -data MumboJumboHere
+	defaults write /Library/Preferences/com.TeamViewer8.Settings General_DirectLAN -int 2
+	defaults write /Library/Preferences/com.TeamViewer8.Settings UpdateCheckInterval -int -1
+	defaults write /Library/Preferences/com.TeamViewer8.Settings AutoUpdateMode -int 3
+	defaults write /Library/Preferences/com.TeamViewer8.Settings Security_Adminrights -int 1
+	defaults write /Library/Preferences/com.TeamViewer8.Settings HostInfoDialog -int 0
+	defaults write /Library/Preferences/com.TeamViewer8.Settings OptionsPasswordAES -data MumboJumboHere
+	defaults write /Library/Preferences/com.TeamViewer8.Settings InstalledBy EDUC
+	exit 0
+	</string>
+	<key>receipts</key>
+	<array>
+		<dict>
+			<key>installed_size</key>
+			<integer>4</integer>
+			<key>packageid</key>
+			<string>com.teamviewer.teamviewerhost8Agent</string>
+			<key>version</key>
+			<string>8.0.19823</string>
+		</dict>
+		<dict>
+			<key>installed_size</key>
+			<integer>54530</integer>
+			<key>packageid</key>
+			<string>com.teamviewer.teamviewerhost8</string>
+			<key>version</key>
+			<string>8.0.19823</string>
+		</dict>
+		<dict>
+			<key>installed_size</key>
+			<integer>280</integer>
+			<key>packageid</key>
+			<string>com.teamviewer.teamviewer8Uninstall</string>
+			<key>version</key>
+			<string>8.0.19823</string>
+		</dict>
+	</array>
+	<key>uninstall_method</key>
+	<string>removepackages</string>
+	<key>uninstallable</key>
+	<true/>
+	<key>version</key>
+	<string>8.0.19823</string>
+</dict>
+</plist>
+{% endhighlight %}
+
+<p style="font-weight:bold; font-style:normal">TeamViewer Customization PKGINFO</p>
+
+{% highlight xml linenos %}
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
+<plist version='1.0'>
+<dict>
+	<key>autoremove</key>
+	<false/>
+	<key>catalogs</key>
+	<array>
+		<string>production</string>
+	</array>
+	<key>category</key>
+	<string>Administrative Tools</string>
+	<key>description</key>
+	<string>This will perform customization to TeamViewer 8 in order for it to function properly in the Your Company Name.</string>
+	<key>developer</key>
+	<string></string>
+	<key>display_name</key>
+	<string>Teamviewer Settings</string>
+	<key>installcheck_script</key>
+	<string>#!/usr/bin/python
+# Joshua D. Miller - josh@psu.edu
+# July 9, 2014
+'''Determines if TeamViewer 9 is installed
+and if so makes sure that the TeamViewer 8
+customization package is not installed.'''
+
+# Import Libraries
+import os
+import hashlib
+
+# Set Variables
+TeamViewerHost8='/Applications/TeamViewer 8/TeamViewerHost.app'
+TeamViewerHost9='/Applications/TeamViewerHost.app'
+Logo='/Contents/Resources/logo_host.tiff'
+Localizable='/Contents/Resources/en.lproj/Localizable.strings'
+MainMenu='/Contents/Resources/MainMenuHost.nib'
+hashes = [
+			( TeamViewerHost8 + Logo, '33668e170cc7049095ca59618e67f939' ),
+			( TeamViewerHost8 + Localizable, '7be298c7319aa3f06295453db6d047bf' ),
+			( TeamViewerHost8 + MainMenu, '975bf29115b0c6763812394a72b17453' ),
+		 ]
+
+
+# MD5 Checksum Function
+def md5Checksum(filePath, md5sum):
+    if hashlib.md5(open(filePath).read()).hexdigest() == md5sum:
+    	return True
+    else:
+    	return False
+# Does TeamViewer 9 exist?
+if os.path.isfile(TeamViewerHost9 + '/Contents/Info.plist'):
+	print 'TeamViewer 9 is installed'
+	exit(1)
+# Does TeamViewer 8 exist?
+elif os.path.isfile(TeamViewerHost8 + '/Contents/Info.plist'):
+	print 'TeamViewer 8 is installed.  Checking customization files.....'
+	# Check Hashes of customization files
+	for file, md5 in hashes:
+		if not md5Checksum(file, md5):
+			print file + ' md5 doesn't match md5 ' + md5
+			print 'Package marked for install....'
+			exit(0)
+	print 'All customization files match.  Exiting....'
+	exit(1)
+else:
+	print 'TeamViewer is not installed'
+	exit(0)
+	</string>
+	<key>installer_item_hash</key>
+	<string>a1fd9b320c8fbafbaf6b8fbcc8d8ef940bc5016be72e2b072d557f1371bde9eb</string>
+	<key>installer_item_location</key>
+	<string>Admin/TeamViewer COE-1.0.dmg</string>
+	<key>installer_item_size</key>
+	<integer>116</integer>
+	<key>installer_type</key>
+	<string>copy_from_dmg</string>
+	<key>items_to_copy</key>
+	<array>
+		<dict>
+			<key>destination_item</key>
+			<string>logo_host.tiff</string>
+			<key>destination_path</key>
+			<string>/Applications/TeamViewer 8/TeamViewerHost.app/Contents/Resources</string>
+			<key>source_item</key>
+			<string>Logo.tiff</string>
+		</dict>
+		<dict>
+			<key>destination_item</key>
+			<string>Localizable.strings</string>
+			<key>destination_path</key>
+			<string>/Applications/TeamViewer 8/TeamViewerHost.app/Contents/Resources/en.lproj/</string>
+			<key>source_item</key>
+			<string>Localizable.strings</string>
+		</dict>
+		<dict>
+			<key>destination_item</key>
+			<string>MainMenuHost.nib</string>
+			<key>destination_path</key>
+			<string>/Applications/TeamViewer 8/TeamViewerHost.app/Contents/Resources</string>
+			<key>source_item</key>
+			<string>MainMenuHost.nib</string>
+		</dict>
+	</array>
+	<key>minimum_os_version</key>
+	<string>10.4.0</string>
+	<key>name</key>
+	<string>TeamViewer COE</string>
+	<key>uninstall_method</key>
+	<string>remove_copied_items</string>
+	<key>uninstallable</key>
+	<true/>
+	<key>update_for</key>
+	<array>
+		<string>TeamViewer Host-8.0.19823</string>
+	</array>
+	<key>version</key>
+	<string>1.0</string>
+</dict>
+</plist>
+{% endhighlight %}

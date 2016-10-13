@@ -1,0 +1,29 @@
+---
+layout: post
+title: Promoting Items from Testing to Production in Munki Automatically
+date: 2014-11-12 09:27:41.000000000 -05:00
+type: post
+published: true
+comments: true
+image: images/Munki.png
+status: publish
+categories:
+- Configuration
+- Munki
+tags:
+- Automation
+- OS X
+---
+<p>Over the past few weeks I have been working to develop a python script that will allow users to specify Applications that they would like to promote to the production catalog of their Munki repository based off the last modified time. This script at this point is a proof of concept and may not work in all environments. I am hoping to add additional features to the script such as promoting different applications to different catalogs based off last modified times. The project is currently in my GitHub repository and I'm definitely open to suggestions or ideas to make the script better. The Munki dev team however is currently looking for ways to incorporate this functionality into the core of Munki itself by adding special keys in the pkginfo files. If you'd like you can join in on that discussion <a href="https://groups.google.com/forum/#!topic/munki-dev/FKWmj4i-VEU/discussion">here</a>. If you'd like to mess around with the script that I created feel free to clone the repository located at <a href="https://github.com/joshua-d-miller/munki-promote">https://github.com/joshua-d-miller/munki-promote</a>. I look forward to any comments or ideas you may have. If you'd like past the break I can show you a basic setup.</p>
+
+<p>To configure the script you would just make a <em style="font-weight:bold; font-style:normal">munkipromote.conf</em> from the <em style="font-weight:bold; font-style:normal">munkipromotetemplate.conf</em> file and then add in your preferences.  Listed below is a sample configuration of that file:</p>
+
+{% highlight text %}
+[munki]
+MUNKI_REPO = /Volumes/munki/repo/pkgsinfo
+MUNKI_APPS = ['Google Chrome', 'Mozilla Firefox', 'Dropbox', 'Box Sync']
+MUNKI_TIME = 7
+MUNKI_CATALOGS = ['production']
+{% endhighlight %}
+
+<p>As you can see here we have configured these variables to be read in by the python file and then set the catalogs array to production for Google Chrome, Mozilla Firefox, Dropbox and Box Sync by scanning our repository. It is definitely good to note that the <em style="font-weight:bold; font-style:normal">MUNKI_APPS</em> variable is a list that when read will match the name in the list with the name in the pkginfo so please make sure that these match or it will fail. The <em style="font-weight:bold; font-style:normal">MUNKI_TIME</em> will be the amount of time the file has not been modified for. By default I like to use a week so that if the pkginfo has not been modified for a week then it will be moved to the production catalog. If I need to make a change to a pkginfo that has had an issue then the timer resets and it will not be changed. As always if there are questions about this script please let me know.</p>

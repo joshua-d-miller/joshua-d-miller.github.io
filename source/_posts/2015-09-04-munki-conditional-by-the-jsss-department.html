@@ -1,0 +1,89 @@
+---
+layout: post
+title: Munki Conditional by the JSS's Department
+date: 2015-09-04 12:53:26.000000000 -04:00
+type: post
+published: true
+comments: true
+image: images/Casper.png
+status: publish
+categories:
+- Casper
+- Configuration
+- Munki
+tags:
+- Automation
+- Casper Suite
+- Mac Management
+---
+<p>Here in our College we have a department that is going to begin using locked printing as well as purchases a department license for SPSS. Since the license for SPSS is the same and I don't want to offer the printers to everyone I thought we could utilize JAMF's inventory information to offer items based off department. The drawback though is JAMF does not have Payload Variables for <em style="font-weight:bold; font-style:normal">Department</em>, <em style="font-weight:bold; font-style:normal">Department ID</em> or <em style="font-weight:bold; font-style:normal">Site Name</em>. (Our Sites are the same as the departments) If you would like for this to change you can up vote this post here <a href="https://jamfnation.jamfsoftware.com/featureRequest.html?id=3599">JAMF Nation Feature Request</a>. This doesn't help me now so I wanted a great way to utilize this information for use with Munki.</p>
+
+<p>To do this I created a Python script that will access the Rest API of JAMF.  The Rest API provides a lot of information and I suggest reading this post: <a href="https://bryson3gps.wordpress.com/2014/03/30/the-jss-rest-api-for-everyone/">The JSS Rest API for Everyone</a>.  Ok let's get into the fun stuff.</p>
+
+<p>After a lot of trial and error I found out that in order to utilize the Rest API it was best to use <em style="font-weight:bold; font-style:normal">cURL</em> as the URLLIB2 in Python does not have native support for TLS. Also it is very important that as of Casper 9.73 that you will need to add this Cipher in your <em style="font-weight:bold; font-style:normal">server.xml</em> file in the TomCat config (JSS/Tomcat/conf/server.xml) in order for older OS X clients to utilize cURL:</p>
+
+<pre class="special_formatting">TLS_RSA_WITH_AES_128_CBC_SHA</pre>
+
+<p>Once that is added you can pretty much copy and paste this Python script and fill in the additional information for your JSS and your Authorization Header. I would suggest creating a local user in JAMF that <em style="font-weight:bold; font-style:normal">only</em> can read information from the JSS.</p>
+
+{% highlight python linenos %}
+#!/usr/bin/env python
+'''This script will determine the department of
+the computer as listed in the JSS so department
+specific applications can be distributed to the
+machine using Munki Admin conditions.
+Joshua D. Miller - josh@psu.edu - September 2, 2015
+The Pennsylvania State University '''
+
+# Import Resources needed to perform this check in JAMF
+import plistlib, os, platform
+from xml.dom import minidom
+from subprocess import check_output
+from Foundation import CFPreferencesCopyAppValue
+from distutils.version import LooseVersion
+
+# Read the location of the ManagedInstallDir from ManagedInstall.plist
+# This code from the Munki Wiki - Greg Neagle
+BUNDLE_ID = 'ManagedInstalls'
+PREF_NAME = 'ManagedInstallDir'
+MANAGEDINSTALLDIR = CFPreferencesCopyAppValue(PREF_NAME, BUNDLE_ID)
+CONDITIONALITEMSPATH = os.path.join(MANAGEDINSTALLDIR, 'ConditionalItems.plist')
+
+# Get computer name by using the native OSX scutil
+COMPUTER_NAME = check_output(['/usr/sbin/scutil', '--get', 'ComputerName']).strip()
+
+# Set the URL and only grab XML from the location portion of the inventory
+URL = 'https://YourJSSHere/JSSResource/computers/name/' \
+ + COMPUTER_NAME + '/subset/Location'
+AUTH = 'Authorization: Basic Your Scrambled Base64 Encoded User/Pass Here'
+XMLAPP = 'Accept: application/xml'
+XMLCONTENT = 'Content-Type: application/xml'
+
+# Determine the OS This is running on and then use either TLSv1 or TLSv1.2
+if platform.mac_ver()[0] >= LooseVersion('10.10.5'):
+    # Use cURL to get XML Data about the computer using TLSv1.2
+    OUTPUT = check_output(['/usr/bin/curl', '--tlsv1.2', '-H', AUTH, '-H', \
+        XMLAPP, '-H', XMLCONTENT, URL]).rstrip()
+else:
+    # Use cURL to get XML Data about the computer using TLSv1
+    OUTPUT = check_output(['/usr/bin/curl', '--tlsv1', '-H', AUTH, '-H', \
+        XMLAPP, '-H', XMLCONTENT, URL]).rstrip()
+
+# Parse the output as XML
+DOM = minidom.parseString(OUTPUT)
+# Look for a specific tag
+XMLTAG = DOM.getElementsByTagName('department')[0].toxml()
+# Strip the tags from the output you want to print out
+XMLDATA = XMLTAG.replace('<department>', '').replace('</department>', '')
+DEPARTMENT_DICT = dict(department=XMLDATA)
+
+# Read in ConditionalItems.plist and if it doesn't exist create it and write the values
+if os.path.exists(CONDITIONALITEMSPATH):
+    EXISTING_DICT = plistlib.readPlist(CONDITIONALITEMSPATH)
+    OUTPUT_DICT = dict(EXISTING_DICT.items() + DEPARTMENT_DICT.items())
+else:
+    OUTPUT_DICT = DEPARTMENT_DICT
+plistlib.writePlist(OUTPUT_DICT, CONDITIONALITEMSPATH)
+{% endhighlight %}
+
+<p>Once you have this created you will want to deploy this with Munki into the folder <em style="font-weight:bold; font-style:normal">/usr/local/munki/conditions</em>.  I like to use MD5 to make sure that the file is the file I specified.  Lastly, you will just need to put in any of your manifests that hit your users (ex. global) what you want to offer based off the new conditional item <em style="font-weight:bold; font-style:normal">Department</em>. As always if you have any questions please be sure to let me know.</p>

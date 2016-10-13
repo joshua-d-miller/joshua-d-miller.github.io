@@ -1,0 +1,75 @@
+---
+layout: post
+title: TeamViewer 11 and Munki
+date: 2016-02-29 16:15:47.000000000 -05:00
+type: post
+published: true
+status: publish
+comments: true
+image: images/TeamViewer Host.png
+categories:
+- Deployment
+- Munki
+tags:
+- Automation
+- Mac Management
+- OS X
+- TeamViewer
+---
+<p>So here we go again. Unfortunately my TeamViewer 10 post was incorrect and I did not test the deployment enough. Using those instructions you will have trouble putting the password on another system as well as issues with the helper.  TeamViewer 11 is of course no exception.  It seems TeamViewer doesn't seem to understand how deployable software should work and there continues to be no improvement to the software. After a lot of testing, I have been able to make it somewhat deployable.</p>
+
+<p>Are you ready for this process? It is quite the doozy and unfortunately is not an ideal model for a software that is cross-platform and labeled as deployable and customizable. Let's begin by highlighting this process:</p>
+<p><ul style="list-style-type:square">
+<li>Create <em style="font-weight:bold; font-style:normal">com.TeamViewer8.Settings.plist</em> with the settings we like initially such as the remote control password, settings password and turning off updates</li>
+<li>Install TeamViewer Host (Version 8)</li>
+<li>Install TeamViewer Host (Version 9)</li>
+<li>Run a post install script that will perform the following
+<ul style="list-style-type:circle">
+<li>Unload the Launch Daemon for TeamViewer to run as a service</li>
+<li>Cleanup TeamViewer 8's folder as it is now just in applications as <em style="font-weight:bold; font-style:normal">TeamViewerHost.app</em></li>
+<li>Convert the TeamViewer 9 Plist to XML so we can manipulate it</li>
+<li>Read in the TeamViewer 9 Plist as it is created by the setup</li>
+<li>Set some additional settings that may not have carried over from version 8</li>
+<li>Load the LaunchDaemon so the password is converted.</li>
+</ul>
+</li>
+<li>Run a Preinstall script that will copy the newly converted password with "special" encryption to the new plist for version 11</li>
+<li>Install Version 11</li>
+<li>Run a post install script that will set the custom attribute for your custom module from the website and run the application before we apply customization of the Main Menu in the Menu Bar</li>
+<li>Finally, apply the <em style="font-weight:bold; font-style:normal">MainMenuHost.NIB</em> file that will remove the pieces we want from the menu that appears by clicking the menu bar item</li>
+</ul></p>
+
+<p>This is obviously no easy process but thankfully we have Munki (or insert software deployment service here). With Munki, we will require that when we install TeamViewer 11 that 8 and 9 be installed first. So let's get started.</p>
+
+<p>First we will install TeamViewer version 8 and utilize a pre install script. This will allow us to set our configuration settings before TeamViewer launches which will allow the unattended host password to be set. I have gone ahead and scripted it in python so go ahead and use the script below.</p>
+
+{% gist joshua-d-miller/a2b2793a02168a3a6888a46174 %}
+
+<p>Remember to get <em style="font-weight:bold; font-style:normal">SecurityPasswordAES</em> and <em style="font-weight:bold; font-style:normal">OptionsPasswordAES</em> you will need to do a manual install on a system and use OS X's built in <em style="font-weight:bold; font-style:normal">defaults</em> to read out these binary values. (Of course you will need to remove the spaces)</p>
+
+<p>Now that we have TeamViewer 8 setup let's go ahead and get 9 ready for deployment with our script as well. Once imported into your repo you will want to go ahead and add the script below as a post install script:</p>
+
+{% gist joshua-d-miller/f83778b0754ff0e257f8fad25f705946 %}
+
+<p>Still following along? Good! Now we are going to finally install the version that we want. TeamViewer version 11. Once imported into the repository we will use a pre instal and post install script in order to achieve full deployability. Check below for those scripts:</p>
+
+<p><em style="font-weight:bold; font-style:normal">TeamViewer 11 Pre Install Script</em></p>
+
+{% gist joshua-d-miller/e9f12caf2c6e2b3f0e6cd22b283e6ba7 %}
+
+<p><em style="font-weight:bold; font-style:normal">TeamViewer 11 Post Install Script</em></p>
+
+{% gist joshua-d-miller/57557d7d4b199acb2e78b5243d2431ab %}
+
+<p>Now that we have all the scripts in place, Munki will install in order, version 8, version 9 and finally version 11.  You could use this same process for version 10.  The last step is to insert our special <em style="font-weight:bold; font-style:normal">MainMenuHost.NIB</em> file. Thanks to a GitHub project located at https://github.com/annidy/NibViwer I was able to look at the actual NIB file for TeamViewer and then export and modify it.  To modify a NIB file you will need to use xCode however if you are lazy I have gone ahead and attached my modified NIB file to this post for your use.  You can download it <a href="http://1drv.ms/1RgnTuG" target="_blank">here</a>.  My file has removed the following from TeamViewer:</p>
+<p><ul style="list-style-type:square">
+<li>Check for Updates</li>
+<li>Activate License</li>
+<li>TeamViewer Website</li>
+<li>Exit TeamViewer</li>
+</ul></p>
+<p>Now that we have the file we would add this to a DMG like we did originally with version 8 and make this DMG an update for TeamViewer 11.</p>
+
+<p>Finally the moment of truth - testing. My extensive testing with these scripts has shown when setup in Munki correctly that Munki will install all three versions of TeamViewer and the customization. Upon completion the user will log in and TeamViewer will launch properly and your password will work.  One last tidbit of information I'd like to add is I always require logout to install TeamViewer just to be safe. I would suggest that you do as well.</p>
+
+<p>As you can see this process is very lengthy and complex for a cross-platform deployable remote control solution. It is my belief that our college will probably begin exploring other options since the deployability of this software has not changed since version 8 and has only gotten worse. I have called in and complained to TeamViewer with each software release and they seem to reiterate the same answer. "Mac deployment just isn't important". For those of you using TeamViewer and this process I suggest you also call in and voice your concerns for this software's inability to be deployed correctly without some major work on Mac. It is my hope that they begin to change their stance and make the software a better solution for Mac. If you have questions on this process please be sure to drop me a line.</p>

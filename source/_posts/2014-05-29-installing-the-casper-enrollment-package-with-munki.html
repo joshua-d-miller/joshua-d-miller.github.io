@@ -1,0 +1,112 @@
+---
+layout: post
+title: Installing the Casper Enrollment Package with Munki
+date: 2014-05-29 10:48:17.000000000 -04:00
+type: post
+published: true
+comments: true
+image: images/Casper.png
+status: publish
+categories:
+- Casper
+- Configuration
+- Munki
+tags:
+- Casper Suite
+- Mac Management
+- OS X
+---
+<p>Our college has purchased the Casper suite and we have performed setup and created the MDM service and profiles that we would like to distribute. Since we are going to continue using Munki for software deployment we wanted to have a way to deploy the Casper Enrollment package so it is a seamless transition from either Profile Manager or local install profiles from Profile Manager <em style="font-weight:bold; font-style:normal">(10.7 Clients as 10.9 Server Profile Manager no longer supports them [see KB article <a title="HT200082" href="http://support.apple.com/kb/HT200082?viewlocale=en_US" target="_blank">HT200082</a>])</em>. Continue reading to see the pre-install, post install and install check scripts I have created in order to achieve this seamless integration.</p>
+
+<p>To get started you will first want to make sure you have created your Recon package for OS X using Casper's tool. Once this package is created you will import the package into Munki just like you would any other package. Once the package has been imported you will want to edit the pkginfo in order to apply your custom settings. The examples listed below are what I needed in order to make the transition seamless so your results may vary but the concept is the same. The goal for our institution was to remove any Profile Manager profiles as well as the trust profile and also remove the local profiles from Profile Manager that were used on the 10.7 clients. After this we then removed Munki's <em style="font-weight:bold; font-style:normal">ManagedInstalls.plist</em> file from both <em style="font-weight:bold; font-style:normal">/Library/Preferences</em> and <em style="font-weight:bold; font-style:normal">/private/var/root/Library/Preferences</em> as this would now be managed by Casper. The other thing I noticed is the package receipt for the Casper package is not written properly as its in the list of receipts but there are no files that can be removed to forget the receipt. I like to use the install check script in Munki so I know that the MDM Profile has been installed and that the right version is on the system (9.31 right now). Listed below is the install check script that I use in Munki:</p>
+
+{% highlight bash linenos %}
+#!/bin/bash
+# Check for the existance of Casper's MDM Profile
+# Joshua D. Miller May 29, 2014
+# Is the Casper MDM Enrollment Profile Installed?
+if /usr/bin/profiles -C -v | grep -q 'Your Profile ID Here'
+    then
+    # Is our Casper Version 9.31?
+    if /usr/sbin/jamf version | grep -q '9.31' then
+    then
+        exit 1
+    else
+        exit 0
+    fi
+else
+    exit 0
+fi
+{% endhighlight %}
+
+<p>This script has worked well for me so far as we are pulling the version of JAMF's binary as well as the Identifier of the Casper enrollment profile (Yours will be different). Now that we can check the install we want to run our script for pre-install which will remove any Profile Manager MDM profiles or local profiles. The script for this is listed below:</p>
+
+{% highlight python linenos %}
+#!/usr/bin/python
+# OS X Profile Manage Removal Script
+# Joshua D. Miller - josh@psu.edu
+# Last Updated: June 12, 2014
+# This script will remove Profile Manager Profiles to prepare
+# the system for enrollment in the Casper MDM solution
+# Import Modules
+import os
+import subprocess
+# Pull the output from /usr/bin/profiles -C and store it in a variable
+try:
+    output = subprocess.check_output(['/usr/bin/profiles', '-C'])
+except subprocess.CalledProcessError as e:
+    sys.exit('Listing of Profiles Failed.  Exiting.')</p>
+# Check the output for Profile Manager Profiles and then Remove them
+for line in output.splitlines():
+    (stuff, label, profile_identifier) = line.partition(' profileIdentifier: ')
+    if label and (profile_identifier.startswith('your old profile identifier')
+        or profile_identifier.startswith('your old profile identifier')):
+            print('Removing Profile: ' + profile_identifier)
+            try:
+                subprocess.check_call(['/usr/bin/profiles', '-R', '-p', profile_identifier])
+            except subprocess.CalledProcessError as e:
+                print('Removal of profile ' + profile_identifier + ' failed.')
+                continue
+            print('Removed Profile: ' + profile_identifier)
+{% endhighlight %}
+
+<p>This will take care of removing us from the other MDM which will allow the install of Casper's MDM.  The only thing left is a post install script which you may not need.  The reason our institution needs this script is due to the fact that we had 10.7 clients who had the Munki configuration manually sent to their machine in the <em style="font-weight:bold; font-style:normal">/private/var/root/Library/Preferences/</em> folder which is now no longer needed as Casper can push the configuration out to the clients.  Listed below is this post install script:</p>
+
+{% highlight python linenos %}
+#!/usr/bin/python
+# OS X ManagedInstalls /private/var/root/Library/Preferences Removal
+# Joshua D. Miller - josh@psu.edu
+# Last Updated: June 12, 2014
+# This script will remove the ManagedInstalls.plist file
+# that was placed on 10.7 systems when Profile Manager
+# could no longer accept 10.7 clients
+# Import Modules
+import os
+import subprocess
+# Remove ManagedInstalls.plist used on 10.7 Systems as it will now be pushed out
+# via a configuration profile by Casper in /Library/Managed Preferences/
+# Look for ManagedInstalls.plist possibly configured in /Library/Preferences
+MLP=os.path.exists('/Library/Preferences/ManagedInstalls.plist')
+# Look for ManagedInstalls.plsit possibly configured in /private/var/root/Library/Preferences/
+MPVRLP=os.path.exists('/private/var/root/Library/Preferences/ManagedInstalls.plist')
+# If ManagedInstalls.plist does exist remove it
+if MLP is True:
+    try:
+    	print('Removing /Library/Preferences/ManagedInstalls.plist')
+        os.remove('/Library/Preferences/ManagedInstalls.plist')
+        print('Removal Completed.')
+    except OSError, e:
+        print 'Removal of file failed.'
+# If ManagedInstalls.plist does exist remove it
+if MPVRLP is True:
+    try:
+    	print('Removing /private/var/root/Library/Preferences/ManagedInstalls.plist')
+        os.remove('/private/var/root/Library/Preferences/ManagedInstalls.plist')
+        print('Removal Completed.')
+    except OSError, e:
+        print 'Removal of file failed.'
+else:
+    print 'Removal not required as file has already been removed.'
+{% endhighlight %}
+
+<p>With these scripts I will be able to enroll all of our live devices into Casper's MDM with no interruption to the user and no need for them to stop by our office to be manually enrolled. If anyone has any suggestions on improvements please be sure to let me know. I hope this is useful to those who would like to use Munki with Casper's MDM service.</p>

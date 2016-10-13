@@ -1,0 +1,44 @@
+---
+layout: post
+title: Allowing Users to install Mendeley's Word Plugin
+date: 2014-04-16 13:01:50.000000000 -04:00
+type: post
+comments: true
+image: images/Mendeley.png
+published: true
+status: publish
+categories:
+- Configuration
+- Munki
+- Quick Fix
+tags:
+- Mendeley
+- OS X
+---
+<p>A lot of our faculty and staff use the Mendeley application which also has a Microsoft Word Plugin that can be installed with Mendeley. The issue however is that Mendeley's Word Plugin must write files to the following places:</p>
+
+<p>/Applications/Microsoft Office 2011/Office/Startup/Word/ - Mendeley.dot file<br />
+~/Library/Application Support/Microsoft/Office/Word Script Menu Items/ - Mendeley Apple Scripts (Accessible from the Menu)</p>
+
+<p>Since the plugin install installs files to each user's folder, it is not a good idea to automate the install via Munki by copying the Mendeley.dot file because even if the file is listed Mendeley will detect it as an older version and then prompt for admin credentials to install the new file. To remedy this issue when Mendeley is installed I grant write permissions for all users to the folder <em style="font-weight:bold; font-style:normal">/Applications/Microsoft Office 2011/Office/Startup/Word</em> to copy the <em style="font-weight:bold; font-style:normal">Mendely.dot</em> file.  This allows the users to install the Microsoft Word plugin for Mendeley without the need for administrative intervention.</p>
+
+<p>Listed below is the script I have created for Munki that will apply this permission upon install to fully automate the process. I have also created an uninstall script that will revert the permissions when Mendeley is no longer installed. As always, if you have any questions feel free to leave a comment or suggestion.</p>
+
+<p><em style="font-weight:bold; font-style:normal">Post Install Script</em></p>
+{% highlight bash linenos %}
+#!/bin/bash
+# Mircosoft Word 2011 Plugin for Mendeley
+# Last Updated April 10, 2014 - Joshua D. Miller
+# Set Permissions to allow the Mendeley Word Plugin to Install
+[ -e /Applications/Microsoft\ Office\ 2011/ ] && chmod o+w /Applications/Microsoft\ Office\ 2011/Office/Startup/Word
+{% endhighlight %}
+<p><em style="font-weight:bold; font-style:normal">Uninstall Script</em></p>
+{% highlight bash linenos %}
+#!/bin/bash
+# Uninstall Script for Word Plugin for Mendeley
+# Last Updated April 10, 2014 - Joshua D. Miller
+# Remove the Mendeley Template file
+[ -e /Applications/Microsoft\ Office\ 2011/Office/Word/Startup/Mendeley.dot ] && rm /Applications/Microsoft\ Office\ 2011/Office/Startup/Word/Mendeley.dot
+# Restore Permissions on the folder /Applications/Microsoft Office 2011/Office/Startup/Word/
+[ -e /Applications/Microsoft\ Office\ 2011/ ] && chmod o-w /Applications/Microsoft\ Office\ 2011/Office/Startup/Word
+{% endhighlight %}

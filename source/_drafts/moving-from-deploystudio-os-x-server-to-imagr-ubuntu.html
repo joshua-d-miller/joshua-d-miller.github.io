@@ -1,0 +1,28 @@
+---
+layout: post
+title: Moving from DeployStudio/OS X Server to Imagr/Ubuntu
+date: 
+type: post
+published: false
+status: draft
+categories:
+- Configuration
+- Deployment
+- Imaging
+tags:
+- Automation
+- BSDPy
+- Imagr
+- Linux
+- NetBoot
+meta: {}
+author:
+  login: joshuadmiller
+  email: josh.miller@outlook.com
+  display_name: Joshua D. Miller
+  first_name: ''
+  last_name: ''
+---
+<p>Over the past month I have been exploring using Graham Gilbert's Imagr with Pepijn Bruienne's BSDPy.  This solution would allow our college to remove one of our last dependancies on OS X Server which we all know would be a good thing.  These two open source projects really showcase the power of the MacAdmins community and what the community can accomplish.  Our experience so far has been very positive and the configuration was fairly easy to set up.  Check below for how we have setup our environment.<!--more--></p>
+<p>In order to begin this project we need to pick a home for our NetBoot server.  In our environment we are using Ubuntu Server as Ubuntu is the preferred Linux distribution for Docker which both these projects rely on although I'm sure you can forego Docker but why would you?  Now we will begin the setup:</p>
+<p>What you want to do first is install Docker on your Ubuntu Server which can be done by issuing these commands:</p>

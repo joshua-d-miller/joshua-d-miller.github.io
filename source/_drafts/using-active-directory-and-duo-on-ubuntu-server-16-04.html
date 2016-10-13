@@ -1,0 +1,22 @@
+---
+layout: post
+title: Using Active Directory and Duo on Ubuntu Server 16.04
+date: 
+type: post
+published: false
+status: draft
+categories:
+- Configuration
+- Ubuntu
+tags:
+- Duo
+meta: {}
+author:
+  login: joshuadmiller
+  email: josh.miller@outlook.com
+  display_name: Joshua D. Miller
+  first_name: ''
+  last_name: ''
+---
+<p>Over the last day or so I've been experimenting with Ubuntu Server 16.04. I'm planning on giving <a href="https://observium.org" target="_blank">Observium</a> a try as it is an open source networking monitoring solution and we are currently paying for <a href="https://www.paessler.com" target="_blank">PRTG Network Monitor</a>. It is my hope that Observium becomes a great solution and we will no longer need PRTG as we are primarily monitoring servers and some devices (Steelcase Room Wizards). As I spun up the server I found that configuring Active Directory and Duo was a bit of a challenge however I was able to get it working. Check below the jump for the configuration pieces I used.<!--more--></p>
+<p>First we need to install the necessary additional packages for Active Directory. This involves installing the following:</p>

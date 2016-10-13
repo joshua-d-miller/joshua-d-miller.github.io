@@ -1,0 +1,61 @@
+# Build settings
+permalink   : /blog/:year/:title/
+markdown    : kramdown
+highlighter : pygments
+gems:
+  - jekyll-paginate
+  - jekyll-gist
+  - jekyll-auto-image
+
+paginate: 5
+paginate_path: "/blog/page/:num/"
+comments: true
+
+collections:
+  attachments:
+    output: true
+
+source: source
+destination: _site
+sass:
+  sass_dir: _scss
+  style: compressed # expanded
+
+# SEO settings
+title: System Administrator Musings
+# description: "A free Jekyll theme for download"
+# keywords: "Jekyll, theme, free, download, SEO, blog, web"
+# url: http://nandomoreira.me
+# baseurl: "/end2end"
+# baseurl: ""
+
+# google_analytics: UA-52446115-1
+repo: http://github.com/joshua-d-miller/
+disqus_shortname: "joshuadmiller"
+disqus_site_shortname: "system-administrator-musings"
+
+# Author settings
+author:
+  name      : Joshua D. Miller
+  job       : Systems Administrator
+  # bio       : "Enthusiast performance, responsive design and usability, always looking for the best project and good coffee."
+  thumb     : /images/author.jpg
+  email     : josh.miller@outlook.com
+  # url       : http://nandomoreira.me
+  github    : http://github.com/joshua-d-miller
+  twitter   : http://twitter.com/joshuadmiller_
+  # facebook  : http://facebook.com/fernando.dev
+  linkedin  : http://linkedin.com/in/millerjoshuad
+
+# navbar pages
+navbar:
+  - slug: about
+    title: About
+  # - slug: resume
+  #   title: Resume
+  # - slug: skills
+  #   title: Skills
+  - slug: blog
+    title: Blog
+
+exclude: ["gulp", "node_modules", "bower", "bower_components", "config.rb", "src", "Gemfile", "Gemfile.lock", ".rvmrc", ".rbenv-version", "package.json", "gulpfile.js", "README.md", "Rakefile", "changelog.md"]
