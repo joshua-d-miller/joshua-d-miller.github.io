@@ -22,15 +22,13 @@
     word-wrap: inherit;
 
     code {
+      display:inline-block;
       white-space: pre;
       padding: 0 !important;
-
-      * {
-        white-space: nowrap; // this sets all children inside to nowrap
-      }
     }
   }
   .lineno {
+    width:15px;
     display:inline-block;
     border-right: solid 1px;
     padding: 0.25em 0.25em 0.25em 0em;
