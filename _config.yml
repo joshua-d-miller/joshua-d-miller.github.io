@@ -15,7 +15,6 @@ collections:
   attachments:
     output: true
 
-source: source
 destination: _site
 sass:
   sass_dir: _scss
