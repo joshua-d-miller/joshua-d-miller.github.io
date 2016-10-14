@@ -366,3 +366,29 @@ body.home {
     animation: octocat-wave 560ms ease-in-out;
   }
 }
+
+/* Format Search Results */
+
+#results-container {
+  list-style-type:none;
+  li:first-child {
+    border-top-style:solid;
+    border-color:#377BB5;
+    border-width:4.5px;
+  }
+  li:last-child {
+    border-bottom-style:solid;
+    border-width:4.5px;
+    border-color:#377BB5;
+  }
+  background-color:white;
+  border-left-style:solid;
+  border-right-style:solid;
+  border-color:#377BB5;
+  border-width:4.5px;
+  padding-left:0;
+  left:0em;
+  z-index:5;
+  width:100%;
+  position:absolute;
+}

@@ -28,7 +28,7 @@ title: System Administrator Musings
 # baseurl: "/end2end"
 # baseurl: ""
 
-# google_analytics: UA-52446115-1
+google_analytics: UA-85695157-1
 repo: http://github.com/joshua-d-miller/
 disqus_shortname: "joshuadmiller"
 disqus_site_shortname: "system-administrator-musings"

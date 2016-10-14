@@ -1,375 +1,244 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict'
-module.exports = {
-  load: load
-}
-
-function load(location,callback){
-  var xhr = getXHR()
-  xhr.open('GET', location, true)
-  xhr.onreadystatechange = createStateChangeListener(xhr, callback)
-  xhr.send()
-}
-
-function createStateChangeListener(xhr, callback){
-  return function(){
-    if ( xhr.readyState===4 && xhr.status===200 ){
-      try{
-        callback(null, JSON.parse(xhr.responseText) )
-      }catch(err){
-        callback(err, null)
-      }
+! function e(t, n, r) {
+    function s(o, u) {
+        if (!n[o]) {
+            if (!t[o]) {
+                var a = "function" == typeof require && require;
+                if (!u && a) return a(o, !0);
+                if (i) return i(o, !0);
+                throw new Error("Cannot find module '" + o + "'")
+            }
+            var f = n[o] = {
+                exports: {}
+            };
+            t[o][0].call(f.exports, function(e) {
+                var n = t[o][1][e];
+                return s(n ? n : e)
+            }, f, f.exports, e, t, n, r)
+        }
+        return n[o].exports
     }
-  }
-}
+    for (var i = "function" == typeof require && require, o = 0; o < r.length; o++) s(r[o]);
+    return s
+}({
+    1: [
+        function(require, module, exports) {
+            module.exports = function() {
+                function receivedResponse(xhr) {
+                    return 200 == xhr.status && 4 == xhr.readyState
+                }
 
-function getXHR(){
-  return (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP')
-}
+                function handleResponse(xhr, callback) {
+                    xhr.onreadystatechange = function() {
+                        if (receivedResponse(xhr)) try {
+                            callback(null, JSON.parse(xhr.responseText))
+                        } catch (err) {
+                            callback(err, null)
+                        }
+                    }
+                }
+                var self = this;
+                self.load = function(location, callback) {
+                    var xhr = window.XMLHttpRequest ? new XMLHttpRequest : new ActiveXObject("Microsoft.XMLHTTP");
+                    xhr.open("GET", location, !0), handleResponse(xhr, callback), xhr.send()
+                }
+            }
+        }, {}
+    ],
+    2: [
+        function(require, module, exports) {
+            function FuzzySearchStrategy() {
+                function createFuzzyRegExpFromString(string) {
+                    return new RegExp(string.split("").join(".*?"), "gi")
+                }
+                var self = this;
+                self.matches = function(string, crit) {
+                    return "string" != typeof string ? !1 : (string = string.trim(), !! string.match(createFuzzyRegExpFromString(crit)))
+                }
+            }
+            module.exports = new FuzzySearchStrategy
+        }, {}
+    ],
+    3: [
+        function(require, module, exports) {
+            function LiteralSearchStrategy() {
+                function doMatch(string, crit) {
+                    return string.toLowerCase().indexOf(crit.toLowerCase()) >= 0
+                }
+                var self = this;
+                self.matches = function(string, crit) {
+                    return "string" != typeof string ? !1 : (string = string.trim(), doMatch(string, crit))
+                }
+            }
+            module.exports = new LiteralSearchStrategy
+        }, {}
+    ],
+    4: [
+        function(require, module, exports) {
+            module.exports = function() {
+                function findMatches(store, crit, strategy) {
+                    for (var data = store.get(), i = 0; i < data.length && matches.length < limit; i++) findMatchesInObject(data[i], crit, strategy);
+                    return matches
+                }
 
-},{}],2:[function(require,module,exports){
-'use strict'
-module.exports = function OptionsValidator(params){
-  if( !validateParams(params) ){
-    throw new Error('-- OptionsValidator: required options missing')
-  }
-  if( !(this instanceof OptionsValidator) ){
-    return new OptionsValidator(params)
-  }
+                function findMatchesInObject(obj, crit, strategy) {
+                    for (var key in obj)
+                        if (strategy.matches(obj[key], crit)) {
+                            matches.push(obj);
+                            break
+                        }
+                }
 
-  var requiredOptions = params.required
+                function getSearchStrategy() {
+                    return fuzzy ? fuzzySearchStrategy : literalSearchStrategy
+                }
+                var self = this,
+                    matches = [],
+                    fuzzy = !1,
+                    limit = 10,
+                    fuzzySearchStrategy = require("./SearchStrategies/fuzzy"),
+                    literalSearchStrategy = require("./SearchStrategies/literal");
+                self.setFuzzy = function(_fuzzy) {
+                    fuzzy = !! _fuzzy
+                }, self.setLimit = function(_limit) {
+                    limit = parseInt(_limit, 10) || limit
+                }, self.search = function(data, crit) {
+                    return crit ? (matches.length = 0, findMatches(data, crit, getSearchStrategy())) : []
+                }
+            }
+        }, {
+            "./SearchStrategies/fuzzy": 2,
+            "./SearchStrategies/literal": 3
+        }
+    ],
+    5: [
+        function(require, module, exports) {
+            module.exports = function(_store) {
+                function isObject(obj) {
+                    return !!obj && "[object Object]" == Object.prototype.toString.call(obj)
+                }
 
-  this.getRequiredOptions = function(){
-    return requiredOptions
-  }
+                function isArray(obj) {
+                    return !!obj && "[object Array]" == Object.prototype.toString.call(obj)
+                }
 
-  this.validate = function(parameters){
-    var errors = []
-    requiredOptions.forEach(function(requiredOptionName){
-      if( parameters[requiredOptionName] === undefined ){
-        errors.push(requiredOptionName)
-      }
-    })
-    return errors
-  }
+                function addObject(data) {
+                    return store.push(data), data
+                }
 
-  function validateParams(params){
-    if( !params ) {
-      return false
-    }
-    return params.required !== undefined && params.required instanceof Array
-  }
-}
-},{}],3:[function(require,module,exports){
-'use strict'
-module.exports = {
-  put:put,
-  clear: clear,
-  get: get,
-  search: search,
-  setOptions: setOptions
-}
+                function addArray(data) {
+                    for (var added = [], i = 0; i < data.length; i++) isObject(data[i]) && added.push(addObject(data[i]));
+                    return added
+                }
+                var self = this,
+                    store = [];
+                isArray(_store) && addArray(_store), self.clear = function() {
+                    return store.length = 0, store
+                }, self.get = function() {
+                    return store
+                }, self.put = function(data) {
+                    return isObject(data) ? addObject(data) : isArray(data) ? addArray(data) : void 0
+                }
+            }
+        }, {}
+    ],
+    6: [
+        function(require, module, exports) {
+            module.exports = function() {
+                var self = this,
+                    templatePattern = /\{(.*?)\}/g;
+                self.setTemplatePattern = function(newTemplatePattern) {
+                    templatePattern = newTemplatePattern
+                }, self.render = function(t, data) {
+                    return t.replace(templatePattern, function(match, prop) {
+                        return data[prop] || match
+                    })
+                }
+            }
+        }, {}
+    ],
+    7: [
+        function(require, module, exports) {
+            ! function(window, document, undefined) {
+                "use strict";
 
-var FuzzySearchStrategy = require('./SearchStrategies/FuzzySearchStrategy')
-var LiteralSearchStrategy = require('./SearchStrategies/LiteralSearchStrategy')
+                function initWithJSON(json) {
+                    store.put(opt.json), registerInput()
+                }
 
-var data = []
-var opt = {}
-opt.fuzzy = false
-opt.limit = 10
-opt.searchStrategy = opt.fuzzy ? FuzzySearchStrategy : LiteralSearchStrategy
+                function initWithURL(url) {
+                    jsonLoader.load(url, function(err, json) {
+                        err ? throwError("failed to get JSON (" + url + ")") : (store.put(json), registerInput())
+                    })
+                }
 
+                function throwError(message) {
+                    throw new Error("SimpleJekyllSearch --- " + message)
+                }
 
-function put(data){
-  if( isObject(data) ){
-    return addObject(data)
-  }
-  if( isArray(data) ){
-    return addArray(data)
-  }
-  return undefined
-}
-function clear(){
-  data.length = 0
-  return data
-}
+                function validateOptions(_opt) {
+                    for (var i = 0; i < requiredOptions.length; i++) {
+                        var req = requiredOptions[i];
+                        _opt[req] || throwError("You must specify a " + req)
+                    }
+                }
 
-function get(){
-  return data
-}
+                function assignOptions(_opt) {
+                    for (var option in opt) opt[option] = _opt[option] || opt[option]
+                }
 
+                function isJSON(json) {
+                    try {
+                        return json instanceof Object && JSON.parse(JSON.stringify(json))
+                    } catch (e) {
+                        return !1
+                    }
+                }
 
-function isObject(obj){ return !!obj && Object.prototype.toString.call(obj) === '[object Object]' }
-function isArray(obj){ return !!obj && Object.prototype.toString.call(obj) === '[object Array]' }
+                function emptyResultsContainer() {
+                    opt.resultsContainer.innerHTML = ""
+                }
 
-function addObject(_data){
-  data.push(_data)
-  return data
-}
+                function appendToResultsContainer(text) {
+                    opt.resultsContainer.innerHTML += text
+                }
 
-function addArray(_data){
-  var added = []
-  for (var i = 0; i < _data.length; i++){
-    if( isObject(_data[i]) ){
-      added.push(addObject(_data[i]))
-    }
-  }
-  return added
-}
+                function registerInput() {
+                    opt.searchInput.addEventListener("keyup", function(e) {
+                        return 0 == e.target.value.length ? void emptyResultsContainer() : void render(searcher.search(store, e.target.value))
+                    })
+                }
 
-
-
-function search(crit){
-  if( !crit ){
-    return []
-  }
-  return findMatches(data,crit,opt.searchStrategy,opt)
-}
-
-function setOptions(_opt){
-  opt = _opt || {}
-
-  opt.fuzzy = _opt.fuzzy || false
-  opt.limit = _opt.limit || 10
-  opt.searchStrategy = _opt.fuzzy ? FuzzySearchStrategy : LiteralSearchStrategy
-}
-
-function findMatches(data,crit,strategy,opt){
-  var matches = []
-  for(var i = 0; i < data.length && matches.length < opt.limit; i++) {
-    var match = findMatchesInObject(data[i],crit,strategy,opt)
-    if( match ){
-      matches.push(match)
-    }
-  }
-  return matches
-}
-
-function findMatchesInObject(obj,crit,strategy,opt){
-  for(var key in obj) {
-    if( !isExcluded(obj[key], opt.exclude) && strategy.matches(obj[key], crit) ){
-      return obj
-    }
-  }
-}
-
-function isExcluded(term, excludedTerms){
-  var excluded = false
-  excludedTerms = excludedTerms || []
-  for (var i = 0; i<excludedTerms.length; i++) {
-    var excludedTerm = excludedTerms[i]
-    if( !excluded && new RegExp(term).test(excludedTerm) ){
-      excluded = true
-    }
-  }
-  return excluded
-}
-
-},{"./SearchStrategies/FuzzySearchStrategy":4,"./SearchStrategies/LiteralSearchStrategy":5}],4:[function(require,module,exports){
-'use strict'
-module.exports = new FuzzySearchStrategy()
-
-function FuzzySearchStrategy(){
-  this.matches = function(string, crit){
-    if( typeof string !== 'string' || typeof crit !== 'string' ){
-      return false
-    }
-    var fuzzy = fuzzyFrom(crit)
-    return !!fuzzy.test(string)
-  }
-
-  function fuzzyFrom(string){
-    var fuzzy = string
-              .trim()
-              .split('')
-              .join('.*?')
-              .replace('??','?')
-    return new RegExp( fuzzy, 'gi')
-  }
-}
-
-},{}],5:[function(require,module,exports){
-'use strict'
-module.exports = new LiteralSearchStrategy()
-
-function LiteralSearchStrategy(){
-  this.matches = function(string,crit){
-    if( typeof string !== 'string' ){
-      return false
-    }
-    string = string.trim()
-    return string.toLowerCase().indexOf(crit.toLowerCase()) >= 0
-  }
-}
-
-},{}],6:[function(require,module,exports){
-'use strict'
-module.exports = {
-  compile: compile,
-  setOptions: setOptions
-}
-
-var options = {}
-options.pattern = /\{(.*?)\}/g
-options.template = ''
-options.middleware = function(){}
-
-function setOptions(_options){
-  options.pattern = _options.pattern || options.pattern
-  options.template = _options.template || options.template
-  if( typeof _options.middleware === 'function' ){
-    options.middleware = _options.middleware
-  }
-}
-
-function compile(data){
-  return options.template.replace(options.pattern, function(match, prop) {
-    var value = options.middleware(prop, data[prop], options.template)
-    if( value !== undefined ){
-      return value
-    }
-    return data[prop] || match
-  })
-}
-
-},{}],7:[function(require,module,exports){
-;(function(window, document, undefined){
-  'use strict'
-
-  var options = {
-    searchInput: null,
-    resultsContainer: null,
-    json: [],
-    searchResultTemplate: '<li><a href="{url}" title="{desc}">{title}</a></li>',
-    templateMiddleware: function(){},
-    noResultsText: 'No results found',
-    limit: 10,
-    fuzzy: false,
-    exclude: []
-  }
-
-  var requiredOptions = ['searchInput','resultsContainer','json']
-
-  var templater = require('./Templater')
-  var repository = require('./Repository')
-  var jsonLoader = require('./JSONLoader')
-  var optionsValidator = require('./OptionsValidator')({
-    required: requiredOptions
-  })
-  var utils = require('./utils')
-
-  /*
-    Public API
-  */
-  window.SimpleJekyllSearch = function SimpleJekyllSearch(_options){
-    var errors = optionsValidator.validate(_options)
-    if( errors.length > 0 ){
-      throwError('You must specify the following required options: ' + requiredOptions)
-    }
-
-    options = utils.merge(options, _options)
-
-    templater.setOptions({
-      template: options.searchResultTemplate,
-      middleware: options.templateMiddleware,
-    })
-
-    repository.setOptions({
-      fuzzy: options.fuzzy,
-      limit: options.limit,
-    })
-
-    if( utils.isJSON(options.json) ){
-      initWithJSON(options.json)
-    }else{
-      initWithURL(options.json)
-    }
-  }
-
-  // for backwards compatibility
-  window.SimpleJekyllSearch.init = window.SimpleJekyllSearch
-
-
-  function initWithJSON(json){
-    repository.put(json)
-    registerInput()
-  }
-
-  function initWithURL(url){
-    jsonLoader.load(url, function(err,json){
-      if( err ){
-        throwError('failed to get JSON (' + url + ')')
-      }
-      initWithJSON(json)
-    })
-  }
-
-  function emptyResultsContainer(){
-    options.resultsContainer.innerHTML = ''
-  }
-
-  function appendToResultsContainer(text){
-    options.resultsContainer.innerHTML += text
-  }
-
-  function registerInput(){
-    options.searchInput.addEventListener('keyup', function(e){
-      var key = e.which
-      var query = e.target.value
-      if( isWhitelistedKey(key) && isValidQuery(query) ) {
-        emptyResultsContainer();
-        render( repository.search(query) );
-      }
-    })
-  }
-
-  function render(results) {
-    if( results.length === 0 ){
-      return appendToResultsContainer(options.noResultsText)
-    }
-    for (var i = 0; i < results.length; i++) {
-      appendToResultsContainer( templater.compile(results[i]) )
-    }
-  }
-
-  function isValidQuery(query) {
-    return query && query.length > 0
-  }
-
-  function isWhitelistedKey(key) {
-    return [13,16,20,37,38,39,40,91].indexOf(key) === -1
-  }
-
-  function throwError(message){ throw new Error('SimpleJekyllSearch --- '+ message) }
-})(window, document);
-
-},{"./JSONLoader":1,"./OptionsValidator":2,"./Repository":3,"./Templater":6,"./utils":8}],8:[function(require,module,exports){
-'use strict'
-module.exports = {
-  merge: merge,
-  isJSON: isJSON,
-}
-
-function merge(defaultParams, mergeParams){
-  var mergedOptions = {}
-  for(var option in defaultParams){
-    mergedOptions[option] = defaultParams[option]
-    if( mergeParams[option] !== undefined ){
-      mergedOptions[option] = mergeParams[option]
-    }
-  }
-  return mergedOptions
-}
-
-function isJSON(json){
-  try{
-    if( json instanceof Object && JSON.parse(JSON.stringify(json)) ){
-      return true
-    }
-    return false
-  }catch(e){
-    return false
-  }
-}
-
-},{}]},{},[7])
+                function render(results) {
+                    if (emptyResultsContainer(), 0 == results.length) return appendToResultsContainer(opt.noResultsText);
+                    for (var i = 0; i < results.length; i++) appendToResultsContainer(templater.render(opt.searchResultTemplate, results[i]))
+                }
+                var Searcher = require("./Searcher"),
+                    Templater = require("./Templater"),
+                    Store = require("./Store"),
+                    JSONLoader = require("./JSONLoader"),
+                    searcher = new Searcher,
+                    templater = new Templater,
+                    store = new Store,
+                    jsonLoader = new JSONLoader,
+                    requiredOptions = ["searchInput", "resultsContainer", "json"],
+                    opt = {
+                        searchInput: null,
+                        resultsContainer: null,
+                        json: [],
+                        searchResultTemplate: '<img src="{image}"></img><li><a href="{url}" title="{desc}">{title}</a></li>',
+                        noResultsText: "No results found",
+                        limit: 10,
+                        fuzzy: !1
+                    };
+                window.SimpleJekyllSearch = function(_opt) {
+                    validateOptions(_opt), assignOptions(_opt), isJSON(opt.json) ? initWithJSON(opt.json) : initWithURL(opt.json)
+                }
+            }(window, document)
+        }, {
+            "./JSONLoader": 1,
+            "./Searcher": 4,
+            "./Store": 5,
+            "./Templater": 6
+        }
+    ]
+}, {}, [7]);
