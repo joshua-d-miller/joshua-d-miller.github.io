@@ -14,10 +14,9 @@
           <li><a href="{{ '/' | prepend: site.baseurl }}{{ item.slug }}" title="{{ item.title }}">{{ item.title }}</a></li>
         {% endfor %}
         <li><a href="{{ "/feed.xml" | prepend: site.baseurl }}" target="_blank"><i class="icon icon-feed"></i></a></li>
-        <li><!-- Html Elements for Search -->
+        <li>
           <div id="search-container">
-            <input type="text" id="search-input" placeholder="search...">
-            <ul id="results-container"></ul>
+            <input type="text" id="search-input" placeholder="search..."><ul style="background-color:white; z-index:5; left:24.5em; right:24.25em; position:absolute;" id="results-container"></ul>
           </div>
         </li>
       </ul>
