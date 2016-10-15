@@ -377,6 +377,11 @@ body.home {
   right:0;
 }
 
+/* Fix mobile navbar */
+#navbar sliding-panel-content {
+  list-style-type:none;
+}
+
 /* Format Search Results */
 
 #results-container {
