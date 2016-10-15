@@ -367,28 +367,54 @@ body.home {
   }
 }
 
+/* Python on Front Page */
+
+.hero-program {
+  text-align:left;
+  width:50%;
+  margin:0 auto;
+  left:0;
+  right:0;
+}
+
 /* Format Search Results */
 
 #results-container {
+  text-align:center;
   list-style-type:none;
-  li:first-child {
-    border-top-style:solid;
-    border-color:#377BB5;
-    border-width:4.5px;
-  }
-  li:last-child {
-    border-bottom-style:solid;
-    border-width:4.5px;
-    border-color:#377BB5;
-  }
   background-color:white;
-  border-left-style:solid;
-  border-right-style:solid;
-  border-color:#377BB5;
-  border-width:4.5px;
-  padding-left:0;
-  left:0em;
+  left:0;
+  right:0;
+  margin:0 auto;
+  width:50%;
   z-index:5;
-  width:100%;
-  position:absolute;
+  position:fixed;
+  li {
+    font-weight:bold;
+    font-variant:small-caps;
+    font-size:1.15em;
+    a:hover {
+      color:#377BB5
+    }
+  }
+}
+
+/* New Share Buttons at bottom of posts */
+
+ul.share-buttons{
+  list-style: none;
+  padding: 0;
+  padding-bottom:1.0em;
+  li {
+    padding-right:1.0em;
+    display: inline-block;
+    a {
+      color:$medium-gray-color;
+      &:hover,
+      &:active,
+      &:focus {
+        color:$primary-color;
+      }
+    }
+  }
 }

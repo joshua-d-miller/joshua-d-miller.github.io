@@ -4,12 +4,15 @@ layout: home
 
 <section class="hero">
 
-  <div style="align-content:left" class="hero-inner container">
+  <div class="hero-inner container">
 
     <img src="{{ site.author.thumb | prepend: site.baseurl }}" alt="author thumb" class="dot">
-    {% highlight python %}#!/usr/bin/python
+    <div class="hero-program">
+    {% highlight python linenos %}
+    #!/usr/bin/python
     print('Hello World!')
     print('Welcome to SysAdminMusings'){% endhighlight %}
+    </div>
     <h3>I'm <strong itemprop="name">{{ site.author.name }}</strong>, a <em itemprop="jobTitle">{{ site.author.job }}</em> that proudly works for The Pennsylvania State University.</h3>
     <h3>{{ site.author.bio }}</h3>
 

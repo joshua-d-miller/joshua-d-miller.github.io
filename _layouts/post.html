@@ -8,18 +8,19 @@ layout: default
     <header class="post-header">
       {% if page.image %}
         <div style="display:flex; justify-content:center; align-items:center;" class="header-with-image">
-        <img style="width:150px; height:150px" src="/{{ page.image }}">
-        <h1 class="post-title">{{ page.title }}</h1>
+        <img style="width:150px; height:150px padding-right:0.5em" src="/{{ page.image }}">
+        <h1 style="padding-left:0.5em" class="post-title">{{ page.title }}</h1>
         </div>
       {% else %}
         <h1 style="display:flex; justify-content:center; align-items:center" class="post-title">{{ page.title }}</h1>
       {% endif %}
-      <p style="display:flex; justify-content:center; align-items:center" class="post-meta">{{ page.date | date: "%b %-d, %Y" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
+      <p style="display:flex; justify-content:center; align-items:center" class="post-meta">{{ page.date | date: "%b %-d, %Y - %r" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
     </header>
 
     <div class="post-content">
       {{ content }}
     </div>
+    {% include share.html %}
 
     {% include comments.html %}
   </div>

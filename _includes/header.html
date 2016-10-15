@@ -16,7 +16,7 @@
         <li><a href="{{ "/feed.xml" | prepend: site.baseurl }}" target="_blank"><i class="icon icon-feed"></i></a></li>
         <li>
           <div id="search-container">
-            <input type="text" id="search-input" placeholder="search..."><ul id="results-container"></ul>
+            <input type="text" id="search-input" placeholder="search..."><div class="search-wrapper"><ul id="results-container"></ul>
           </div>
         </li>
       </ul>
@@ -30,7 +30,7 @@
       searchInput: document.getElementById('search-input'),
       resultsContainer: document.getElementById('results-container'),
       json: '{{ site.baseurl }}/search.json',
-      searchResultTemplate: '<li style="display:block;"><a href="{url}" title="{desc}">{title}</a></li>',
+      searchResultTemplate: '<li style="display:block;"><a href="{url}" title="{title}">{title}</a></li>',
       noResultsText: 'No results found',
       limit: 10,
       fuzzy: true,
