@@ -445,3 +445,15 @@ ul.share-buttons{
     }
   }
 }
+
+/* About Me Picture Rounded Corners */
+
+#Photo {
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
+  justify-content:center;
+  border-width:5px;
+  border-color:white;
+  border-radius:25px;
+}

@@ -4,9 +4,7 @@ title: About Me
 permalink: /about/
 ---
 
-<p><div style="display:flex; justify-content:center" class="Photo">
-<img src="{{ site.baseurl }}/images/author.jpg">
-</div></p>
+<img id="Photo" src="{{ site.baseurl }}/images/author.jpg">
 
 I am currently a Systems Administrator for the College of Education at The Pennsylvania State University. I currently support 450+ macOS devices, 150+ iOS devices and a few Linux Servers. I am also backup to our Windows Systems Administrator.
 
