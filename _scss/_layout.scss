@@ -142,6 +142,11 @@ body {
   }
 
   a {
+    &:hover,
+    &:focus,
+    &:active {
+      color:$primary-color;
+    }
     padding: 5px 15px;
 
     @include media($tablet) {
@@ -150,9 +155,20 @@ body {
   }
 
   @include media($mobile) {
+    ul {
+      padding-left: 0 !important;
+      width:90%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+    }
     li, a {
       display: block;
       text-align: center;
+    }
+
+    #search-box-containter {
+      padding-top:0.6em;
     }
 
     li {
@@ -161,6 +177,7 @@ body {
 
     a {
       padding: 15px 0;
+      padding-left: 0 !important;
     }
   }
 }
@@ -173,6 +190,11 @@ body {
     border: 2px solid $primary-color;
     color: $primary-color;
     margin-bottom: 2px;
+  }
+  /* Added to give buttons a nice look */
+  &.btn-ghost:hover {
+    background-color: $primary-color;
+    color: white;
   }
 
   &.disabled,
@@ -370,16 +392,16 @@ body.home {
 /* Python on Front Page */
 
 .hero-program {
-  text-align:left;
-  width:50%;
+  text-align:center;
+  width:80%;
   margin:0 auto;
   left:0;
   right:0;
 }
 
-/* Fix mobile navbar */
-#navbar sliding-panel-content {
-  list-style-type:none;
+.sliding-panel-button {
+  position:absolute;
+  right: 0px;
 }
 
 /* Format Search Results */
