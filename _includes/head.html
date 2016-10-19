@@ -3,6 +3,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Facebook Metadata for sharing -->
+    <meta property="og:url"        content="{{ site.baseurl }}{{ page.url }}"/>
+    <meta property="og:type"       content="article" />
+    <meta property="og:title"     content="{{ page.title }}" />
+    <meta property="og:description" content="{{ post.content | strip_html | truncatewords: 50 }}" />
+    <meta property="og:image"      content="{{ site.baseurl }}/{{ page.image }}" />
     <meta property="url"           content="{{ site.baseurl }}{{ page.url }}" />
     <meta property="type"          content="article" />
     <meta property="image"         content="/{{ page.image }}" />

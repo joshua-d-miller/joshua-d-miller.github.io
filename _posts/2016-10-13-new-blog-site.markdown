@@ -1,7 +1,7 @@
 ---
 title: New Blog Site
 layout: post
-date: 2016-10-13 16:55:51
+date: 2016-10-13 16:55:51 -04:00
 type: post
 published: true
 comments: true
