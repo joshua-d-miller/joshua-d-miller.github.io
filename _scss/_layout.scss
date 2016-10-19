@@ -496,6 +496,9 @@ ul.share-buttons{
   .post-image {
     display: none;
   }
+  .post-content {
+    max-width: 400px;
+  }
 }
 
 /* Fixes Just for Firefox */
