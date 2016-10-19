@@ -463,6 +463,8 @@ ul.share-buttons{
   border-radius:25px;
 }
 
+/* Add Post Image to list of Posts */
+
 .post {
   display:table;
 }
@@ -470,8 +472,16 @@ ul.share-buttons{
   width:150px;
   height:150px;
   display:table-cell;
-  position:relative;
   text-align:center;
   vertical-align:middle;
   padding-right:1.0em;
+}
+
+/* Fix Post Images Just for Firefox */
+
+@-moz-document url-prefix() {
+  .post-image {
+    max-width:150px;
+    max-height:150px;
+  }
 }
