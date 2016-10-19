@@ -1,6 +1,6 @@
 <article class="post">
   {% if post.image %}
-  <div class = "intro-with-image">
+  <div class = "post-image">
     <img src="/{{ post.image }}">
   </div>
   <div>
@@ -15,7 +15,6 @@
       <time>{{ post.date | date: "%b %-d, %Y - %r" }}</time>
     </div>
   </header>
-
-    <p><a href="{{ post.url | prepend: site.baseurl }}" title="Permalink to: {{ post.title }}" class="read-more">{{ post.content | strip_html | truncatewords: 50 }}</a></p>
+  <p><a href="{{ post.url | prepend: site.baseurl }}" title="Permalink to: {{ post.title }}" class="read-more">{{ post.content | strip_html | truncatewords: 50 }}</a></p>
   </div>
 </article>

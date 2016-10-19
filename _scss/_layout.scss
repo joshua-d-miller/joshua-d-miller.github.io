@@ -457,3 +457,14 @@ ul.share-buttons{
   border-color:white;
   border-radius:25px;
 }
+
+.post {
+  display:table;
+}
+.post-image {
+  width:150px;
+  height:150px;
+  display:table-cell;
+  position:relative;
+  text-align:center;
+}
