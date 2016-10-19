@@ -62,10 +62,15 @@ body {
 
   a {
     color: $medium-gray-color;
+    -webkit-transition: font-size 200ms ease-in-out;
+    -moz-transition: font-size 200ms ease-in-out;
+    -o-transition: font-size, 200ms ease-in-out;
+    transition: font-size, 200ms ease-in-out;
 
     &:hover,
     &:focus,
     &:active {
+      font-size:115%;
       color: $dark-gray-color;
     }
   }
