@@ -457,3 +457,20 @@ ul.share-buttons{
   border-color:white;
   border-radius:25px;
 }
+
+/* Image in Posts on main Paginator */
+.intro-with-image {
+  left:0;
+  right:0;
+  margin:0 auto;
+  img {
+    vertical-align:middle;
+    float:left;
+    width:150px;
+    height:150px;
+    padding-right:0.5em;
+  }
+}
+.read-more-image {
+  display:flex;
+}
