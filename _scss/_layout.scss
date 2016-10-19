@@ -172,8 +172,8 @@ body {
       text-align: center;
     }
 
-    #search-box-containter {
-      padding-top:0.6em;
+    #search-input {
+      width:100%;
     }
 
     li {
@@ -411,6 +411,9 @@ body.home {
 
 /* Format Search Results */
 
+#search-container {
+}
+
 #results-container {
   text-align:center;
   list-style-type:none;
@@ -465,6 +468,7 @@ ul.share-buttons{
 
 /* Add Post Image to list of Posts */
 
+
 .post {
   display:table;
 }
@@ -477,9 +481,33 @@ ul.share-buttons{
   padding-right:1.0em;
 }
 
-/* Fix Post Images Just for Firefox */
+/* Navigation Items all one One Line */
+
+#navigation-items {
+  display:inline;
+}
+#search-input {
+  display:inline;
+  width:49%;
+}
+
+/* Remove Post image on phones */
+@media (max-width: 480px) {
+  .post-image {
+    display: none;
+  }
+}
+
+/* Fixes Just for Firefox */
 
 @-moz-document url-prefix() {
+
+#results-container {
+  li {
+    padding-bottom:0.25em;
+    font-size:95%;
+    }
+  }
   .post-image {
     max-width:150px;
     max-height:150px;
