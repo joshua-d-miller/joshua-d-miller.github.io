@@ -499,26 +499,38 @@ ul.share-buttons{
   .post-content {
     max-width: 400px;
   }
+  .munki-p-image {
+    display: none !important;
+  }
+  .laps-image {
+    display: none !important;
+  }
 }
 
 /* Projects CSS */
-.projects-munki-promote {
-  padding: 0.5em 0.5em 0.5em 0.5em;
-}
-.munki-p-image {
-  width:150px;
-  height:150px;
-  display:flex;
-  float:left;
-}
-.projects-laps {
-  padding: 0.5em 0.5em 0.5em 0.5em;
+
+.projects-content {
+  display:table;
 }
 .laps-image {
-  width:200px;
-  height:200px;
-  display:flex;
-  float:left;
+  width:35%;
+  display:table-cell;
+  vertical-align:middle;
+  padding-right: 2.5em;
+}
+.laps-desc {
+  display:table-cell;
+  vertial-align:middle;
+}
+.munki-p-image {
+  width:35%;
+  display:table-cell;
+  vertical-align:middle;
+  padding-right: 2.5em;
+}
+.munki-p-desc {
+  display:table-cell;
+  vertical-align:middle;
 }
 
 /* Fixes Just for Firefox */
