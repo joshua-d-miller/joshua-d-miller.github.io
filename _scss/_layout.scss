@@ -537,6 +537,15 @@ ul.share-buttons{
 
 @-moz-document url-prefix() {
 
+.laps-image {
+  max-width:215px;
+  max-height:169px;
+}
+.munki-p-image {
+  max-width:215px;
+  max-height:215px;
+}
+
 #results-container {
   li {
     padding-bottom:0.25em;
