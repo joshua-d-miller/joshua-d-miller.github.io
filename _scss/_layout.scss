@@ -488,7 +488,7 @@ ul.share-buttons{
 }
 #search-input {
   display:inline;
-  width:49%;
+  width:40%;
 }
 
 /* Remove Post image on phones */
@@ -499,6 +499,26 @@ ul.share-buttons{
   .post-content {
     max-width: 400px;
   }
+}
+
+/* Projects CSS */
+.projects-munki-promote {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+.munki-p-image {
+  width:150px;
+  height:150px;
+  display:flex;
+  float:left;
+}
+.projects-laps {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+.laps-image {
+  width:200px;
+  height:200px;
+  display:flex;
+  float:left;
 }
 
 /* Fixes Just for Firefox */
