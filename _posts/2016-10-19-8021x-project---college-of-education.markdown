@@ -66,7 +66,7 @@ With the RADIUS server and the switch configured we will now add the Group Polic
         - Network Profile
             - Security Settings
                 - Enable use of IEEE 802.1x authentication for network access: Enabled
-                - Enforce use of IEEE 802.1x authentication forn network access: Disabled
+                - Enforce use of IEEE 802.1x authentication from network access: Disabled
             - IEEE 802.1X Settings
                 - Computer Authentication: Computer Only
                 - EAPOL Start Message: Transmit per IEEE 802.1X
@@ -78,19 +78,19 @@ With the RADIUS server and the switch configured we will now add the Group Polic
             - Network Authentication Method Properties
                 - Authentication Method: Smart card or certificate
                 - Validate server certificate: Enabled
-                    - NOTE: Make sure you selct your CA Cert in the list
+                    - NOTE: Make sure you select your CA Cert in the list
                 - Use a certificate on this computer: Enabled
                 - Use simple certificate selection: Enabled
                 - Use a different username for the connection: Disabled
         - Public Key Policies/Certificate Services Client - Auth-Enrollment Settings
             - Automatic certificate management: Enabled
             - Enroll new certificates, renew expired certificates, process pending certificate requests and remove revoked certificates: Enabled
-            - Update and manage certficates that use certificate templates from Active Directory<br/><br/>
+            - Update and manage certificates that use certificate templates from Active Directory<br/><br/>
 
 With this policy and an AD CA template for computers you should now be able to receive the settings needed to connect to your 802.1x switch using a Windows 7, 8 or 10 client.
 
 **Step 3b Configure MDM Profile for macOS devices**<br/>
-We currently use jamf to serve MDM profiles to our macOS devices. One issue I have found with building this profile in jamf however is that it treats the profile as a user profile when attempting to connect so the user is prompted to select the computer certificate. If I sign the profile using a developer certificate and then upload to jamf so it can't modify it, then this does not occur. I would suggest that you do the same. Here is a sample **mobileconfig** file that you can taylor to your organization and upload to your MDM:
+We currently use jamf to serve MDM profiles to our macOS devices. One issue I have found with building this profile in jamf however is that it treats the profile as a user profile when attempting to connect so the user is prompted to select the computer certificate. If I sign the profile using a developer certificate and then upload to jamf so it can't modify it, then this does not occur. I would suggest that you do the same. Here is a sample **mobileconfig** file that you can tailor to your organization and upload to your MDM:
 
 {% highlight xml linenos %}
 <?xml version="1.0" encoding="UTF-8"?>
@@ -221,10 +221,10 @@ We currently use jamf to serve MDM profiles to our macOS devices. One issue I ha
 </plist>
 {% endhighlight %}
 
-As you can see, I made a few changes. First, I changed the **PayloadDisplayName** so that instead of it saying **Ethernet** in the list of 802.1x security profiles it actually will say where it is used. Secondly, you will also see that I created an special template called **Mac Client/Sever Auth** so that macOS devices could authenticate. You can see more details on that [here](https://www.afp548.com/2012/11/20/802-1x-eaptls-machine-auth-mtlion-adcerts/ "802.1x EAP-TLS Machine Authentication in Mt. Lion with AD Certificates"). Finally, we have both our Mac and Windows clients configured to connect to our RADIUS server and authenticate to the network. To sign the configuration profile you can use [Nick McSpadden's Profile Signer](https://github.com/nmcspadden/ProfileSigner "Profile Signer"). Of coure you will need a developer certificate in order to do so.
+As you can see, I made a few changes. First, I changed the **PayloadDisplayName** so that instead of it saying **Ethernet** in the list of 802.1x security profiles it actually will say where it is used. Secondly, you will also see that I created an special template called **Mac Client/Sever Auth** so that macOS devices could authenticate. You can see more details on that [here](https://www.afp548.com/2012/11/20/802-1x-eaptls-machine-auth-mtlion-adcerts/ "802.1x EAP-TLS Machine Authentication in Mt. Lion with AD Certificates"). Finally, we have both our Mac and Windows clients configured to connect to our RADIUS server and authenticate to the network. To sign the configuration profile you can use [Nick McSpadden's Profile Signer](https://github.com/nmcspadden/ProfileSigner "Profile Signer"). Of course you will need a developer certificate in order to do so.
 
 **Final Thoughts**<br/>
-So far testing has been very successful and one of our four buildings is currently online. Since going through the test we have discovered a few interesting pieces that we still need to figure out. For instance, most printers that are network do not support 802.1x so we were thinking of creating a private VLAN that our networked clients can access but does not have access to the internet for the printers that will have 802.1x disabled. We have also thought about using **MAC Authentication** on the switches on this VLAN. Other devices such as Apple TVs, ThereNow Cameras and our one buildings Clinic eqiupment obviously also do not support 802.1x so we are still working to determine the best way to support these devices moving forward. I welcome additional comments for those who might have suggestions to make this better than it alrady seems to be.
+So far testing has been very successful and one of our four buildings is currently online. Since going through the test we have discovered a few interesting pieces that we still need to figure out. For instance, most printers that are network do not support 802.1x so we were thinking of creating a private VLAN that our networked clients can access but does not have access to the Internet for the printers that will have 802.1x disabled. We have also thought about using **MAC Authentication** on the switches on this VLAN. Other devices such as Apple TVs, ThereNow Cameras and our one buildings Clinic equipment obviously also do not support 802.1x so we are still working to determine the best way to support these devices moving forward. I welcome additional comments for those who might have suggestions to make this better than it already seems to be.
 
 
 

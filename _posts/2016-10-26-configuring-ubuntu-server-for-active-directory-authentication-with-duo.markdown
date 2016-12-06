@@ -27,7 +27,7 @@ sudo apt-get upgrade       # Strictly upgrades the current packages
 sudo apt-get dist-upgrade  # Installs updates (new ones)
 {% endhighlight %}
 
-Now that we have completed the initial server setup, it is time to configure Active Directory and Duo authentication as I use both of these in our college. Lets first install **sssd** as I prefer this method for using Active Directory authentication. We will then install **realmd** since Ubuntu does include this. It allows us to discover our Active Diretory and install any additional packages that may be required. Here is what mine looked like:
+Now that we have completed the initial server setup, it is time to configure Active Directory and Duo authentication as I use both of these in our college. Lets first install **sssd** as I prefer this method for using Active Directory authentication. We will then install **realmd** since Ubuntu does include this. It allows us to discover our Active Directory and install any additional packages that may be required. Here is what mine looked like:
 
 {% highlight text %}
 sudo apt-get install sssd
@@ -49,7 +49,7 @@ your.domain
 sudo apt-get install sssd-tools libnss-sss libpam-sss adcli samba-common-bin
 {% endhighlight %}
 
-So now we should be able to join the domain right? Unfortunately, I ran into an issue and recevied an error about the necessary packages not being installed even though we just installed them. The good news however is I was able to get around this by performing the following:
+So now we should be able to join the domain right? Unfortunately, I ran into an issue and received an error about the necessary packages not being installed even though we just installed them. The good news however is I was able to get around this by performing the following:
 
 {% highlight text %}
 sudo realm join -v -U domainadmin your.domain --install=/
@@ -77,7 +77,7 @@ With this change a user can use their shortname to login to the server and their
 session    required    pam_mkhomedir.so skel=/etc/skel/ umask=0022
 {% endhighlight %}
 
-Next we want to grant our group to be able to **sudo** and make changes on the server. This step is completlely optional but if you are planning on making server changes after setup I would highly recommend it so you can track changes. We will edit the file **/etc/sudoers** and add underneath the line *%admin ALL=(ALL) ALL* we will add the following:
+Next we want to grant our group to be able to **sudo** and make changes on the server. This step is completely optional but if you are planning on making server changes after setup I would highly recommend it so you can track changes. We will edit the file **/etc/sudoers** and add underneath the line *%admin ALL=(ALL) ALL* we will add the following:
 
 {% highlight text %}
 %GroupName ALL=(ALL) ALL
@@ -94,13 +94,13 @@ From here I like to reboot for good measure just to make sure everything took co
 
 # Duo Configuration
 
-To configure Duo we will need to download the Duo tar file. You can for the most part just follow the steps listed here: [Duo Unix Setup]('https://duo.com/docs/duounix' "Duo Unix Setup"). One thing when performining this: you will need to install the **build-essential** package so that it can be compiled. You may also need to elevate to root when compiling by using the *sudo -s* command as I ran into an error trying to do it from my account.
+To configure Duo we will need to download the Duo tar file. You can for the most part just follow the steps listed here: [Duo Unix Setup]('https://duo.com/docs/duounix' "Duo Unix Setup"). One thing when performing this: you will need to install the **build-essential** package so that it can be compiled. You may also need to elevate to root when compiling by using the *sudo -s* command as I ran into an error trying to do it from my account.
 
 {% highlight text %}
 sudo apt-get install build-essential
 {% endhighlight %}
 
-Now that Duo is installed you will need to configure it by editing the */etc/duo/pam_duo.conf* file as listed in the link above. Once that is compelted we will configure how Duo is used with Active Directory. We will need to edit */etc/pam.d/common-auth* and paste this block over the "Primary" block:
+Now that Duo is installed you will need to configure it by editing the */etc/duo/pam_duo.conf* file as listed in the link above. Once that is completed we will configure how Duo is used with Active Directory. We will need to edit */etc/pam.d/common-auth* and paste this block over the "Primary" block:
 
 {% highlight text %}
 auth    [success=3 default=ignore]      pam_unix.so nullok_secure
