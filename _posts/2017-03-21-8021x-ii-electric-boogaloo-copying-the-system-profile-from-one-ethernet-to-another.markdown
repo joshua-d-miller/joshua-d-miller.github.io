@@ -1,6 +1,7 @@
 ---
 title: 802.1x II - Electric Boogaloo - Copying the System Profile from One Ethernet to Another
 layout: post
+type: post
 published: true
 comments: true
 date: 2017-03-21 14:37:00 -0400
@@ -15,12 +16,10 @@ tags:
 - macOS
 - Windows
 - Group Policy
-- pyObjC
 ---
-
 So it has been a while since I posted. I have been working very hard along with [frogor](https://twitter.com/mikeymikey) and [mosen](https://github.com/mosen) to determine why the **FirstActiveEthernet** option in an 802.1x Ethernet profile will only ever apply to one interface and will not switch from one to another. Many other MacAdmins have reported that upon submitting enterprise tickets to Apple that they are either "looking into it" or it is a "feature request" to use your 802.1x Profile as a System profile on all Ethernet interfaces attached to the system. This post will serve as a brain dump of all the information we have scoured and processes we have worked through to try to reach the end goal of seamless 802.1x integration.
 
-In our college, we were working on deploying EAP-TLS for both Mac and PC as if you read the original 802.1x post [here]({% post url 2016-10-19-8021x-project---college-of-education.markdown %}); we were looking to remove the potential security risk of Ethernet dongles as with DHCP reservations whomever has the dongle has the reservation. Enter 802.1x which will authenticate the user every time they connect to the network and log this information to a RADIUS server. Having a RADIUS server will allow a Systems Administrator to set requirements on what can and cannot connect to the network.
+In our college, we were working on deploying EAP-TLS for both Mac and PC as if you read the original 802.1x post [here](http://joshua-d-miller.com/blog/2016/8021x-project-college-of-education/); we were looking to remove the potential security risk of Ethernet dongles as with DHCP reservations whomever has the dongle has the reservation. Enter 802.1x which will authenticate the user every time they connect to the network and log this information to a RADIUS server. Having a RADIUS server will allow a Systems Administrator to set requirements on what can and cannot connect to the network.
 
 Upon initial investigation I noticed that in the **System** keychain, an identity preference is made for the 802.1x Configuration profile that has a unique identifier at the end. Obviously there was no easy way to replicate this unique identifier. I also stumbled upon this small exchange on [Ask Different](http://apple.stackexchange.com/questions/193631/802-1x-management-on-the-command-line) and thought maybe we could copy or rename the identity preference to **com.apple.network.eap.system.identity.default** which would make it the default for all interfaces. Unfortunately that did not work. I then thought maybe we could create a copy of the identity preference and rename it from **com.apple.network.eap.system.identity.profileid.IDHere** to **com.apple.network.eap.user.identity.profileid.IDHere**. Well upon doing this all the interfaces would connect because when clicking Connect, the 802.1x profile defaults to User mode even though it is configured for System mode. Thus began creating a script to systematically copy the keychain entry. Thanks to mosen and frogor we were able to do just that and I thought this would be the best solution. You can see that script below:
 
