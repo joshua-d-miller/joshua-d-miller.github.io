@@ -1,5 +1,5 @@
 ---
-title: 802.1x II: Electric Boogaloo - Copying the System Profile from One Ethernet to Another
+title: 802.1x II - Electric Boogaloo - Copying the System Profile from One Ethernet to Another
 layout: post
 type: post
 published: true
