@@ -1,7 +1,6 @@
 ---
 title: 802.1x II - Electric Boogaloo - Copying the System Profile from One Ethernet to Another
 layout: post
-type: post
 published: true
 comments: true
 date: 2017-03-21 14:37:00 -0400
@@ -36,5 +35,7 @@ After working diligently with mosen and working through the **EAPOL** framework 
 Once the System profile was copied to another Ethernet interface, that interface then connected automatically just like the original which is the behavior we are looking for. Now comes the fun part of testing all kinds of different environments using this script to see if it is a universal solution or would it need some tailoring in order to work for everyone. Now obviously the name I use is unique **Ethernet(COE)** which if you build the profile outside of jamf and then upload it to the JSS, it will actually retain that name even if you leave it unsigned. Unfortunately jamf's default 802.1x Ethernet profile name is **Network**. Now you are probably thinking is there a way I can monitor this inside the JSS and the answer is yes. I have gone ahead and devised another script that you can place in your JSS as an Extension Attribute that will poll the Ethernet interfaces on your system to determine if they have the System profile attached. If so then it will report True otherwise False. Of course jamf cannot do an Array or dictionary in an Extension Attribute so I have converted the Array to a String and separated the interfaces with ||. Then you can build a SMART Group that looks for **like False** which will then give you a Group you could scope out the Fix script as a policy. Here is that Extension Attribute:
 
 {% gist joshua-d-miller/2ba2804be41cf60ae961805447961152 %}
+
+On a side note - I have tested this script with both EAP-TLS and PEAP-MSCHAPV2 as unfortunately since we have a lot of remote users we might be moving to PEAP-MSCHAPV2 so that a client certificate which requires an AD connection to get isn't required. This makes the profile fail and jamf does not have a built in retry so clearing out a bunch of systems that did not receive the profile was getting repetitive.
 
 Please take these scripts and test them in your environment and report back results to me either on Slack or Twitter. I'm hoping we can come to some kind of true made Enterprise solution for 802.1x so that it works the way most of us intend it to. I would like to give a big personal thanks to [mosen](https://github.com/mosen) as he was very instrumental in assisting with deciphering the EAPOL framework and working with me on getting the functions in Objective C. Without him this may not have been even a possibility.
