@@ -31,7 +31,7 @@ title: System Administrator Musings
 # baseurl: ""
 
 google_analytics: UA-85695157-1
-repo: http://github.com/joshua-d-miller/
+repo: https://github.com/joshua-d-miller/
 disqus_shortname: "joshuadmiller"
 disqus_site_shortname: "system-administrator-musings"
 
@@ -43,7 +43,7 @@ author:
   thumb     : /images/author.jpg
   email     : josh.miller@outlook.com
   # url       : http://nandomoreira.me
-  github    : http://github.com/joshua-d-miller
+  github    : https://github.com/joshua-d-miller
   twitter_username: joshuadmiller_
   twitter   : http://twitter.com/joshuadmiller_
   # facebook  : http://facebook.com/fernando.dev
@@ -61,3 +61,6 @@ navbar:
     title: Blog
 
 exclude: ["gulp", "node_modules", "bower", "bower_components", "config.rb", "src", "Gemfile", "Gemfile.lock", ".rvmrc", ".rbenv-version", "package.json", "gulpfile.js", "README.md", "Rakefile", "changelog.md"]
+
+url: https://www.joshua-d-miller.com   # with the https protocol
+enforce_ssl: www.joshua-d-miller.com   # without any protocol
