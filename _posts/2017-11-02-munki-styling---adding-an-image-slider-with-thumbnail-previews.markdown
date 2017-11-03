@@ -192,7 +192,7 @@ Javascript and jQuery
         }
     }
 </script>
-{% endhighlight}
+{% endhighlight %}
 
 **Example Description** - Keep in mind you have to escape HTML in XML
 {% highlight xml linenos %}
