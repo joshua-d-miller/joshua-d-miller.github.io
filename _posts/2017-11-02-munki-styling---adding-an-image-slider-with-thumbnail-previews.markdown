@@ -226,3 +226,5 @@ If you find ways to improve this code I would love to hear your feedback. So one
 - [Javascript Image Slider](https://www.youtube.com/watch?v=Dc2WHsuiXos&t=1s)
 - [Bart Reardon's Twitter](https://twitter.com/bartreardon)
 - [John Pater's GitHub](https://github.com/jpat14)
+
+
