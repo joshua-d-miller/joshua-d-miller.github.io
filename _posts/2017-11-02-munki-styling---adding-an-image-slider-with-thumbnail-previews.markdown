@@ -102,7 +102,7 @@ div.msc-button-inner.install-updates.installed:hover {
     background: -webkit-gradient(linear, left top, left bottom, 
         color-stop(0%,#b20000), color-stop(100%,#7f0000));
 }
-{% end hightlight %}
+{% endhighlight %}
 
 This code will color the *Install*, *Update* and *Check Again* buttons blue and will color the *Remove* button red if you just copy and paste it into your **footer_template.html** but you can easily change the colors. 
 
