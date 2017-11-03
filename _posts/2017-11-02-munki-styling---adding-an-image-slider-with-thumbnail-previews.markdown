@@ -162,7 +162,7 @@ At this point I asked our Programmer Analyst [John Pater](https://github.com/jpa
 }
 {% endhighlight %}
 
-Javascript and jQuery
+**Javascript and jQuery**
 {% highlight html linenos %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -221,7 +221,7 @@ If you find ways to improve this code I would love to hear your feedback. So one
 **References**
 - [Munki 2 Client Customization Showcase](https://groups.google.com/forum/#!searchin/munki-dev/showcase%7Csort:date/munki-dev/PwvrYaqKxGc/nCvIuK8coW0J)
 - [Munki Client Customization](https://github.com/munki/munki/wiki/Client-Customization)
-- [Managed Software Center Banners from Erik Gomez](http://blog.eriknicolasgomez.com/2015/05/07/yosemite-style-banners-for-munki-2/
+- [Managed Software Center Banners from Erik Gomez](http://blog.eriknicolasgomez.com/2015/05/07/yosemite-style-banners-for-munki-2/)
 - [CSS Image Slider with Thumbnails](http://thecodeplayer.com/walkthrough/css3-image-slider-with-stylized-thumbnails)
 - [Javascript Image Slider](https://www.youtube.com/watch?v=Dc2WHsuiXos&t=1s)
 - [Bart Reardon's Twitter](https://twitter.com/bartreardon)
