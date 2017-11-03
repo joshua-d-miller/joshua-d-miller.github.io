@@ -18,7 +18,7 @@ So over the past few days I decided I wanted to spice up the way Managed Softwar
 
 The great thing about the Managed Software Center interface is all the initial styling is done in CSS so you can change most of the CSS as long as you know what to reference. If you are going to customize Managed Software Center though I highly recommend visiting the Munki wiki via [Client Customization](https://github.com/munki/munki/wiki/Client-Customization) which does a very good job of showing the basics of customization. Now let's get into the good stuff.
 
-First thing I did when customizing the CSS of Managed Software Center is I put it all in a common place which like @bartreardon](https://twitter.com/bartreardon), I used **footer_template.html**. To change the buttons throughout Managed Software Center for *Install*, *Remove*, *Update* *Check Again* we add the following CSS styling:
+First thing I did when customizing the CSS of Managed Software Center is I put it all in a common place which like [@bartreardon](https://twitter.com/bartreardon), I used **footer_template.html**. To change the buttons throughout Managed Software Center for *Install*, *Remove*, *Update* *Check Again* we add the following CSS styling:
 
 {% highlight css linenos %}
 /* Install Button */
