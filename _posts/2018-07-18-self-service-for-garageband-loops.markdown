@@ -7,11 +7,11 @@ date: 2018-07-18 10:24:33 -0400
 image: images/GarageBand.png
 status: publish
 categories:
--- Configuration
--- Munki
--- MDM
+- Configuration
+- Munki
+- MDM
 tags:
--- macOS Apps
+- macOS Apps
 ---
 With the move to Volume Purchasing for Apple Applications through MDM, I was left wondering how we could add the GarageBand loops to our systems if users wanted to use GarageBand. Before I would run the wonderful project [appleLoops](https://github.com/carlashley/appleLoops) and then package them to install when installing GarageBand with Munki. Well since GarageBand is now automatic that method would prompt the user afterwards to install the GarageBand loops and what we definitely saw with new systems was seeing the loops available when the application finally pushed down with the new MDM approach.
 
