@@ -1,7 +1,6 @@
 ---
 title: Self Service for GarageBand Loops
 layout: post
-type: post
 published: true
 comments: true
 date: 2018-07-18 10:24:33 -0400
