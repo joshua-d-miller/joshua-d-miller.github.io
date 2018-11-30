@@ -384,7 +384,7 @@ Next I will show you how to add an RSS feed to your sidebar. The RSS feed we hav
     <ul class="newslist"></ul>
 </div>
 </li>
-{% endhighlight}
+{% endhighlight %}
 
 Lastly, we made some modifications to the buttons so that they would be Blue for Install, Red for Uninstall, Have white text in the middle and turn Green to install. Here is that CSS:
 
