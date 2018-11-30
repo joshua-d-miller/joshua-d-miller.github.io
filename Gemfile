@@ -5,7 +5,7 @@ source 'http://rubygems.org'
 group :development do
   gem 'rake', '~>10.5'
   gem 'sass', '~>3.4'
-  gem 'jekyll', '~> 3'
+  gem 'jekyll', '~> 3.6.3'
   gem 'github-pages', group: [:jekyll_plugins]
   gem 'jekyll-paginate', group: [:jekyll_plugins]
   gem 'pygments.rb', group: [:jekyll_plugins]
