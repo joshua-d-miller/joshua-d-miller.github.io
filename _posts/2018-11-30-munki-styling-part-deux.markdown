@@ -28,7 +28,7 @@ The first new feature we added was a news ticker that will read Penn State's IT 
             <ul>
             </ul>
         </div>
-        <div class = "contact">
+        <div class="contact">
         <span class="contact-line1"><span class="CETC">Carrara Education Technology Center</span>
         <span class="contact-line2">231 Chambers Building<span class="sep-pipe">|</span>University Park, Pennsylvania 16802<span class="sep-pipe">|</span>1.814.865.0626<span class="sep-pipe">|</span><a href="https://help.educ.psu.edu/">help.educ.psu.edu</a></span>
         </div>
@@ -501,6 +501,6 @@ div.msc-button-inner.install-updates.installed-not-removable {
 
 With all this CSS you can now see the embededed GIF that showcases our RSS Feed, News Ticker and Feedback Form as well as the other CSS Changes we made. All these changes are compatible with macOS Mojave's Dark Mode as well.
 
-![Managed Software Center - With CSS](images/feedback_and_ticker.gif)
+![Managed Software Center - With CSS](https://joshua-d-miller.com/images/feedback_and_ticker.gif)
 
 If you have any additional questions or comments please feel free to message me in the MacAdmins Slack or send me an email or add a comment below. Once again, I'd like to thank **John Pater** for assisting me with this process and helping me make Managed Software Center really shine. Also, a big thank you **Greg Neagle** for making such a fantastic product that is cusomtizable like this.
