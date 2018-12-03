@@ -1,5 +1,7 @@
 ---
 layout: post
+published: true
+comments: true
 title: Munki Styling Part Deux
 date: 2018-11-30 12:09:00 -4000
 image: images/Munki.png
@@ -503,4 +505,4 @@ With all this CSS you can now see the embededed GIF that showcases our RSS Feed,
 
 ![Managed Software Center - With CSS](https://joshua-d-miller.com/images/feedback_and_ticker.gif)
 
-If you have any additional questions or comments please feel free to message me in the MacAdmins Slack or send me an email or add a comment below. Once again, I'd like to thank **John Pater** for assisting me with this process and helping me make Managed Software Center really shine. Also, a big thank you **Greg Neagle** for making such a fantastic product that is cusomtizable like this.
+If you have any additional questions or comments please feel free to message me in the MacAdmins Slack or send me an email or add a comment below. Once again, I'd like to thank [John Pater](https://github.com/jpat14) for assisting me with this process and helping me make Managed Software Center really shine. Also, a big thank you [Greg Neagle](https://twitter.com/gregneagle) for making such a fantastic product that is cusomtizable like this.
