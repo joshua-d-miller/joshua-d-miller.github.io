@@ -16,9 +16,9 @@ tags:
 ---
 This month with the recently released macOS Mojave, I noticed the app store had taken on an all new look. With this new look it got me thinking about the look of Managed Software Center. The CSS in my previous post [Munki Styling - Adding an Image Slider with Thumbnail Previews](https://joshua-d-miller.com/blog/2017/munki-styling-adding-an-image-slider-with-thumbnail-previews/), I showcased adding an Image Slider and an accordian style bulleted list. I also changed the colors of the **Install** and **Remove** buttons in Managed Software Center. These modfiications were great, but with the release of macOS Mojave a lot of my customizations were now not showing up properly. This was especially apparent in the newly showcased **Dark Mode**.
 
-Once agin, I dug into the CSS of Managed Software Center which we are able to overrwrite easily. So, I decided to work with our web programmer and designer [John Pater](https://github.com/jpat14), who was once again very helpful in determine the best way to fix a lot of the styling for **Dark Mode** as well as adding some new features.
+Once again, I dug into the CSS of Managed Software Center which we are able to override easily. So, I decided to work with our web programmer and designer [John Pater](https://github.com/jpat14), who was once again very helpful in determining the best way to fix a lot of the styling for **Dark Mode** as well as adding some new features.
 
-The first new feature we added was a news ticker that will read Penn State's IT Alerts and showcase them as a sliding ticker using JQuery. We decided the best place for this ticker was at the bottom or the **footer_template** in order to showcase the alerts any time someone has Managed Software Center open. With this addition, it made sense to remove the bottom links so you will see the bottom links div is now empty. Listed below is the code that was needed in order to add the news ticker:
+The first new feature we added was a news ticker that will read Penn State's IT Alerts and showcase them as a sliding ticker using jQuery. We decided the best place for this ticker was at the bottom or the **footer_template** in order to showcase the alerts any time someone has Managed Software Center open. With this addition, it made sense to remove the bottom links so you will see the bottom links div is now empty. Listed below is the code that was needed in order to add the news ticker:
 
 {% highlight html linenos %}
 <div class="bottom-links">
@@ -38,7 +38,7 @@ The first new feature we added was a news ticker that will read Penn State's IT 
 </div>
 {% endhighlight %}
 
-You will see we created a two **<div>** classes for the ITAlerts. This allows us to display the RSS Feed as list items and then through the power of JQuery which some CSS Styling we can then show only one item at a time and create a fade effect. We decided to take the code shown here at [jQuery Easy Ticker](https://www.aakashweb.com/demos/jquery-easy-ticker/) and then apply it to our **footer_template** as shown below:
+You will see we created a two **<div>** classes for the ITAlerts. This allows us to display the RSS Feed as list items and then through the power of jQuery with some CSS Styling, we can then show only one item at a time and create a fade effect. We decided to take the code shown here at [jQuery Easy Ticker](https://www.aakashweb.com/demos/jquery-easy-ticker/) and then apply it to our **footer_template** as shown below:
 
 {% highlight html linenos %}
 <!-- jQuery ITS ALerts Status Bar Ticker -->
@@ -297,7 +297,7 @@ function submitContactForm(){
 </div></li>
 {% endhighlight %}
 
-You will notice that there is some CSS specifically aimed at bootstrap because loading the Bootstrap CSS will mess with some aspects of Managed Software Center. These settings will restore the previous look.
+You will notice that there is some CSS specifically aimed at bootstrap because loading the Bootstrap CSS will mess with some aspects of Managed Software Center. These settings will make sure that does not happen.
 
 Next I will show you how to add an RSS feed to your sidebar. The RSS feed we have is from our website where we post news articles about updates on licensing or Apple apps. We should get better at updating the articles....  Here is the code for RSS reader:
 
@@ -505,4 +505,4 @@ With all this CSS you can now see the embededed GIF that showcases our RSS Feed,
 
 ![Managed Software Center - With CSS](https://joshua-d-miller.com/images/feedback_and_ticker.gif)
 
-If you have any additional questions or comments please feel free to message me in the MacAdmins Slack or send me an email or add a comment below. Once again, I'd like to thank [John Pater](https://github.com/jpat14) for assisting me with this process and helping me make Managed Software Center really shine. Also, a big thank you [Greg Neagle](https://twitter.com/gregneagle) for making such a fantastic product that is cusomtizable like this.
+If you have any additional questions or comments please feel free to message me in the MacAdmins Slack or send me an email or add a comment below. Once again, I'd like to thank [John Pater](https://github.com/jpat14) for assisting me with this process and helping me make Managed Software Center really shine. Also, a big thank you to [Greg Neagle](https://twitter.com/gregneagle) for making such a fantastic product that is cusomtizable like this.
