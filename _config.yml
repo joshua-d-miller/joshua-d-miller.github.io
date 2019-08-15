@@ -1,66 +1,43 @@
 # Build settings
-permalink   : /blog/:year/:title/
-markdown    : kramdown
-highlighter : rouge
-gems:
+title: System Administrator Musings
+description: >
+  A site by a Systems Administrator at The Pennsylvania State University
+  that documents the fun things that have been encountered along the fun
+  journey of managing macOS and iOS devices.
+permalink: ':title/'
+remote_theme: artemsheludko/flexible-jekyll
+url: https://www.joshua-d-miller.com   # with the https protocol
+enforce_ssl: www.joshua-d-miller.com   # without any protocol
+
+# Author settings
+author: Joshua D. Miller
+author-img: author.jpg
+about-author: >
+  Husband, Father, and avid administrator of macOS and iOS devices
+  at The Pennsylvania State University in the College of Education.
+social-email: josh.miller@outlook.com
+social-github: https://github.com/joshua-d-miller
+social-twitter: joshuadmiller_
+social-linkedin: http://linkedin.com/in/millerjoshuad
+
+# Disqus and Tracker
+analytics: UA-85695157-1
+disqus_identifier: joshuadmiller
+
+markdown: kramdown
+highlighter: rouge
+
+plugins:
+  - jekyll-sitemap
   - jekyll-paginate
   - jekyll-gist
   - jekyll-auto-image
+  - jemoji
+  - jekyll-remote-theme
 
 timezone: America/New_York
 
-paginate: 5
-paginate_path: "/blog/page/:num/"
-comments: true
-
-collections:
-  attachments:
-    output: true
-
-destination: _site
-sass:
-  sass_dir: _scss
-  style: compressed # expanded
-
-# SEO settings
-title: System Administrator Musings
-# description: "A free Jekyll theme for download"
-# keywords: "Jekyll, theme, free, download, SEO, blog, web"
-# url: http://nandomoreira.me
-# baseurl: "/end2end"
-# baseurl: ""
-
-google_analytics: UA-85695157-1
-repo: https://github.com/joshua-d-miller/
-disqus_shortname: "joshuadmiller"
-disqus_site_shortname: "system-administrator-musings"
-
-# Author settings
-author:
-  name      : Joshua D. Miller
-  job       : Systems Administrator
-  # bio       : "Enthusiast performance, responsive design and usability, always looking for the best project and good coffee."
-  thumb     : /images/author.jpg
-  email     : josh.miller@outlook.com
-  # url       : http://nandomoreira.me
-  github    : https://github.com/joshua-d-miller
-  twitter_username: joshuadmiller_
-  twitter   : http://twitter.com/joshuadmiller_
-  # facebook  : http://facebook.com/fernando.dev
-  linkedin  : http://linkedin.com/in/millerjoshuad
-
-# navbar pages
-navbar:
-  - slug: about
-    title: About
-  - slug: projects
-    title: Projects
-  # - slug: skills
-  #   title: Skills
-  - slug: blog
-    title: Blog
+paginate: 10
+paginate_path: "/page/:num/"
 
 exclude: ["gulp", "node_modules", "bower", "bower_components", "config.rb", "src", "Gemfile", "Gemfile.lock", ".rvmrc", ".rbenv-version", "package.json", "gulpfile.js", "README.md", "Rakefile", "changelog.md"]
-
-url: https://www.joshua-d-miller.com   # with the https protocol
-enforce_ssl: www.joshua-d-miller.com   # without any protocol

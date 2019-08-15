@@ -5,7 +5,7 @@ type: post
 published: true
 comments: true
 date: 2016-10-26 08:01:08 -04:00
-image: images/Ubuntu.png
+img: Ubuntu.png
 status: publish
 categories:
 - Ubuntu
@@ -111,5 +111,3 @@ auth    [success=1 default=ignore]      /lib64/security/pam_duo.so
 This means that if you are using a local account that it will skip the Duo process but if you use an Active Directory account, duo authentication is required.
 
 This may look like a lot of steps but after highlighting them it is actually pretty simple. Now that we have the server configured it is time to start setting up NetBoot.
-
-

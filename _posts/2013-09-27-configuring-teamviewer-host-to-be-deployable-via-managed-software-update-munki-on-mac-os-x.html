@@ -3,7 +3,7 @@ layout: post
 title: Configuring TeamViewer Host 8 to be deployable via Munki
 date: 2013-09-27 13:06:39.000000000 -04:00
 type: post
-image: images/TeamViewer Host.png
+img: TeamViewer%20Host.png
 published: true
 comments: true
 status: publish
@@ -20,7 +20,7 @@ tags:
 
 <p>/Library/Preferences/com.TeamViewer8.Settings (If this was Version 7 you would substitute the 8).</p>
 
-<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/plist1.png"><img class="alignnone size-full wp-image-50" src="{{ site.baseurl }}/images/plist1.png" alt="plist" width="474" height="493" /></a></p>
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/assets/img/plist1.png"><img class="alignnone size-full wp-image-50" src="{{ site.baseurl }}/assets/img/plist1.png" alt="plist" width="474" height="493" /></a></p>
 <p>Munki allows for you to perform pre-install, post-install and post-uninstall scripts. This meant that these settings could be written to the PLIST file during the install with the "defaults write" command. The passwords in TeamViewer are stored in the following:</p>
 
 <p style="padding-left:25px"><em style="font-weight:bold; font-style:normal">SecurityPasswordAES</em> - Password used to access the system<br />
@@ -30,7 +30,7 @@ tags:
 
 <p>Once in terminal enter the following command: <em style="font-weight:bold; font-style:normal">defaults read /Library/Preferences/com.TeamViewer8.Settings.plist</em> and you will see the following information:</p>
 
-<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}defaultsread11.png"><img class="alignnone size-full wp-image-51" src="{{ site.baseurl }}/images/defaultsread11.png" alt="defaultsread1" width="474" height="245" /></a></p>
+<p style="display:flex; justify-content:center"><a href="/assets/img/defaultsread11.png"><img class="alignnone size-full wp-image-51" src="{{ site.baseurl }}/assets/img/defaultsread11.png" alt="defaultsread1" width="474" height="245" /></a></p>
 
 <p>From this information we now have the the correct information to insert the passwords as they are data fields and data fields require hexadecimal in Mac OS X.  We can now build the Munki package to install TeamViewer with our settings.</p>
 
@@ -57,7 +57,7 @@ tags:
 <p>Once these changes have been made you can package the modified files in a DMG and have it update every time the TeamViewer Host is installed which will add your branding and customization to the product performing a real deployable version. The last piece however that I have yet been able to figure out with the product itself is how to report the IDs back to your Corporate License. For the time being PSU has IBM Endpoint Manager which I have worked with the Windows System Administrator to create an Analyses job that will look at the plist file after TeamViewer is launched on the remote system for the ID as the ID is placed in the PLIST file. Since we don't want personal TeamViewer IDs, we also added in the install script a PLIST entry that says it was installed by EDUC which we also look for when scanning for the IDs.  This portion is still manual but may not be for long. I have also had many conversations with TeamViewer and they have indicated that the next version (9) may possibly have a deployable version for Mac so you would not need to perform any of this. If you have any questions please feel free to let me know. Here are my final PKGInfo files for both the TeamViewer Host install and the additional settings. You will see under the uninstall_script that I remove our customized PLIST file which I highly recommend.</p>
 
 <p style="font-weight:bold; font-style:normal">TeamViewer Host PKGINFO</p>
-{% highlight xml linenos %}
+{% highlight xml linenos=table %}
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
 <plist version='1.0'>

@@ -4,7 +4,7 @@ layout: post
 published: true
 comments: true
 date: 2017-11-02 15:35:05 -0400
-image: images/Munki.png
+img: Munki.png
 status: publish
 categories:
 - Configuration
@@ -49,7 +49,7 @@ div.msc-button-inner.installed {
 }
 
 div.msc-button-inner.installed:hover {
-    background: -webkit-gradient(linear, left top, left bottom, 
+    background: -webkit-gradient(linear, left top, left bottom,
         color-stop(0%,#b20000), color-stop(100%,#7f0000));
 }
 div.msc-button-inner.large.installed {
@@ -58,7 +58,7 @@ div.msc-button-inner.large.installed {
 }
 
 div.msc-button-inner.large.installed:hover {
-    background: -webkit-gradient(linear, left top, left bottom, 
+    background: -webkit-gradient(linear, left top, left bottom,
         color-stop(0%,#b20000), color-stop(100%,#7f0000));
 }
 
@@ -99,12 +99,12 @@ div.msc-button-inner.install-updates.installed {
         color-stop(0%,#cc0000), color-stop(100%,#b20000));
 }
 div.msc-button-inner.install-updates.installed:hover {
-    background: -webkit-gradient(linear, left top, left bottom, 
+    background: -webkit-gradient(linear, left top, left bottom,
         color-stop(0%,#b20000), color-stop(100%,#7f0000));
 }
 {% endhighlight %}
 
-This code will color the *Install*, *Update* and *Check Again* buttons blue and will color the *Remove* button red if you just copy and paste it into your **footer_template.html** but you can easily change the colors. 
+This code will color the *Install*, *Update* and *Check Again* buttons blue and will color the *Remove* button red if you just copy and paste it into your **footer_template.html** but you can easily change the colors.
 
 The next thing I wanted to do was make it so the showcase images did not cut off if the user resized the Managed Software Center window. This way the banner always display fully and did not get cut off the window was smaller than the banner size. To perform this it was just adding some simple CSS code into **showcase_template.html** since this had to do with the banners.
 
@@ -117,9 +117,9 @@ The next thing I wanted to do was make it so the showcase images did not cut off
 
 Now that we have some nice touches to Managed Software Center, I wanted to add some real flair and allow users to click featured application banners and see a nice description with screen shots. After asking in the **#munki** channel about banners and seeing Erik Gomez's awesome examples located on his [blog](http://blog.eriknicolasgomez.com/2015/05/07/yosemite-style-banners-for-munki-2/) I decided to use a similar layout and make some featured banners. I also really believe in sharing so listed below are some of the banners I created for your use:
 
-![Solstice](/images/Solstice.png)
-![Zoom](/images/Zoom.png)
-![Franz](/images/Franz.png)
+![Solstice]({{ site.baseurl }}/assets/img/Solstice.png)
+![Zoom]({{ site.baseurl }}/assets/img/Zoom.png)
+![Franz]({{ site.baseurl }}/assets/img/Franz.png)
 
 Now that we have the banners for featured applications, let's go ahead and add the image slider. This one was a tough one because Munki in order to handle custom HTML in **pkginfo** files can strip out certain elements of HTML. Some particular ones I found were **div** and **script**. Luckily, Javascript can easily be put into one of the templates so it doesn't need to be part of the **pkginfo**. As for the **div** which we use to do CSS, we needed an alternative. Luckily, since what we were using the **div** for was horizontal it was very easy to substitute **span** for **div** which worked out great. Now to build the image slider, I first started out with CSS which I had a very hard time centering perfectly as the thumbnail images were outside the main image box using **float** which per the CSS documentation cannot be centered. The recommendation was to use **display: block** but when doing this I still could not center the thumbnails and an extra box around the elements was created. I really liked the look of this [CSS Image Slider with Thumbnails](http://thecodeplayer.com/walkthrough/css3-image-slider-with-stylized-thumbnails) but it just seemed way more trouble than it was worth.
 
@@ -181,13 +181,13 @@ At this point I asked our Programmer Analyst [John Pater](https://github.com/jpa
             $(targetElement).toggleClass('thumb-select')
             $('#mainImage').removeClass('scale-in')
             $('#mainImage').addClass('scale-out')
-            $(".scale-out").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd', 
-            function() 
+            $(".scale-out").one('transitionend webkitTransitionEnd oTransitionEnd otransitionend MSTransitionEnd',
+            function()
             {
                 $('#mainImage').removeClass('scale-out')
                 $('#mainImage').addClass('scale-in')
                 mainImage.src = targetElement.getAttribute("src");
-                
+
             });
         }
     }
@@ -214,7 +214,7 @@ Creative Cloud gives you the entire collection of Adobe desktop and mobile apps,
 
 My images were **800px** wide and **400px** high. You can obviously change this to how you would like but with this code you should now have a beautiful image slider in Managed Software Center. Here is what it should look like:
 
-![Adobe Creative Cloud](/images/Adobe Creative Cloud - Munki.png)
+![Adobe Creative Cloud]({{ site.baseurl }}/assets/img/Adobe Creative Cloud - Munki.png)
 
 If you find ways to improve this code I would love to hear your feedback. So one last thing I'd like to do is place all the links in this article here at the bottom for easy consumption. Here they are:
 
@@ -225,5 +225,4 @@ If you find ways to improve this code I would love to hear your feedback. So one
 - [CSS Image Slider with Thumbnails](http://thecodeplayer.com/walkthrough/css3-image-slider-with-stylized-thumbnails)
 - [Javascript Image Slider](https://www.youtube.com/watch?v=Dc2WHsuiXos&t=1s)
 - [Bart Reardon's Twitter](https://twitter.com/bartreardon)
-- [John Pater's GitHub](https://github.com/jpat14)  
-  
+- [John Pater's GitHub](https://github.com/jpat14)

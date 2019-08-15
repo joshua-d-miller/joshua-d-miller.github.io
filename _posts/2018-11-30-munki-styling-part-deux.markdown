@@ -4,7 +4,7 @@ published: true
 comments: true
 title: Munki Styling Part Deux
 date: 2018-11-30 12:09:00 -4000
-image: images/Munki.png
+img: Munki.png
 status: publish
 categories:
 - Configuration

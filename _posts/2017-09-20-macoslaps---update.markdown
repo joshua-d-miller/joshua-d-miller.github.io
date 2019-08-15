@@ -5,7 +5,7 @@ type: post
 published: true
 comments: true
 date: 2017-09-20 12:35:25 -0400
-image:
+img: LAPS.png
 status: publish
 categories:
 - Security
@@ -21,7 +21,7 @@ One thing remained with macOSLAPS though: I still had to log into a Windows box 
 
 Next I wanted to add some customization to the application so that users could request multiple passwords and reset the password by changing the date to an expired date. Once the machine checked in at its predefined run time with macOSLAPS (9:00 AM, 1:00 PM and 4:00 PM are the defaults), the password would then change. I stumbled upon a way to make a menu in Python using a while loop and print statements which allowed me to construct a menu where the user can select what they would like to do which you can see below:
 
-![macOSLAPS-Utility](/images/macOSLAPS-Utility%20Menu.png)
+![macOSLAPS-Utility]({{ site.baseurl }}/assets/img/macOSLAPS-Utility-Menu.png)
 
 Now that the menu was constructed we setup the function for Active Directory to handle it accordingly. Also before you get to this menu you will be asked for Active Directory credentials.
 

@@ -1,27 +1,19 @@
 ---
-layout: home
+layout: main
 ---
-
-<section class="hero">
-
-  <div class="hero-inner container">
-
-    <img src="{{ site.author.thumb | prepend: site.baseurl }}" alt="author thumb" class="dot">
-    <div class="hero-program">
-    {% highlight python %}
-    #!/usr/bin/python
-    print('Hello World!')
-    print('Welcome to SysAdminMusings'){% endhighlight %}
-    </div>
-    <h3>I'm <strong itemprop="name">{{ site.author.name }}</strong>, a <em itemprop="jobTitle">{{ site.author.job }}</em> that proudly works for The Pennsylvania State University.</h3>
-    <h3>{{ site.author.bio }}</h3>
-
-    <a href="{{ '/about' | prepend: site.baseurl }}" class="btn btn-ghost">about</a>
-    <a href="{{ '/projects' | prepend: site.baseurl }}" class="btn btn-ghost">projects</a>
-    <a href="{{ '/blog' | prepend: site.baseurl }}" class="btn btn-ghost">blog</a>
-
-    {% include social.html %}
-
+{% for post in paginator.posts %}
+<article class="post">
+  {% if post.img %}
+    <a class="post-thumbnail" style="background-image: url({{"/assets/img/" | prepend: site.baseurl | append : post.img}})" href="{{post.url | prepend: site.baseurl}}"></a>
+  {% else %}
+  {% endif %}
+  <div class="post-content">
+    <h2 class="post-title"><a href="{{post.url | prepend: site.baseurl}}">{{post.title}}</a></h2>
+    <p>{{ post.content | strip_html | truncatewords: 65 }}</p>
+    <span class="post-date">{{post.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;—&nbsp;</span>
+    <span class="post-words">{% capture words %}{{ post.content | number_of_words }}{% endcapture %}{% unless words contains "-" %}{{ words | plus: 250 | divided_by: 250 | append: " minute read" }}{% endunless %}</span>
   </div>
+</article>
+{% endfor %}
 
-</section>
+{% include pagination.html %}

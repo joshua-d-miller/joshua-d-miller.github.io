@@ -4,7 +4,7 @@ layout: post
 published: true
 comments: true
 date: 2016-12-06 10:16:17 -04:00
-image: images/TeamViewer Host 12.png
+img: TeamViewer%20Host%2012.png
 status: publish
 categories:
 - Deployment

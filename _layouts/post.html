@@ -1,28 +1,40 @@
 ---
-layout: default
+layout: main
 ---
-
-<article role="article" class="post">
-
-  <div class="card">
-    <header class="post-header">
-      {% if page.image %}
-        <div style="display:flex; justify-content:center; align-items:center;" class="header-with-image">
-        <img style="width:150px; height:150px padding-right:0.5em" src="/{{ page.image }}">
-        <h1 style="padding-left:0.5em" class="post-title">{{ page.title }}</h1>
+<article class="article-page">
+  <div class="page-content">
+    {% if page.img %}
+    <div class="page-cover-image">
+      <figure>
+        <img class="page-image" src={{ "/assets/img/" | prepend: site.baseurl | append : page.img}} alt="{{page.title}}">
+        {% if page.fig-caption %}
+          <figcaption>{{page.fig-caption}}</figcaption>
+        {% endif %}
+      </figure>
+    </div> <!-- End Page Cover Image -->
+    {% else %}
+    {% endif %}
+    <div class="wrap-content">
+      <header class="header-page">
+        <h1 class="page-title">{{page.title}}</h1>
+        <div class="page-date"><span>{{page.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
+      </header>
+      {{content | markdownify}}
+      <div class="page-footer">
+        <div class="page-share">
+            <a href="https://facebook.com/sharer.php?u={{ site.url }}{{ page.url }}" rel="nofollow" title="Share on Facebook" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>
+            <a href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ page.url }}&via={{ site.author.twitter_username }}&related={{ site.author.twitter_username }}" rel="nofollow" title="Share on Twitter"><i class="fa fa-twitter fa-2x"></i></a>
+            <a href="http://www.reddit.com/submit?url={{ site.url }}{{ page.url }}&title={{ page.title }}" target="_blank" title="Submit to Reddit"><i class="fa fa-reddit fa-2x"></i></a>
+            <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url }}&title={{ page.title }}&summary=&source={{ site.url }}" target="_blank" title="Share on LinkedIn"><i class="fa fa-linkedin fa-2x"></i></a>
+            <a href="mailto:?subject={{ page.title }}&body={{ site.url }}{{ page.url }}" title="Email this post"><i class="fa fa-envelope fa-2x"></i></a>
         </div>
-      {% else %}
-        <h1 style="display:flex; justify-content:center; align-items:center" class="post-title">{{ page.title }}</h1>
-      {% endif %}
-      <p style="display:flex; justify-content:center; align-items:center" class="post-meta">{{ page.date | date: "%b %-d, %Y - %r" }}{% if page.author %} • {{ page.author }}{% endif %}{% if page.meta %} • {{ page.meta }}{% endif %}</p>
-    </header>
-
-    <div class="post-content">
-      {{ content }}
-    </div>
-    {% include share.html %}
-
-    {% include comments.html %}
-  </div>
-
-</article>
+        <div class="page-tag">
+          {% for tag in page.tags %}
+            <a href="{{site.baseurl}}/tags#{{tag}}" class="tag">&#35; {{ tag }}</a>
+          {% endfor %}
+        </div>
+      </div>
+      {% include disqus.html %}
+    </div> <!-- End Wrap Content -->
+  </div> <!-- End Page Content -->
+</article> <!-- End Article Page -->

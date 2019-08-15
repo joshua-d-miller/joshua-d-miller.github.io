@@ -3,6 +3,7 @@ title: New Blog Site
 layout: post
 date: 2016-10-13 16:55:51 -04:00
 type: post
+img: Jekyll.png
 published: true
 comments: true
 status: publish
@@ -145,4 +146,4 @@ After going through all of my individual posts and rectifying these issues I the
 }
 {% endhighlight %}
 
-I still have a few more things to fix as I migrated my WordPress comments to [Disqus](http://disqus.com "Disqus") but they don't seem to show up in the corresponding posts. Not a deal breaker but it would be nice to have a complete and full migration. Hopefully with this migration it will get me to actually makes posts more often as well as document.
+I still have a few more things to fix as I migrated my WordPress comments to [Disqus](http://disqus.com "Disqus") but they don't seem to show up in the corresponding posts. Not a deal breaker but it would be nice to have a complete and full migration. Hopefully with this migration it will get me to actually make posts more often as well as document.

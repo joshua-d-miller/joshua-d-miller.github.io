@@ -4,7 +4,7 @@ type: post
 published: true
 comments: true
 date:
-image:
+img:
 status: publish
 categories:
 tags:

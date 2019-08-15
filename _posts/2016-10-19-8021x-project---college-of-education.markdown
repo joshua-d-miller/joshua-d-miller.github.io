@@ -5,7 +5,7 @@ type: post
 published: true
 comments: true
 date: 2016-10-19 08:00:03 -04:00
-image: images/Network.png
+img: Network.png
 status: publish
 categories:
 - Security
@@ -225,7 +225,3 @@ As you can see, I made a few changes. First, I changed the **PayloadDisplayName*
 
 **Final Thoughts**<br/>
 So far testing has been very successful and one of our four buildings is currently online. Since going through the test we have discovered a few interesting pieces that we still need to figure out. For instance, most printers that are network do not support 802.1x so we were thinking of creating a private VLAN that our networked clients can access but does not have access to the Internet for the printers that will have 802.1x disabled. We have also thought about using **MAC Authentication** on the switches on this VLAN. Other devices such as Apple TVs, ThereNow Cameras and our one buildings Clinic equipment obviously also do not support 802.1x so we are still working to determine the best way to support these devices moving forward. I welcome additional comments for those who might have suggestions to make this better than it already seems to be.
-
-
-
-

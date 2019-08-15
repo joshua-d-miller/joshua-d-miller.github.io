@@ -4,7 +4,7 @@ layout: post
 published: true
 comments: true
 date: 2018-07-18 10:24:33 -0400
-image: images/GarageBand.png
+img: GarageBand.png
 status: publish
 categories:
 - Configuration

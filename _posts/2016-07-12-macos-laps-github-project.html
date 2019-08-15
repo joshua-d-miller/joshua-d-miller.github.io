@@ -1,8 +1,9 @@
 ---
 layout: post
-title: macOS LAPS - GitHub Project
+title: macOSLAPS - GitHub Project
 date: 2016-07-12 09:04:17.000000000 -04:00
 type: post
+img: LAPS.png
 published: true
 comments: true
 status: publish
@@ -15,7 +16,7 @@ tags:
 - Mac Management
 - macOS
 ---
-<p>This morning I published my macOS LAPS project. This python script will allow your machine to contact Active Directory and determine if the local administrator password expiration time has passed. If it has passed then the password will be changed to something random and published back to Active Directory.</p>
+<p>This morning I published my macOSLAPS project. This python script will allow your machine to contact Active Directory and determine if the local administrator password expiration time has passed. If it has passed then the password will be changed to something random and published back to Active Directory.</p>
 
 <p>To perform this I have chosen to use Python and make use of <em style="font-weight:bold; font-style:normal">subprocess</em> to use the native macOS Directory Utility. This means that when ran as <em style="font-weight:bold; font-style:normal">root</em> the authentication to active directory is done using the computer account which can only access its own attributes. We will be changing the <em style="font-weight:bold; font-style:normal">ms-MCS-AdmPwd</em> by reading in <em style="font-weight:bold; font-style:normal">ms-Mcs-AdmPwdExpirationTime</em>. We will also convert the time from "Windows NT" time to Epoch Time and finally a timestamp. If the password is changed then we will write a time back to AD based off your specification.</p>
 <p>Settings for this script are stored in <em style="font-weight:bold; font-style:normal">/Library/Preferences/edu.psu.macOSLAPS.plist</em>. This also means that you can utilize your own MDM service and use <em style="font-weight:bold; font-style:normal">/Library/Managed Preferences</em>. The default values are:</p>

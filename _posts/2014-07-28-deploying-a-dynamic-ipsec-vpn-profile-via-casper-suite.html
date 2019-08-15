@@ -5,7 +5,7 @@ date: 2014-07-28 13:58:39.000000000 -04:00
 type: post
 published: true
 comments: true
-image: images/Casper.png
+img: Casper.png
 status: publish
 categories:
 - Casper
@@ -23,18 +23,18 @@ tags:
 
 <p>To create the VPN Profile first we will want to setup our settings within a configuration profile in Casper here:</p>
 
-<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/casper-menu.png"><img class="alignnone  wp-image-147" src="{{ site.baseurl }}/images/casper-menu.png" alt="Casper Menu" width="187" height="403" /></a></p>
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/assets/img/casper-menu.png"><img class="alignnone  wp-image-147" src="{{ site.baseurl }}/assets/img/casper-menu.png" alt="Casper Menu" width="187" height="403" /></a></p>
 <p>Once we have begun creating a configuration profile we will want to then select VPN and configure:</p>
 
-<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/config-profile-vpn.png"><img class="alignnone size-full wp-image-148" src="{{ site.baseurl }}/images/config-profile-vpn.png" alt="Config Profile VPN" width="580" height="318" /></a></p>
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/assets/img/config-profile-vpn.png"><img class="alignnone size-full wp-image-148" src="{{ site.baseurl }}/assets/img/config-profile-vpn.png" alt="Config Profile VPN" width="580" height="318" /></a></p>
 
 <p>Here you will enter your connection details for your VPN and the type.  You will want to leave the password field blank as you will want it to prompt the user each time but for the username field you want to use the payload variable <em style="font-weight:bold; font-style:normal">$USERNAME</em> which will dynamically insert the user name when it is deployed to the system. You can find more information on payload variables available in Casper in the Casper Administrator's guide.</p>
 
 <p>Now that your VPN Profile is configured we will want to pick the scope.  We will want to target <em style="font-weight:bold; font-style:normal">Mac Laptops</em> but exclude any machines that don't have user names assigned via the <em style="font-weight:bold; font-style:normal">No users assigned</em> Smart Group.</p>
 
-<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/vpn-target.png"><img class="alignnone  wp-image-150" src="{{ site.baseurl }}/images/vpn-target.png" alt="VPN Target" width="411" height="376" /></a></p>
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/assets/img/vpn-target.png"><img class="alignnone  wp-image-150" src="{{ site.baseurl }}/assets/img/vpn-target.png" alt="VPN Target" width="411" height="376" /></a></p>
 
-<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/images/vpn-exclusion.png"><img class="alignnone  wp-image-149" src="{{ site.baseurl }}/images/vpn-exclusion.png" alt="VPN Exclusion" width="415" height="363" /></a></p>
+<p style="display:flex; justify-content:center"><a href="{{ site.baseurl }}/assets/img/vpn-exclusion.png"><img class="alignnone  wp-image-149" src="{{ site.baseurl }}/assets/img/vpn-exclusion.png" alt="VPN Exclusion" width="415" height="363" /></a></p>
 
 <p>Once this is completed the configuration profile should deploy easily to each system that has a user assigned to it. This method is <em style="font-weight:bold; font-style:normal">ONLY</em> good for those who want to deploy the VPN to single user systems. The next step however is we would like to add the VPN item in the Menu bar so users can easily connect when needed. To perform this we would reopen our VPN configuration profile and add a custom settings file called <em style="font-weight:bold; font-style:normal">com.apple.mcx.menuExtras</em>. In this PLIST you want to define the following Keys:</p>
 

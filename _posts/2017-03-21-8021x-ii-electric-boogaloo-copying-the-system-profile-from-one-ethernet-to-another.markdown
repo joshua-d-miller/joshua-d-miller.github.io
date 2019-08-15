@@ -5,7 +5,7 @@ type: post
 published: true
 comments: true
 date: 2017-03-21 14:37:00 -0400
-image: images/Network.png
+img: Network.png
 status: publish
 categories:
 - Security

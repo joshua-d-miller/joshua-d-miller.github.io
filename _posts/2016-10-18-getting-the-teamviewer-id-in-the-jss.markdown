@@ -5,7 +5,7 @@ type: post
 published: true
 date: 2016-10-18 16:41:45 -04:00
 comments: true
-image: images/Casper.png
+img: Casper.png
 status: publish
 categories:
 - Casper

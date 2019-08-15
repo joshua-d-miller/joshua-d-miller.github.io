@@ -5,7 +5,7 @@ type: post
 published: true
 date: 2016-10-18 15:39:17 -04:00
 comments: true
-image:
+img: CSS.png
 status: publish
 categories:
     - Web Design
