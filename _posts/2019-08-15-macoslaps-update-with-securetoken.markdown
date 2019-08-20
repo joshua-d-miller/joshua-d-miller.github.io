@@ -2,7 +2,7 @@
 layout: post
 published: true
 comments: true
-title: "macOSUpdate with secureToken"
+title: "macOSLAPS Update with secureToken"
 date: "2019-08-15 08:56:36 -0400"
 img: LAPS.png
 tags:
