@@ -33,8 +33,8 @@ Now that these files exist, we can then read out the contents of these files int
 
 ## Password Grouping
 
-We now have the ability to perform password grouping which will allow you to have a password like the Safari or iCloud keychain style passwords in Active Directory or your MDM. Many thanks to [Per Oloffson](https://github.com/magervalp) for sending this pull request. For example: With <span style="color:red">**PasswordLength**</style> set to *12*, <span style="color:red">**PasswordGrouping**</style> set to *4* and <span style="color:red">**PasswordSeparator**</style> set to *-*
-<span style="color:blue">*Ies3-#81n-@imd*</style>
+We now have the ability to perform password grouping which will allow you to have a password like the Safari or iCloud keychain style passwords in Active Directory or your MDM. Many thanks to [Per Oloffson](https://github.com/magervalp) for sending this pull request. For example: With <span style="color:red">**PasswordLength**</span> set to *12*, <span style="color:red">**PasswordGrouping**</span> set to *4* and <span style="color:red">**PasswordSeparator**</span> set to *-*
+<span style="color:blue">*Ies3-#81n-@imd*</span>
 
 ## Extension Attribute and JSON for jamf Pro
 
