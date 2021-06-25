@@ -10,7 +10,7 @@ tags:
     - Mac Management
     - macOS
 ---
-Today I presented on What's new in macOSLAPS at the MacAdmins Campfire Sessions. If you would like to see today's slides those can be downloaded [here]({{ site.baseurl }}/assets/attachments/whats-new-in-macosLAPS.pdf)  
+Today I presented on What's new in macOSLAPS at the MacAdmins Campfire Sessions. If you would like to see today's slides those can be downloaded [here]({{ site.baseurl }}/assets/attachments/whats-new-in-macoslaps.pdf)  
 
 ## New Features
 
