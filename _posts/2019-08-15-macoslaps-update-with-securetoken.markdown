@@ -22,8 +22,8 @@ This is where the new *firstPass* option comes in. I have added the new key to t
 
 ## Future
 
-The current verison posted on GitHub **1.1.4 Build 230** will most likely be the **LAST** version that will be built with Xcode 10.1. This is significant because any newer verisons of Xcode **DO NOT** include the Swift binaries. What this means is that those users using macOSLAPS on 10.14.3 or lower will need to install the [Swift 5 Runtime Support for Command Line Tools](https://support.apple.com/kb/DL1998?viewlocale=en_US&locale=en_US). This will also be when I move macOSLAPS to Swift 5.
+The current version posted on GitHub **1.1.4 Build 230** will most likely be the **LAST** version that will be built with Xcode 10.1. This is significant because any newer versions of Xcode **DO NOT** include the Swift binaries. What this means is that those users using macOSLAPS on 10.14.3 or lower will need to install the [Swift 5 Runtime Support for Command Line Tools](https://support.apple.com/kb/DL1998?viewlocale=en_US&locale=en_US). This will also be when I move macOSLAPS to Swift 5.
 
 ## Special Thanks
 
-I'd like to thank all of those in the #macoslaps Slack channel in the [MacAdmins Slack](https://macadmins.herokuapp.com) for reporting issues, helping otheres with deployment and just being a great community to work with. If you would like to download the latest version of macOSLAPS you can get it [here](https://github.com/joshua-d-miller/macOSLAPS/releases/tag/1.1.4(230))
+I'd like to thank all of those in the #macoslaps Slack channel in the [MacAdmins Slack](https://macadmins.herokuapp.com) for reporting issues, helping others with deployment and just being a great community to work with. If you would like to download the latest version of macOSLAPS you can get it [here](https://github.com/joshua-d-miller/macOSLAPS/releases/tag/1.1.4(230))

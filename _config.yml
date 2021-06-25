@@ -1,7 +1,7 @@
 # Build settings
 title: System Administrator Musings
 description: >
-  A site by a Systems Administrator at The Pennsylvania State University
+  A site by a Systems Administrator at Glossier
   that documents the fun things that have been encountered along the fun
   journey of managing macOS and iOS devices.
 permalink: ':title/'
@@ -14,7 +14,7 @@ author: Joshua D. Miller
 author-img: author.jpg
 about-author: >
   Husband, Father, and avid administrator of macOS and iOS devices
-  at The Pennsylvania State University in the College of Education.
+  at Glossier.
 social-email: josh.miller@outlook.com
 social-github: https://github.com/joshua-d-miller
 social-twitter: joshuadmiller_
