@@ -1,7 +1,7 @@
 # Build settings
 title: System Administrator Musings
 description: >
-  A site by a Systems Administrator at Glossier
+  A site by a Client Platform Engineer at Spotify
   that documents the fun things that have been encountered along the fun
   journey of managing macOS and iOS devices.
 permalink: ':title/'
@@ -13,8 +13,8 @@ enforce_ssl: www.joshua-d-miller.com   # without any protocol
 author: Joshua D. Miller
 author-img: author.jpg
 about-author: >
-  Husband, Father, and avid administrator of macOS and iOS devices
-  at Glossier.
+  Husband, Father, and avid administrator of devices
+  at Spotify.
 social-email: josh.miller@outlook.com
 social-github: https://github.com/joshua-d-miller
 social-twitter: joshuadmiller_
