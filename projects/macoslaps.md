@@ -28,14 +28,8 @@ facts:
     value: Active Directory or the keychain
   - label: License
     value: MIT
+toc: true
 ---
-
-<nav class="toc" aria-label="On this page" markdown="1">
-On this page
-
-* TOC
-{:toc}
-</nav>
 
 ## What it does
 

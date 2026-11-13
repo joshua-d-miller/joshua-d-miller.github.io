@@ -1,4 +1,4 @@
-# Builds the site with current Jekyll (see Gemfile) and publishes it to GitHub Pages.
+# Builds the site with Eleventy and publishes it to GitHub Pages.
 # Requires Settings → Pages → Build and deployment → Source: "GitHub Actions".
 name: Deploy site to Pages
 
@@ -23,21 +23,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ruby/setup-ruby@v1
+      - uses: actions/setup-node@v4
         with:
-          ruby-version: "3.3"
-          bundler-cache: true   # runs bundle install and caches the gems
+          node-version: 22
+          cache: npm
 
-      - id: pages
-        uses: actions/configure-pages@v5
+      - run: npm ci
+      - run: npm run build
 
-      - name: Build with Jekyll
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: production
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
 
       - uses: actions/upload-pages-artifact@v4
         if: github.event_name != 'pull_request'
+        with:
+          path: _site
 
   deploy:
     if: github.event_name != 'pull_request'

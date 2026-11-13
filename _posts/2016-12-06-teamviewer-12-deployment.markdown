@@ -3,7 +3,7 @@ title: TeamViewer 12 Deployment
 layout: post
 published: true
 comments: true
-date: 2016-12-06 10:16:17 -04:00
+date: 2016-12-06T09:16:17-05:00
 img: TeamViewer%20Host%2012.png
 status: publish
 categories:
@@ -203,7 +203,7 @@ To perform the activation TeamViewer includes an executable that must be run to 
 
 <h3>PKGInfo File</h3>
 
-{% highlight xml linenos %}
+{% highlight xml %}
 
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

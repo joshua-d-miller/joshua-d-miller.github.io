@@ -11,8 +11,8 @@
   {%- assign path = page.url -%}
   <nav class="site-nav" aria-label="Main">
     <ul>
-      <li><a href="{{ '/' | relative_url }}"{% if path == '/' or page.paginator or path contains '/page/' %} aria-current="page"{% endif %}>Home</a></li>
-      <li><a href="{{ '/blog/' | relative_url }}"{% if path == '/blog/' %} aria-current="page"{% elsif page.layout == 'post' %} aria-current="true"{% endif %}>Posts</a></li>
+      <li><a href="{{ '/' | relative_url }}"{% if path == '/' or path contains '/page/' %} aria-current="page"{% endif %}>Home</a></li>
+      <li><a href="{{ '/blog/' | relative_url }}"{% if path == '/blog/' %} aria-current="page"{% elsif isPost %} aria-current="true"{% endif %}>Posts</a></li>
       <li><a href="{{ '/projects/' | relative_url }}"{% if path == '/projects/' %} aria-current="page"{% elsif path contains '/projects/' %} aria-current="true"{% endif %}>Projects</a></li>
       <li><a href="{{ '/tags/' | relative_url }}"{% if path == '/tags/' %} aria-current="page"{% endif %}>Tags</a></li>
     </ul>

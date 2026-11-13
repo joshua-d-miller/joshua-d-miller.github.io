@@ -1,7 +1,7 @@
 ---
 layout: post
 title: TeamViewer 10 and Munki
-date: 2015-12-16 13:59:50.000000000 -05:00
+date: 2015-12-16T13:59:50-05:00
 type: post
 published: true
 comments: true
@@ -39,7 +39,7 @@ tags: []
 
 <p>Now that we have covered all that, we are going to generate our <em style="font-weight:bold; font-style:normal">preinstall_script</em> for Munki since these settings need to be there <em style="font-weight:bold; font-style:normal">BEFORE</em> TeamViewer launches. I have gone ahead and attached mine below for your copying ease. Side Note: I like to require a logout so that the software can install properly.</p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 # This script will apply configuration settings for TeamViewer 10
 # Joshua D. Miller - josh@psu.edu - The Pennsylvania State University
@@ -72,7 +72,7 @@ exit 0
 
 <p>So as you may have noticed TeamViewer basically creates a new PLIST file every time a new version is released ex. 8, 9, 10. I want to remove these old PLIST files as they are no longer needed.  Removing these files is simple, so we are going to remove the old files using a <em style="font-weight:bold; font-style:normal">postinstall_script</em>. One thing you will notice in my script listed below however is that I am using <em style="font-weight:bold; font-style:normal">xattr.</em> Remember the weird ID at the end of your PKG file when you downloaded your custom made host? TeamViewer uses xattr on the TeamViewer application to accomplish getting the custom settings. If you are like me you probably want that in your script and not in the file name. If you don't care you can skip this step. Listed below you will see how to add that if you want to keep it out of your PKG name.</p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 # Remove old TeamViewer Settings File and lockfile if it exist
 /bin/test -f /Library/Preferences/com.TeamViewer8.Settings.plist && /bin/rm -f /Library/Preferences/com.TeamViewer8.Settings.plist

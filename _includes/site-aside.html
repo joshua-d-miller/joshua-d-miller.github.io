@@ -2,7 +2,7 @@
   <div>
     <h2 id="aside-projects" class="aside-title">Projects</h2>
     <ul class="aside-projects">
-      {%- for p in site.data.projects -%}
+      {%- for p in projects -%}
       <li><a href="{{ p.page | default: p.repo | relative_url }}"{% if p.page and page.url == p.page %} aria-current="page"{% endif %}>{{ p.name }}</a></li>
       {%- endfor -%}
     </ul>

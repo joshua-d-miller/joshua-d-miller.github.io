@@ -28,6 +28,7 @@ facts:
     value: TypeScript (Node.js 22)
   - label: License
     value: AGPL-3.0
+toc: true
 ---
 
 <figure>
@@ -35,13 +36,6 @@ facts:
        alt="The planner on a wall-mounted screen: a month calendar drawn like chalk on a blackboard, with events, a weather forecast, trash day, countdowns, a meal plan and reward jars in a Notes column.">
   <figcaption>The board on the wall.</figcaption>
 </figure>
-
-<nav class="toc" aria-label="On this page" markdown="1">
-On this page
-
-* TOC
-{:toc}
-</nav>
 
 ## What it does
 

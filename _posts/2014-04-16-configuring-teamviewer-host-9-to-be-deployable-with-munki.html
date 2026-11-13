@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Configuring TeamViewer Host 9 to be deployable with Munki
-date: 2014-04-16 11:13:53.000000000 -04:00
+date: 2014-04-16T11:13:53-04:00
 type: post
 published: true
 comments: true
@@ -23,7 +23,7 @@ tags:
 <p>Once you have read through this we will start our package for TeamViewer 9.  You can download the latest version of TeamViewer 9 from their website. Also it is worth noting that if you recently purchased TeamViewer you should still be able to download TeamViewer 8 Host and use the method described in the article above as your license is attached to your user account and not the host application. We will <em style="font-weight:bold; font-style:normal">NOT</em> need to define a preinstall_script as this information should carry over from version 8. If you would like to define something I would suggest defining it in the version 8 script to avoid any issues.  We will still define a <em style="font-weight:bold; font-style:normal">post_install</em> script as with this method the TeamViewer 8 settings file is left behind as well as a conversion file that it uses called <em style="font-weight:bold; font-style:normal">com.TeamViewer9.Settings.plist</em>. Listed below is a script you can use to remove these extra files as well as the customizations that may be left behind from TeamViewer 8.</p>
 
 <p><em style="font-weight:bold; font-style:normal">Post Install Script</em></p>
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 # Post Instal Script to remove extra files from TeamViewer
 # Upgrade by Joshua D. Miller May 16, 2014
@@ -42,7 +42,7 @@ exit 0
 
 <p><em style="font-weight:bold; font-style:normal">Post Uninstall Script</em></p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!bin/bash
 rm -rf /Library/Preferences/com.teamviewer.teamviewer9.plist
 exit 0
@@ -52,7 +52,7 @@ exit 0
 
 <p>The other thing I noticed was that our customization package would attempt to install even though TeamViewer 9 had been installed since our customization package uses the installs key in Munki to install the files. To remedy this issue, I removed the installs key and used an installcheck_script written in python which will check for the correct TeamViewer installed and then if version 8 is installed compare the MD5 hashes. Please see the script listed below:</p>
 
-{% highlight python linenos %}
+{% highlight python %}
 #!/usr/bin/python
 # Joshua D. Miller - josh@psu.edu
 # July 9, 2014

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Java 7 Update 51 Global Exceptions list
-date: 2014-01-16 17:25:20.000000000 -05:00
+date: 2014-01-16T17:25:20-05:00
 type: post
 published: true
 img: Oracle%20Java.png
@@ -28,7 +28,7 @@ tags:
 
 <p>This above lines will tell Java that the exception sites file is located in this location and apply it for all users. Since the first location cannot be modified by standard users they will NOT be able to add or remove exceptions.  Use the second version if you would like your users to have the ability to add their own exceptions. Lastly, you define the exceptions file which you can do manually with VI or you can use a Munki post install script.  Below you will find a fully automated post install script that I have created for Munki that will create the files and output the necessary options as well as allow all users to modify the <em style="font-weight:bold; font-style:normal">exception.sites</em> file.</p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/sh
 # Java script to add the exception.sites in a shared location for the
 # new version of Java. Script created and updated by Josh Miller and

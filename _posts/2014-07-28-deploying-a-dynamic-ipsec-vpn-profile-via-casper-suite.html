@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Deploying a Dynamic IPSEC VPN Profile via Casper Suite
-date: 2014-07-28 13:58:39.000000000 -04:00
+date: 2014-07-28T13:58:39-04:00
 type: post
 published: true
 comments: true
@@ -38,7 +38,7 @@ tags:
 
 <p>Once this is completed the configuration profile should deploy easily to each system that has a user assigned to it. This method is <em style="font-weight:bold; font-style:normal">ONLY</em> good for those who want to deploy the VPN to single user systems. The next step however is we would like to add the VPN item in the Menu bar so users can easily connect when needed. To perform this we would reopen our VPN configuration profile and add a custom settings file called <em style="font-weight:bold; font-style:normal">com.apple.mcx.menuExtras</em>. In this PLIST you want to define the following Keys:</p>
 
-{% highlight xml linenos %}
+{% highlight xml %}
 <key>VPN.menu</key>
 <true/><br />
 <key>delaySeconds</key>

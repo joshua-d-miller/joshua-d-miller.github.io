@@ -3,7 +3,7 @@ layout: post
 published: true
 comments: true
 title: "New Theme for Blog"
-date: "2019-08-07 22:35:50 -0400"
+date: 2019-08-07T22:35:50-04:00
 img: Jekyll.png
 tags:
     - Jekyll
@@ -25,7 +25,7 @@ So once again I had issues with Syntax highlighting with a new theme. Seems to b
 ```
 Now that we can use custom CSS, I can make changes to how things behave on the site. If you are interested in just pulling my CSS Styles and adjusting them for your site feel free to copy the *custom.css* code below:
 
-{% highlight html linenos %}
+{% highlight html %}
 
 /* Fix Code Blocks */
 pre {
@@ -223,7 +223,7 @@ To add the search, we once again use the same files we had in the original theme
 
 Adding the search required us pulling down the *main.html* file as we are going to make changes to the default file. Remember, any files we place in our repository manually will **OVERRIDE** the remote version. Using the following code in our *main.html* and then combined with the Search json files and the CSS listed above we now have Search capabilities on the site.
 
-{% highlight html linenos %}
+{% highlight html %}
 <input type="text" id="search-input" placeholder="search...">
 <div class="search-wrapper"><ul id="results-container"></ul>
 </div>

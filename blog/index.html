@@ -3,15 +3,14 @@ layout: page
 title: All posts
 lede: Everything I've written, newest first.
 ---
-{%- assign by_year = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
-{%- for year in by_year -%}
+{%- for group in collections.postsByYear -%}
 <section class="archive-year">
-  <h2 id="y{{ year.name }}">{{ year.name }}</h2>
+  <h2 id="y{{ group.year }}">{{ group.year }}</h2>
   <ul class="archive-list">
-    {%- for post in year.items -%}
+    {%- for post in group.posts -%}
     <li>
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%b %-d' }}</time>
+      <a href="{{ post.url | relative_url }}">{{ post.data.title }}</a>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_fmt: 'LLL d' }}</time>
     </li>
     {%- endfor -%}
   </ul>

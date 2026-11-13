@@ -3,7 +3,7 @@ layout: post
 published: true
 comments: true
 title: Munki Styling Part Deux
-date: 2018-11-30 12:09:00 -4000
+date: 2018-11-30T07:09:00-05:00
 img: Munki.png
 status: publish
 categories:
@@ -20,7 +20,7 @@ Once again, I dug into the CSS of Managed Software Center which we are able to o
 
 The first new feature we added was a news ticker that will read Penn State's IT Alerts and showcase them as a sliding ticker using jQuery. We decided the best place for this ticker was at the bottom or the **footer_template** in order to showcase the alerts any time someone has Managed Software Center open. With this addition, it made sense to remove the bottom links so you will see the bottom links div is now empty. Listed below is the code that was needed in order to add the news ticker:
 
-{% highlight html linenos %}
+{% highlight html %}
 <div class="bottom-links">
 </div>
 <div class="footer-container">
@@ -38,9 +38,9 @@ The first new feature we added was a news ticker that will read Penn State's IT 
 </div>
 {% endhighlight %}
 
-You will see we created a two **<div>** classes for the ITAlerts. This allows us to display the RSS Feed as list items and then through the power of jQuery with some CSS Styling, we can then show only one item at a time and create a fade effect. We decided to take the code shown here at [jQuery Easy Ticker](https://www.aakashweb.com/demos/jquery-easy-ticker/) and then apply it to our **footer_template** as shown below:
+You will see we created a two **`<div>`** classes for the ITAlerts. This allows us to display the RSS Feed as list items and then through the power of jQuery with some CSS Styling, we can then show only one item at a time and create a fade effect. We decided to take the code shown here at [jQuery Easy Ticker](https://www.aakashweb.com/demos/jquery-easy-ticker/) and then apply it to our **footer_template** as shown below:
 
-{% highlight html linenos %}
+{% highlight html %}
 <!-- jQuery ITS ALerts Status Bar Ticker -->
 <script type="text/javascript">
     $.ajax({
@@ -150,7 +150,7 @@ You will see we created a two **<div>** classes for the ITAlerts. This allows us
 
 The next thing we added was a feedback button which creates a modal window that can take name, email and comments or concerns. This is also accomplished with jQuery and just takes a small bit of code. We decided to place the feedback button on the sidebar next to our RSS feed which is also jQuery. I will highlight the RSS feed after the feedback button. Here is the html code you will need in the sidebar to add your feedback button. I went with Purple to really make it stand out. You will also need to write a PHP file that can email the data posted from this. Listed below is the code we put into the **sidebar_template**:
 
-{% highlight html linenos %}
+{% highlight html %}
 <!-- Load jQuery and Bootstrap into the sidebar_template -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -301,7 +301,7 @@ You will notice that there is some CSS specifically aimed at bootstrap because l
 
 Next I will show you how to add an RSS feed to your sidebar. The RSS feed we have is from our website where we post news articles about updates on licensing or Apple apps. We should get better at updating the articles....  Here is the code for RSS reader:
 
-{% highlight html linenos %}
+{% highlight html %}
 <style type="text/css" scoped>
 .RSS {
     padding:1em;
@@ -390,7 +390,7 @@ Next I will show you how to add an RSS feed to your sidebar. The RSS feed we hav
 
 Lastly, we made some modifications to the buttons so that they would be Blue for Install, Red for Uninstall, Have white text in the middle and turn Green to install. Here is that CSS:
 
-{% highlight html linenos %}
+{% highlight html %}
 <style type="text/css" scoped>
 /* 10.14 Mojave Dark mode fix for buttons */
 div.msc-button-inner {

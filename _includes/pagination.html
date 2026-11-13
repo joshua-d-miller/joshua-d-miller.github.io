@@ -1,13 +1,13 @@
-{%- if paginator.total_pages > 1 -%}
+{%- if pagination.pages.size > 1 -%}
 <nav class="pagination" aria-label="Older and newer posts">
-  {%- if paginator.previous_page -%}
-  <a class="button" rel="prev" href="{{ paginator.previous_page_path | relative_url }}">{% include icon.html name="arrow-left" %} Newer posts</a>
+  {%- if pagination.href.previous -%}
+  <a class="button" rel="prev" href="{{ pagination.href.previous }}">{% include icon.html name="arrow-left" %} Newer posts</a>
   {%- else -%}
   <span></span>
   {%- endif -%}
-  <span class="pagination-status">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
-  {%- if paginator.next_page -%}
-  <a class="button" rel="next" href="{{ paginator.next_page_path | relative_url }}">Older posts {% include icon.html name="arrow-right" %}</a>
+  <span class="pagination-status">Page {{ pagination.pageNumber | plus: 1 }} of {{ pagination.pages.size }}</span>
+  {%- if pagination.href.next -%}
+  <a class="button" rel="next" href="{{ pagination.href.next }}">Older posts {% include icon.html name="arrow-right" %}</a>
   {%- else -%}
   <span></span>
   {%- endif -%}

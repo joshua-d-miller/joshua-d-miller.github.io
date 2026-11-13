@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Allowing a VirtualBox VM to be run by ALL Users
-date: 2014-01-16 17:18:03.000000000 -05:00
+date: 2014-01-16T17:18:03-05:00
 type: post
 published: true
 img: Oracle%20VirtualBox.png
@@ -18,7 +18,7 @@ tags:
 
 <p>The first thing to do is create a preinstall script which will create the directories where the Virtual Machine will be stored in a shared directory.  I used <em style="font-weight:bold; font-style:normal">/Users/Shared/</em>. I create the configuration I needed I installed VirtualBox on my machine and configured it the way I wanted for a shared user environment. Then I used echo to create an XML file in the directory I created for the shared configuration. Listed below is my preinstall script:</p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 /bin/test -d /Users/Shared/VirtualBox || mkdir /Users/Shared/VirtualBox/
 /bin/test -d /Users/Shared/VirtualBox || mkdir /Users/Shared/VirtualBox/VirtualBox\ VMs
@@ -56,7 +56,7 @@ tags:
 
 <p>You will need to change < and > to &lt; and &gt; so that they can be used by echo within an XML file efficiently. Now we move on to the post install script. This script will set the permissions on this directory so the default VirtualBox behavior cannot occur which sets the owner of the Virtual Machine. Also with the upcoming release of OS X 10.10 our <em style="font-weight:bold; font-style:normal">launchd.conf</em> environment variable will not work. I have gone ahead and created a very simple launch agent that will use <em style="font-weight:bold; font-style:normal">launchctl</em> to set the variable each time a user logs in. This will ensure it works every time and is compatible with previous and future versions of OS X. Listed here is that install script:</p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/sh</p>
 /bin/chmod -R +a 'everyone allow delete,chown,list,search,add_file,add_subdirectory,delete_child,file_inherit,directory_inherit' /Users/Shared/VirtualBox
 /bin/test -e /Library/LaunchAgents/edu.psu.educ.virtualboxhome.plist || /bin/echo '<?xml version='1.0' encoding='UTF-8'?>

@@ -1,20 +1,19 @@
 ---
 layout: default
 ---
-{%- assign words = content | strip_html | number_of_words -%}
-{%- assign minutes = words | divided_by: 220 | at_least: 1 -%}
-{%- assign this_year = site.time | date: '%Y' | plus: 0 -%}
-{%- assign post_year = page.date | date: '%Y' | plus: 0 -%}
+{%- assign minutes = content | reading_minutes -%}
+{%- assign this_year = site.time | year -%}
+{%- assign post_year = page.date | year -%}
 {%- assign age = this_year | minus: post_year -%}
 <article class="post" itemscope itemtype="https://schema.org/BlogPosting">
   <header class="post-header">
-    {%- if page.img -%}
-    <img class="post-icon" src="{{ '/assets/img/thumbs/' | append: page.img | relative_url }}" alt="" width="72" height="72">
+    {%- if img -%}
+    <img class="post-icon" src="{{ '/assets/img/thumbs/' | append: img | relative_url }}" alt="" width="72" height="72">
     {%- endif -%}
     <div>
-      <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
+      <h1 class="post-title" itemprop="headline">{{ title }}</h1>
       <p class="post-meta">
-        <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: '%B %-d, %Y' }}</time>
+        <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date_fmt: 'LLLL d, yyyy' }}</time>
         <span aria-hidden="true">·</span> {{ minutes }} min read
       </p>
     </div>
@@ -28,29 +27,31 @@ layout: default
     {{ content }}
   </div>
 
-  {%- if page.tags.size > 0 -%}
+  {%- if tags.size > 0 -%}
   <footer class="post-footer">
     <h2 class="visually-hidden">Tags</h2>
     <ul class="chips">
-      {%- for tag in page.tags -%}
-      <li><a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a></li>
+      {%- for tag in tags -%}
+      <li><a href="{{ '/tags/' | relative_url }}#{{ tag | tag_slug }}">{{ tag }}</a></li>
       {%- endfor -%}
     </ul>
   </footer>
   {%- endif -%}
 </article>
 
+{%- assign newer = collections.posts | getNextCollectionItem: page -%}
+{%- assign older = collections.posts | getPreviousCollectionItem: page -%}
 <nav class="post-nav" aria-label="More posts">
-  {%- if page.next -%}
-  <a class="post-nav-link" rel="next" href="{{ page.next.url | relative_url }}">
+  {%- if newer -%}
+  <a class="post-nav-link" rel="next" href="{{ newer.url | relative_url }}">
     <span class="post-nav-label">{% include icon.html name="arrow-left" %} Newer</span>
-    <span class="post-nav-title">{{ page.next.title }}</span>
+    <span class="post-nav-title">{{ newer.data.title }}</span>
   </a>
   {%- else -%}<span></span>{%- endif -%}
-  {%- if page.previous -%}
-  <a class="post-nav-link post-nav-link--older" rel="prev" href="{{ page.previous.url | relative_url }}">
+  {%- if older -%}
+  <a class="post-nav-link post-nav-link--older" rel="prev" href="{{ older.url | relative_url }}">
     <span class="post-nav-label">Older {% include icon.html name="arrow-right" %}</span>
-    <span class="post-nav-title">{{ page.previous.title }}</span>
+    <span class="post-nav-title">{{ older.data.title }}</span>
   </a>
   {%- endif -%}
 </nav>

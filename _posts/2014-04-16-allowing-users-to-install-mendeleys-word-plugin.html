@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Allowing Users to install Mendeley's Word Plugin
-date: 2014-04-16 13:01:50.000000000 -04:00
+date: 2014-04-16T13:01:50-04:00
 type: post
 comments: true
 img: Mendeley.png
@@ -25,7 +25,7 @@ tags:
 <p>Listed below is the script I have created for Munki that will apply this permission upon install to fully automate the process. I have also created an uninstall script that will revert the permissions when Mendeley is no longer installed. As always, if you have any questions feel free to leave a comment or suggestion.</p>
 
 <p><em style="font-weight:bold; font-style:normal">Post Install Script</em></p>
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 # Mircosoft Word 2011 Plugin for Mendeley
 # Last Updated April 10, 2014 - Joshua D. Miller
@@ -33,7 +33,7 @@ tags:
 [ -e /Applications/Microsoft\ Office\ 2011/ ] && chmod o+w /Applications/Microsoft\ Office\ 2011/Office/Startup/Word
 {% endhighlight %}
 <p><em style="font-weight:bold; font-style:normal">Uninstall Script</em></p>
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 # Uninstall Script for Word Plugin for Mendeley
 # Last Updated April 10, 2014 - Joshua D. Miller

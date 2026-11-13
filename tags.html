@@ -4,23 +4,21 @@ title: Tags
 permalink: /tags/
 lede: Posts grouped by topic.
 ---
-{%- capture site_tags -%}{%- for tag in site.tags -%}{{ tag | first }}{%- unless forloop.last -%}|{%- endunless -%}{%- endfor -%}{%- endcapture -%}
-{%- assign tag_words = site_tags | split: '|' | sort_natural -%}
 <nav aria-label="Tags">
   <ul class="chips chips--large">
-    {%- for tag in tag_words -%}
-    <li><a href="#{{ tag | slugify }}">{{ tag }} <span class="count">({{ site.tags[tag].size }}<span class="visually-hidden"> posts</span>)</span></a></li>
+    {%- for tag in collections.tagList -%}
+    <li><a href="#{{ tag.slug }}">{{ tag.name }} <span class="count">({{ tag.posts.size }}<span class="visually-hidden"> posts</span>)</span></a></li>
     {%- endfor -%}
   </ul>
 </nav>
-{%- for tag in tag_words -%}
+{%- for tag in collections.tagList -%}
 <section class="archive-year">
-  <h2 id="{{ tag | slugify }}" tabindex="-1">{{ tag }}</h2>
+  <h2 id="{{ tag.slug }}" tabindex="-1">{{ tag.name }}</h2>
   <ul class="archive-list">
-    {%- for post in site.tags[tag] -%}
+    {%- for post in tag.posts -%}
     <li>
-      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%b %-d, %Y' }}</time>
+      <a href="{{ post.url | relative_url }}">{{ post.data.title }}</a>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_fmt: 'LLL d, yyyy' }}</time>
     </li>
     {%- endfor -%}
   </ul>

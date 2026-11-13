@@ -398,7 +398,6 @@ pre {
   font-size: 0.88rem; line-height: 1.55; tab-size: 4;
 }
 pre code { background: none; border: 0; padding: 0; font-size: inherit; color: inherit; }
-.highlighter-rouge .highlight { background: none; }
 
 .table-wrap { overflow-x: auto; margin: 0 0 1.4em; border: 1px solid var(--border); border-radius: var(--radius); }
 .table-wrap table { margin: 0; border: 0; }
@@ -423,18 +422,18 @@ td:last-child code { white-space: normal; }
 .search-results p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.93rem; }
 .search-results mark { background: var(--notice-bg); color: var(--text); border-radius: 3px; padding: 0 2px; }
 
-/* ---------- Syntax highlighting (Rouge) ---------- */
-.highlight .c, .highlight .c1, .highlight .cm, .highlight .cs, .highlight .cp, .highlight .cd { color: var(--syn-comment); font-style: italic; }
-.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt, .highlight .kc, .highlight .ow { color: var(--syn-keyword); }
-.highlight .s, .highlight .s1, .highlight .s2, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .ss, .highlight .dl { color: var(--syn-string); }
-.highlight .m, .highlight .mi, .highlight .mf, .highlight .mh, .highlight .mo, .highlight .il { color: var(--syn-number); }
-.highlight .nf, .highlight .fm, .highlight .nc, .highlight .nn, .highlight .ne { color: var(--syn-name); }
-.highlight .na, .highlight .nv, .highlight .vi, .highlight .vg, .highlight .vc { color: var(--syn-attr); }
-.highlight .nt { color: var(--syn-tag); }
-.highlight .nb, .highlight .bp, .highlight .no { color: var(--syn-builtin); }
-.highlight .gd { color: var(--syn-keyword); }
-.highlight .gi { color: var(--syn-string); }
-.highlight .err { color: inherit; background: none; }
+/* ---------- Syntax highlighting (Prism, via @11ty/eleventy-plugin-syntaxhighlight) ---------- */
+.token.comment, .token.prolog, .token.doctype, .token.cdata { color: var(--syn-comment); font-style: italic; }
+.token.keyword, .token.important, .token.atrule, .token.rule, .token.deleted { color: var(--syn-keyword); }
+.token.string, .token.char, .token.attr-value, .token.regex, .token.inserted, .token.url, .token.triple-quoted-string { color: var(--syn-string); }
+.token.number, .token.boolean, .token.constant, .token.unit { color: var(--syn-number); }
+.token.function, .token.class-name, .token.selector { color: var(--syn-name); }
+.token.attr-name, .token.property, .token.variable, .token.parameter { color: var(--syn-attr); }
+.token.tag { color: var(--syn-tag); }
+.token.builtin, .token.namespace, .token.symbol, .token.entity { color: var(--syn-builtin); }
+.token.punctuation, .token.operator { color: inherit; }
+.token.bold, .token.important { font-weight: 600; }
+.token.italic { font-style: italic; }
 
 /* ---------- Motion & print ---------- */
 @media (prefers-reduced-motion: no-preference) {
@@ -450,8 +449,3 @@ td:last-child code { white-space: normal; }
   a { color: inherit; }
 }
 
-/* Rouge line-numbered blocks (some older posts use {% highlight … linenos %}) */
-.rouge-table { width: auto; margin: 0; background: none; font-size: inherit; border: 0; }
-.rouge-table td { padding: 0; border: 0; background: none; }
-.rouge-table td.gutter { padding-right: 1rem; color: var(--syn-comment); user-select: none; text-align: right; }
-.rouge-table pre { border: 0; padding: 0; margin: 0; background: none; overflow: visible; }

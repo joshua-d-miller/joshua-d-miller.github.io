@@ -1,7 +1,13 @@
 ---
 layout: default
+pagination:
+  data: collections.posts
+  size: 10
+  reverse: true
+  alias: posts
+permalink: "{% if pagination.pageNumber > 0 %}/page/{{ pagination.pageNumber | plus: 1 }}/{% else %}/{% endif %}"
 ---
-{%- if paginator.page == 1 -%}
+{%- if pagination.pageNumber == 0 -%}
 <section class="intro" aria-labelledby="intro-title">
   <h1 id="intro-title">Hi, I'm Joshua.</h1>
   <p class="lede">I manage Macs and other devices for a living and write about it here. Some of that work turned into open-source tools you can use.</p>
@@ -13,7 +19,7 @@ layout: default
     <a href="{{ '/projects/' | relative_url }}">All projects</a>
   </div>
   <div class="project-grid">
-    {%- assign featured = site.data.projects | where: "featured", true -%}
+    {%- assign featured = projects | where: "featured", true -%}
     {%- for p in featured -%}
       {% include project-card.html project=p level=3 %}
     {%- endfor -%}
@@ -23,16 +29,16 @@ layout: default
 
 <section aria-labelledby="latest-posts">
   <div class="section-head">
-    {%- if paginator.page == 1 -%}
+    {%- if pagination.pageNumber == 0 -%}
     <h2 id="latest-posts">Latest posts</h2>
     {%- else -%}
-    <h1 id="latest-posts">Posts, page {{ paginator.page }}</h1>
+    <h1 id="latest-posts">Posts, page {{ pagination.pageNumber | plus: 1 }}</h1>
     {%- endif -%}
     <a href="{{ '/blog/' | relative_url }}">All posts by year</a>
   </div>
   <div class="post-list">
-    {%- assign level = 3 -%}{%- if paginator.page > 1 -%}{%- assign level = 2 -%}{%- endif -%}
-    {%- for post in paginator.posts -%}
+    {%- assign level = 3 -%}{%- if pagination.pageNumber > 0 -%}{%- assign level = 2 -%}{%- endif -%}
+    {%- for post in posts -%}
       {% include post-card.html post=post level=level %}
     {%- endfor -%}
   </div>

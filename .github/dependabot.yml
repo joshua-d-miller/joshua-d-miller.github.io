@@ -1,7 +1,7 @@
-# Keeps Jekyll, its plugins and the workflow's actions up to date with monthly PRs.
+# Keeps Eleventy, its plugins and the workflow's actions up to date with monthly PRs.
 version: 2
 updates:
-  - package-ecosystem: bundler
+  - package-ecosystem: npm
     directory: /
     schedule:
       interval: monthly

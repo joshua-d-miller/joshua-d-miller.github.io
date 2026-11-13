@@ -4,7 +4,7 @@ layout: post
 type: post
 published: true
 comments: true
-date: 2017-09-20 12:35:25 -0400
+date: 2017-09-20T12:35:25-04:00
 img: LAPS.png
 status: publish
 categories:

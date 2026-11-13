@@ -4,7 +4,7 @@ layout: post
 type: post
 published: true
 comments: true
-date: 2017-03-21 14:37:00 -0400
+date: 2017-03-21T14:37:00-04:00
 img: Network.png
 status: publish
 categories:

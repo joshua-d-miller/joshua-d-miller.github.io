@@ -3,7 +3,7 @@ title: New Blog CSS Upgrades
 layout: post
 type: post
 published: true
-date: 2016-10-18 15:39:17 -04:00
+date: 2016-10-18T15:39:17-04:00
 comments: true
 img: CSS.png
 status: publish

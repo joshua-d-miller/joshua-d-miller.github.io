@@ -3,7 +3,7 @@ layout: post
 published: true
 comments: true
 title: "LAPS for macOS"
-date: "2019-08-15 09:16:00 -0400"
+date: 2019-08-15T09:16:00-04:00
 img: LAPS.png
 tags:
     - Active Directory
