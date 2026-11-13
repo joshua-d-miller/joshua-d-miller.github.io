@@ -1,9 +1,15 @@
 # joshua-d-miller.com
 
-Source for [www.joshua-d-miller.com](https://www.joshua-d-miller.com), built by GitHub Pages with Jekyll.
-The theme lives in this repo (no remote theme), so nothing changes unless it changes here.
+Source for [www.joshua-d-miller.com](https://www.joshua-d-miller.com). It's built with current Jekyll (4.x) by a
+GitHub Actions workflow (`.github/workflows/pages.yml`) and published to GitHub Pages. The theme lives in this repo
+(no remote theme), so nothing changes unless it changes here. Dependabot opens a PR when Jekyll, a plugin or an
+action has an update; the workflow builds every PR, so you can see it still works before merging.
+
+**One-time setup:** in the repo's Settings → Pages → Build and deployment, set Source to **GitHub Actions**.
 
 ## Run it locally
+
+Needs Ruby 3.2 or newer.
 
 ```bash
 bundle install
