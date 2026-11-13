@@ -3,7 +3,7 @@ title: Munki Styling - Adding an Image Slider with Thumbnail Previews
 layout: post
 published: true
 comments: true
-date: 2017-11-02 15:35:05 -0400
+date: 2017-11-02T15:35:05-04:00
 img: Munki.png
 status: publish
 categories:
@@ -20,7 +20,7 @@ The great thing about the Managed Software Center interface is all the initial s
 
 First thing I did when customizing the CSS of Managed Software Center is I put it all in a common place which like [@bartreardon](https://twitter.com/bartreardon), I used **footer_template.html**. To change the buttons throughout Managed Software Center for *Install*, *Remove*, *Update* *Check Again* we add the following CSS styling:
 
-{% highlight css linenos %}
+{% highlight css %}
 /* Install Button */
 div.msc-button-inner.not-installed {
     background: -webkit-gradient(linear, left top, left bottom,
@@ -108,7 +108,7 @@ This code will color the *Install*, *Update* and *Check Again* buttons blue and 
 
 The next thing I wanted to do was make it so the showcase images did not cut off if the user resized the Managed Software Center window. This way the banner always display fully and did not get cut off the window was smaller than the banner size. To perform this it was just adding some simple CSS code into **showcase_template.html** since this had to do with the banners.
 
-{% highlight css linenos %}
+{% highlight css %}
 .stage img {
     max-width: 100%;
     height: auto !important;
@@ -126,7 +126,7 @@ Now that we have the banners for featured applications, let's go ahead and add t
 At this point I asked our Programmer Analyst [John Pater](https://github.com/jpat14) for some advice on how to achieve a responsive and nice Image Slider in Managed Software Center and he recommended Javascript or JQuery. Well in the end we actually ended up using both. I stumbled upon [this](https://www.youtube.com/watch?v=Dc2WHsuiXos&t=1s) which was exactly what I was looking for however I was only adding three images which meant the thumbnails were not centered. Also I wanted to add some transition effects similar to the CSS example so that the slider was very nice looking. At this point John recommended adding **jQuery** into the mix with the javascript which allowed us to add and remove CSS effects from the elements easily. Once these changes were made we added the javascript and jquery elements to the **footer_template.html**. Now all we have to do is add the HTML elements to a **pkginfo** that we want an image slider on. We first selected **Adobe Creative Cloud**. The test was successful and we had a beautiful image slider in the description of the software. We can now add this slider to any item in Managed Software Center and all we have to do is change the links to the images. Below is the CSS Code, Javascript and jQuery code in order to achieve this. Once you add these elements you just need to add HTML code to the description of an application to utilize it. I will use our **Adobe Creative Cloud** description as our example.
 
 **CSS**
-{% highlight CSS linenos %}
+{% highlight css %}
 .imgStyle {
     width:100px;
     border:3px solid grey;
@@ -163,7 +163,7 @@ At this point I asked our Programmer Analyst [John Pater](https://github.com/jpa
 {% endhighlight %}
 
 **Javascript and jQuery**
-{% highlight html linenos %}
+{% highlight html %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
 
@@ -195,7 +195,7 @@ At this point I asked our Programmer Analyst [John Pater](https://github.com/jpa
 {% endhighlight %}
 
 **Example Description** - Keep in mind you have to escape HTML in XML
-{% highlight xml linenos %}
+{% highlight xml %}
 &lt;html&gt;
 &lt;body&gt;
 &lt;p&gt;
@@ -214,7 +214,7 @@ Creative Cloud gives you the entire collection of Adobe desktop and mobile apps,
 
 My images were **800px** wide and **400px** high. You can obviously change this to how you would like but with this code you should now have a beautiful image slider in Managed Software Center. Here is what it should look like:
 
-![Adobe Creative Cloud]({{ site.baseurl }}/assets/img/Adobe Creative Cloud - Munki.png)
+![Adobe Creative Cloud]({{ site.baseurl }}/assets/img/Adobe%20Creative%20Cloud%20-%20Munki.png)
 
 If you find ways to improve this code I would love to hear your feedback. So one last thing I'd like to do is place all the links in this article here at the bottom for easy consumption. Here they are:
 

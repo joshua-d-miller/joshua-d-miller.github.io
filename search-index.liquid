@@ -1,0 +1,26 @@
+---
+permalink: /search.json
+layout: false
+eleventyExcludeFromCollections: true
+---
+[
+{%- for post in collections.posts reversed -%}
+  {
+    "title": {{ post.data.title | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "date": {{ post.date | date_fmt: 'LLLL d, yyyy' | jsonify }},
+    "tags": {{ post.data.tags | jsonify }},
+    "text": {{ post.content | text | jsonify }}
+  },
+{%- endfor -%}
+{%- assign shown = projects | visible -%}{%- for p in shown -%}{%- if p.page -%}
+  {
+    "title": {{ p.name | append: " (project)" | jsonify }},
+    "url": {{ p.page | relative_url | jsonify }},
+    "date": "",
+    "tags": {{ p.tags | jsonify }},
+    "text": {{ p.summary | jsonify }}
+  },
+{%- endif -%}{%- endfor -%}
+  null
+]

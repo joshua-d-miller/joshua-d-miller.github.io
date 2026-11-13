@@ -1,0 +1,11 @@
+# Keeps Eleventy, its plugins and the workflow's actions up to date with monthly PRs.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: MunkiWebAdmin2 - Setting up Active Directory
-date: 2016-02-29 16:44:35.000000000 -05:00
+date: 2016-02-29T16:44:35-05:00
 type: post
 published: true
 comments: true
@@ -17,7 +17,45 @@ tags: []
 
 <p>To setup Active Directory in MunkiWebAdmin2 we are going to use Greg's start code in the <em style="font-weight:bold; font-style:normal">settings.py</em> file and make some modifications. We are also going to add some additional pieces so that the administration site is automatically setup for your groups.</p>
 
-{% gist joshua-d-miller/eee7cc933047c9c0799b8759df675295 %}
+{% highlight python %}
+# django ldap auth
+USE_LDAP = True
+# LDAP authentication support
+if USE_LDAP:
+
+    import ldap
+    from django_auth_ldap.config import LDAPSearch, ActiveDirectoryGroupType
+
+    # LDAP settings
+    AUTH_LDAP_SERVER_URI = 'Your AD Server here using ldaps'
+    AUTH_LDAP_PORT = 636 (Default Port for SSL)
+    AUTH_LDAP_BIND_DN = 'CN=Account Name,OU=What OU this account is in,DC=domain,DC=local'
+    AUTH_LDAP_BIND_PASSWORD = 'password for your bind account'
+    AUTH_LDAP_USER_SEARCH = LDAPSearch(
+        'OU=OU to search for users in,DC=domain,DC=local',
+        ldap.SCOPE_SUBTREE, '(sAMAccountName=%(user)s)')
+    AUTH_LDAP_GROUP_SEARCH = LDAPSearch(
+        'OU=OU to search for groups in,DC=domain,DC=local',
+        ldap.SCOPE_SUBTREE, '(objectClass=*)')
+    AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType()
+    AUTH_LDAP_FIND_GROUP_PERMS = True
+    AUTH_LDAP_GLOBAL_OPTIONS = {
+        ldap.OPT_X_TLS_REQUIRE_CERT: False,
+        ldap.OPT_REFERRALS: False, }
+    AUTH_LDAP_REQUIRE_GROUP = 'CN=Name of Group,OU=OU Group is in,DC=domain,DC=local'
+    AUTH_LDAP_ALWAYS_UPDATE_USER = True
+    # Cache group memberships for an hour to minimize LDAP traffic
+    AUTH_LDAP_CACHE_GROUPS = True
+    AUTH_LDAP_GROUP_CACHE_TIMEOUT = 3600
+    AUTH_LDAP_USER_ATTR_MAP = {'first_name': 'givenName',
+                               'last_name': 'sn',
+                               'email': 'mail'}
+    AUTH_LDAP_USER_FLAGS_BY_GROUP = {
+    'is_active': 'CN=Group for Active,OU=Location of Group,DC=domain,DC=local',
+    'is_staff': 'CN=Group for Staff,OU=Location of Group,DC=domain,DC=local',
+    'is_superuser': 'CN=Group for Superuser,OU=Location of Group,DC=domain,DC=local'
+    }
+{% endhighlight %}
 
 <p>Now let's talk about this code. First of all you want to make sure you are searching for the correct users and groups. Secondly, you want to make sure that you require a certain group membership so not just anyone can log into MunkiWebAdmin. Lastly, The piece at the bottom, we can define who can access what part of administrative console. I like to provide AD integration for the admin console but you can of course use a local account in the Django database as well. In our environment, we actually do not utilize the "is staff" portion and only utilize "is active" and "is superuser" since we are a smaller unit. Now, since "is active" does not have any permissions to start you will want to log into the console with one of your superuser account and provide permissions for those users that login or you can create a local group in Django with the permissions you want and add them to that group.</p>
 

@@ -1,0 +1,20 @@
+{%- assign p = include.project -%}
+<article class="project-card">
+  {%- if p.icon -%}
+  <img class="project-card-icon" src="{{ p.icon | relative_url }}" alt="" width="56" height="56" loading="lazy">
+  {%- endif -%}
+  <div>
+    <h{{ include.level | default: 3 }} class="project-card-title">
+      <a href="{{ p.page | default: p.repo | relative_url }}">{{ p.name }}</a>
+    </h{{ include.level | default: 3 }}>
+    <p>{{ p.summary }}</p>
+    {%- if p.tags -%}
+    <ul class="chips" aria-label="Technologies">
+      {%- for t in p.tags -%}<li>{{ t }}</li>{%- endfor -%}
+    </ul>
+    {%- endif -%}
+    {%- if p.page -%}
+    <p class="project-card-links"><a href="{{ p.repo }}">Source on GitHub<span class="visually-hidden"> for {{ p.name }}</span></a></p>
+    {%- endif -%}
+  </div>
+</article>

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Suppressing the "What's New" dialog in Microsoft Remote Desktop for Mac
-date: 2014-11-24 15:02:15.000000000 -05:00
+date: 2014-11-24T15:02:15-05:00
 type: post
 published: true
 comments: true
@@ -17,7 +17,7 @@ tags:
 ---
 <p>Since our College is both Windows and Mac we install the Microsoft Remote Desktop tool for Mac onto all systems. Microsoft's latest edition is a welcomed change however one annoying thing happens with every update. Each user is prompted with a nice "What's New" dialog when they launch it. After doing some digging I found that this setting is actually stored in a "sandbox" container which means that each user has this setting.  Essentially if you have a system with multiple users, each one of them would have to press "Don't Show this Again" to make it go away. Well I'm a big fan of automation so I developed a quick Bash Script that will place a shell script and a Launch Agent on the system that will change this setting so users do not see that popup each time it updates.</p>
 
-{% highlight bash linenos %}
+{% highlight bash %}
 #!/bin/bash
 # Microsoft Remote Desktop What's New
 # Dialog Box Supression Script

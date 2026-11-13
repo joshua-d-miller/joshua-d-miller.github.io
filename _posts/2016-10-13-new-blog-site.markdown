@@ -1,7 +1,7 @@
 ---
 title: New Blog Site
 layout: post
-date: 2016-10-13 16:55:51 -04:00
+date: 2016-10-13T16:55:51-04:00
 type: post
 img: Jekyll.png
 published: true
@@ -24,7 +24,7 @@ Over the last week I have been experimenting with Jekyll per the recommendation 
 
 After going through all of my individual posts and rectifying these issues I then chose to use the [end2end](https://github.com/nandomoreirame/end2end "End2End Theme") which presented its own challenged. Since the CSS is developed by someone else, I had to go through and determine how to make certain things display correctly such as using **rouge** instead of **pygments**. This was especially tricky as everything was being moved to one side. There were also some issues with the gist line numbers displaying. To remedy these issue, I modified the **_syntax.scss** file. I also changed the theme to the [Friendly](https://raw.githubusercontent.com/jwarby/pygments-css/master/friendly.css "Friendly Pygments Theme (Works with rouge)"). Listed below is my SCSS file for your use:
 
-{% highlight scss linenos %}
+{% highlight scss %}
 .highlight {
   @extend %clearfix;
   padding: 0;

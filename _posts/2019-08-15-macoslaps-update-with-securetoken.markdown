@@ -3,7 +3,7 @@ layout: post
 published: true
 comments: true
 title: "macOSLAPS Update with secureToken"
-date: "2019-08-15 08:56:36 -0400"
+date: 2019-08-15T08:56:36-04:00
 img: LAPS.png
 tags:
     - Active Directory

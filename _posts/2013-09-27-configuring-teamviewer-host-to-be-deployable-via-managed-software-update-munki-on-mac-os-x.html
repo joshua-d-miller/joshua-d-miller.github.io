@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Configuring TeamViewer Host 8 to be deployable via Munki
-date: 2013-09-27 13:06:39.000000000 -04:00
+date: 2013-09-27T13:06:39-04:00
 type: post
 img: TeamViewer%20Host.png
 published: true
@@ -57,7 +57,7 @@ tags:
 <p>Once these changes have been made you can package the modified files in a DMG and have it update every time the TeamViewer Host is installed which will add your branding and customization to the product performing a real deployable version. The last piece however that I have yet been able to figure out with the product itself is how to report the IDs back to your Corporate License. For the time being PSU has IBM Endpoint Manager which I have worked with the Windows System Administrator to create an Analyses job that will look at the plist file after TeamViewer is launched on the remote system for the ID as the ID is placed in the PLIST file. Since we don't want personal TeamViewer IDs, we also added in the install script a PLIST entry that says it was installed by EDUC which we also look for when scanning for the IDs.  This portion is still manual but may not be for long. I have also had many conversations with TeamViewer and they have indicated that the next version (9) may possibly have a deployable version for Mac so you would not need to perform any of this. If you have any questions please feel free to let me know. Here are my final PKGInfo files for both the TeamViewer Host install and the additional settings. You will see under the uninstall_script that I remove our customized PLIST file which I highly recommend.</p>
 
 <p style="font-weight:bold; font-style:normal">TeamViewer Host PKGINFO</p>
-{% highlight xml linenos=table %}
+{% highlight xml %}
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
 <plist version='1.0'>
@@ -146,7 +146,7 @@ tags:
 
 <p style="font-weight:bold; font-style:normal">TeamViewer Customization PKGINFO</p>
 
-{% highlight xml linenos %}
+{% highlight xml %}
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
 <plist version='1.0'>

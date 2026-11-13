@@ -3,7 +3,7 @@ title: Self Service for GarageBand Loops
 layout: post
 published: true
 comments: true
-date: 2018-07-18 10:24:33 -0400
+date: 2018-07-18T10:24:33-04:00
 img: GarageBand.png
 status: publish
 categories:
@@ -17,7 +17,7 @@ With the move to Volume Purchasing for Apple Applications through MDM, I was lef
 
 To rememdy this I got to thinking couldn't we just pull the *appleLoops* python script down to the system and then run it on demand now that Munki supports on Demand scripts? The answer is yes, and this way you are always pulling down the latest version of the script and getting the latest version of the loops so there is no need to run this periodically and import into your repo. To acoomplish this, I threw together a very simple bash script that will download the GitHub project and then extract and run the script through a Munki on demand nopkg script. This way users that actually want to use GarageBand can download the loops at their convienience. Here is the package info that you can copy and change to your repo's liking.
 
-{% highlight xml linenos %}
+{% highlight xml %}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">

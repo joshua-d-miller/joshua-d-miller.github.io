@@ -3,7 +3,7 @@ title: Getting the TeamViewer ID in the JSS
 layout: post
 type: post
 published: true
-date: 2016-10-18 16:41:45 -04:00
+date: 2016-10-18T16:41:45-04:00
 comments: true
 img: Casper.png
 status: publish
@@ -17,7 +17,7 @@ tags:
 ---
 My college uses TeamViewer for remote support and in my previous posts I have highlighted how to deploy the software. The only remaining issue is getting the client ID so that we can remote into the system. Well to remedy this I built a python script that will extract the ID from either a **TeamViewer 8** plist file or a **TeamViewer 11** plist file. See below for the code you can plug into your extension attribute:
 
-{% highlight python linenos %}
+{% highlight python %}
 #!/usr/bin/python
 # pylint:disable=C0103, E0611
 '''TeamViewer ID'''

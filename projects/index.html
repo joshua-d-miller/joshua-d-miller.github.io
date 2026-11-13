@@ -1,0 +1,11 @@
+---
+layout: page
+title: Projects
+lede: Open-source tools I build and maintain.
+---
+<div class="project-grid project-grid--single">
+  {%- assign shown = projects | visible -%}
+  {%- for p in shown -%}
+    {% include project-card.html project=p level=2 %}
+  {%- endfor -%}
+</div>

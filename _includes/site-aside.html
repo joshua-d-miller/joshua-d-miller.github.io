@@ -1,0 +1,33 @@
+<aside class="site-aside" aria-label="Projects and contact">
+  <div>
+    <h2 id="aside-projects" class="aside-title">Projects</h2>
+    <ul class="aside-projects">
+      {%- assign shown = projects | visible -%}
+      {%- for p in shown -%}
+      <li><a href="{{ p.page | default: p.repo | relative_url }}"{% if p.page and page.url == p.page %} aria-current="page"{% endif %}>{{ p.name }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+
+  <div>
+    <h2 id="aside-contact" class="aside-title">Elsewhere</h2>
+    <ul class="social">
+      {%- if site.social.github -%}
+      <li><a href="https://github.com/{{ site.social.github }}">{% include icon.html name="github" %}<span>GitHub</span></a></li>
+      {%- endif -%}
+      {%- if site.social.linkedin -%}
+      <li><a href="https://www.linkedin.com/in/{{ site.social.linkedin }}">{% include icon.html name="linkedin" %}<span>LinkedIn</span></a></li>
+      {%- endif -%}
+      {%- if site.social.mastodon -%}
+      <li><a href="{{ site.social.mastodon }}" rel="me">{% include icon.html name="mastodon" %}<span>Mastodon</span></a></li>
+      {%- endif -%}
+      {%- if site.social.twitter -%}
+      <li><a href="https://x.com/{{ site.social.twitter }}">{% include icon.html name="twitter" %}<span>X (Twitter)</span></a></li>
+      {%- endif -%}
+      {%- if site.social.email -%}
+      <li><a href="mailto:{{ site.social.email }}">{% include icon.html name="email" %}<span>Email</span></a></li>
+      {%- endif -%}
+      <li><a href="{{ '/feed.xml' | relative_url }}">{% include icon.html name="rss" %}<span>RSS feed</span></a></li>
+    </ul>
+  </div>
+</aside>

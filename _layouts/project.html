@@ -1,0 +1,59 @@
+---
+layout: default
+---
+<article class="project">
+  <header class="project-hero">
+    {%- if icon -%}
+    <img class="project-icon" src="{{ icon | relative_url }}" alt="" width="96" height="96">
+    {%- endif -%}
+    <div class="project-hero-text">
+      <p class="eyebrow"><a href="{{ '/projects/' | relative_url }}">Projects</a></p>
+      <h1>{{ title }}</h1>
+      <p class="lede">{{ tagline }}</p>
+      {%- if actions -%}
+      <ul class="actions">
+        {%- for a in actions -%}
+        <li><a class="button{% if forloop.first %} button--primary{% endif %}" href="{% if a.url contains '://' or a.url contains '#' %}{{ a.url }}{% else %}{{ a.url | relative_url }}{% endif %}">{% if a.icon %}{% include icon.html name=a.icon %}{% endif %}{{ a.label }}</a></li>
+        {%- endfor -%}
+      </ul>
+      {%- endif -%}
+    </div>
+  </header>
+
+  {%- if facts -%}
+  <dl class="facts">
+    {%- for f in facts -%}
+    <div><dt>{{ f.label }}</dt><dd>{{ f.value }}</dd></div>
+    {%- endfor -%}
+  </dl>
+  {%- endif -%}
+
+  {%- if toc -%}
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    {{ content | toc }}
+  </nav>
+  {%- endif -%}
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  {%- if related_title -%}
+  {%- capture related_html -%}
+      {%- for post in collections.posts reversed -%}
+        {%- if post.data.title contains related_title -%}
+        {% include post-card.html post=post level=3 compact=true %}
+        {%- endif -%}
+      {%- endfor -%}
+  {%- endcapture -%}
+  {%- if related_html != "" -%}
+  <section class="related" aria-labelledby="related-posts">
+    <h2 id="related-posts">Posts about {{ title }}</h2>
+    <div class="post-list post-list--compact">
+      {{ related_html }}
+    </div>
+  </section>
+  {%- endif -%}
+  {%- endif -%}
+</article>

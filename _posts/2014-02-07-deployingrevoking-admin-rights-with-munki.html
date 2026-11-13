@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Deploying/Revoking Admin Rights with Munki
-date: 2014-02-07 13:57:55.000000000 -05:00
+date: 2014-02-07T13:57:55-05:00
 type: post
 published: true
 img: Munki.png
@@ -16,7 +16,7 @@ tags:
 ---
 <p>In our college we have users that would like to have administrative access to their machines even though Munki provides the ability to install software approved by the College. To allow this we have created a packageless install for Munki which will issue a basic terminal command to add administrative rights for the user listed. This package can also be uninstalled which will revoke access. See the example listed below:</p>
 
-{% highlight xml linenos %}
+{% highlight xml %}
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE plist PUBLIC '-//Apple//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>
 <plist version='1.0'>

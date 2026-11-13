@@ -1,0 +1,19 @@
+{%- assign post = include.post -%}
+{%- assign lvl = include.level | default: 2 -%}
+<article class="post-card">
+  {%- if post.data.img -%}
+  <img class="post-card-thumb" src="{{ '/assets/img/thumbs/' | append: post.data.img | relative_url }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+  {%- else -%}
+  <span class="post-card-thumb post-card-thumb--blank" aria-hidden="true"></span>
+  {%- endif -%}
+  <div class="post-card-body">
+    <h{{ lvl }} class="post-card-title"><a href="{{ post.url | relative_url }}">{{ post.data.title }}</a></h{{ lvl }}>
+    <p class="post-meta">
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_fmt: 'LLLL d, yyyy' }}</time>
+      <span aria-hidden="true">·</span> {{ post.content | reading_minutes }} min read
+    </p>
+    {%- unless include.compact -%}
+    <p class="post-card-excerpt">{{ post.content | text | truncate_words: 40 }}</p>
+    {%- endunless -%}
+  </div>
+</article>

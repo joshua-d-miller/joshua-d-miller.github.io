@@ -1,12 +1,18 @@
 ---
-layout: default
+layout: page
+title: All posts
+lede: Everything I've written, newest first.
 ---
-
-<section class="post-list">
-  {% for post in paginator.posts %}
-    {% include article.html %}
-  {% endfor %}
-
-  {% include pagination.html %}
-  <div class="infinite-spinner"></div>
+{%- for group in collections.postsByYear -%}
+<section class="archive-year">
+  <h2 id="y{{ group.year }}">{{ group.year }}</h2>
+  <ul class="archive-list">
+    {%- for post in group.posts -%}
+    <li>
+      <a href="{{ post.url | relative_url }}">{{ post.data.title }}</a>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date_fmt: 'LLL d' }}</time>
+    </li>
+    {%- endfor -%}
+  </ul>
 </section>
+{%- endfor -%}

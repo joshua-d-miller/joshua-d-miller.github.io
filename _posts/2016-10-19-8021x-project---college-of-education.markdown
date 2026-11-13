@@ -4,7 +4,7 @@ layout: post
 type: post
 published: true
 comments: true
-date: 2016-10-19 08:00:03 -04:00
+date: 2016-10-19T08:00:03-04:00
 img: Network.png
 status: publish
 categories:
@@ -92,7 +92,7 @@ With this policy and an AD CA template for computers you should now be able to r
 **Step 3b Configure MDM Profile for macOS devices**<br/>
 We currently use jamf to serve MDM profiles to our macOS devices. One issue I have found with building this profile in jamf however is that it treats the profile as a user profile when attempting to connect so the user is prompted to select the computer certificate. If I sign the profile using a developer certificate and then upload to jamf so it can't modify it, then this does not occur. I would suggest that you do the same. Here is a sample **mobileconfig** file that you can tailor to your organization and upload to your MDM:
 
-{% highlight xml linenos %}
+{% highlight xml %}
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">

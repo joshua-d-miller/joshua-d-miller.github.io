@@ -4,7 +4,7 @@ layout: post
 type: post
 published: true
 comments: true
-date: 2016-10-26 08:01:08 -04:00
+date: 2016-10-26T08:01:08-04:00
 img: Ubuntu.png
 status: publish
 categories:

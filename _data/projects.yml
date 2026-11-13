@@ -1,0 +1,37 @@
+# Projects shown in the sidebar, on the home page and on /projects/.
+# `page` is the project's page on this site; `repo` is its GitHub repository.
+# `hidden: true` keeps a project (and its page) off the site entirely.
+- name: macOSLAPS
+  page: /projects/macoslaps/
+  repo: https://github.com/joshua-d-miller/macOSLAPS
+  icon: /assets/img/projects/macoslaps-icon.png
+  summary: >-
+    Rotates the password of a local administrator account on macOS and
+    escrows it to Active Directory or keeps it for your MDM. LAPS, for Macs.
+  tags: [Swift, macOS, Active Directory, MDM]
+  featured: true
+
+- name: Family Chalk Planner
+  page: /projects/family-chalk-planner/
+  repo: https://github.com/joshua-d-miller/family-chalk-planner
+  icon: /assets/img/projects/family-chalk-planner-icon.png
+  summary: >-
+    A chalkboard-style family wall calendar for a wall-mounted screen,
+    edited from a tablet. Self-hosted, with chores, meal plans and photos.
+  tags: [TypeScript, Node.js, Self-hosted, Docker]
+  featured: true
+  hidden: true   # not public yet: remove this line to publish its page and list it everywhere
+
+- name: munki-promote
+  repo: https://github.com/joshua-d-miller/munki-promote
+  summary: >-
+    Promotes Munki items from testing to production catalogs automatically,
+    based on how long they've been in testing.
+  tags: [Python, Munki]
+
+- name: LAPS for macOS
+  repo: https://github.com/joshua-d-miller/LAPS-for-macOS
+  summary: >-
+    A Mac app for help desks to look up and reset LAPS passwords stored in
+    Active Directory.
+  tags: [Swift, macOS, Active Directory]

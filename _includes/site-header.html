@@ -1,0 +1,37 @@
+<header class="site-header">
+  <a class="brand" href="{{ '/' | relative_url }}">
+    <img class="brand-photo" src="{{ site.author.image | relative_url }}" alt="" width="72" height="72">
+    <span class="brand-text">
+      <span class="brand-name">{{ site.author.name }}</span>
+      <span class="brand-title">{{ site.title }}</span>
+    </span>
+  </a>
+  <p class="brand-bio">{{ site.author.bio }}</p>
+
+  {%- assign path = page.url -%}
+  <nav class="site-nav" aria-label="Main">
+    <ul>
+      <li><a href="{{ '/' | relative_url }}"{% if path == '/' or path contains '/page/' %} aria-current="page"{% endif %}>Home</a></li>
+      <li><a href="{{ '/blog/' | relative_url }}"{% if path == '/blog/' %} aria-current="page"{% elsif isPost %} aria-current="true"{% endif %}>Posts</a></li>
+      <li><a href="{{ '/projects/' | relative_url }}"{% if path == '/projects/' %} aria-current="page"{% elsif path contains '/projects/' %} aria-current="true"{% endif %}>Projects</a></li>
+      <li><a href="{{ '/tags/' | relative_url }}"{% if path == '/tags/' %} aria-current="page"{% endif %}>Tags</a></li>
+    </ul>
+  </nav>
+
+  <div class="header-tools">
+  <form class="site-search" action="{{ '/search/' | relative_url }}" method="get" role="search" aria-label="Site">
+    <label for="site-search-q" class="visually-hidden">Search posts</label>
+    <input id="site-search-q" name="q" type="search" placeholder="Search posts" autocomplete="off">
+    <button type="submit">{% include icon.html name="search" %}<span class="visually-hidden">Search</span></button>
+  </form>
+
+  <fieldset class="theme-switch">
+    <legend>Theme</legend>
+    <div class="theme-options">
+      <label><input type="radio" name="theme" value="auto" checked>{% include icon.html name="auto" %}<span>Auto</span></label>
+      <label><input type="radio" name="theme" value="light">{% include icon.html name="sun" %}<span>Light</span></label>
+      <label><input type="radio" name="theme" value="dark">{% include icon.html name="moon" %}<span>Dark</span></label>
+    </div>
+  </fieldset>
+  </div>
+</header>
