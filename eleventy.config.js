@@ -1,6 +1,6 @@
 // Eleventy configuration for joshua-d-miller.com
 // Build: `npm run build` (writes _site/). Preview: `npm start`.
-import yaml from "js-yaml";
+import { load as loadYaml } from "js-yaml";
 import markdownIt from "markdown-it";
 import markdownItAnchor from "markdown-it-anchor";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
@@ -24,7 +24,7 @@ const inTz = (d) => DateTime.fromJSDate(toDate(d), { zone: TZ });
 
 export default function (eleventyConfig) {
   // ---- Data, assets, ignores ----
-  eleventyConfig.addDataExtension("yml,yaml", (contents) => yaml.load(contents));
+  eleventyConfig.addDataExtension("yml,yaml", (contents) => loadYaml(contents));
   eleventyConfig.addPassthroughCopy("assets");
   eleventyConfig.addPassthroughCopy("CNAME");
   eleventyConfig.ignores.add("README.md");
