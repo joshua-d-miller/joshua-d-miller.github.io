@@ -56,6 +56,8 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("xml_escape", (s) =>
     String(s ?? "").replace(/[<>&'"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[c]));
   eleventyConfig.addFilter("tag_slug", slugifyTag);
+  // Projects marked `hidden: true` in _data/projects.yml are left off every list
+  eleventyConfig.addFilter("visible", (list) => (list || []).filter((p) => !p.hidden));
   eleventyConfig.addFilter("text", (html) =>
     String(html ?? "").replace(/<\/?(p|div|h\d|li|br|pre|tr|td|th|figure|blockquote)[^>]*>/gi, " $&")
       .replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim());

@@ -1,5 +1,6 @@
 # Projects shown in the sidebar, on the home page and on /projects/.
 # `page` is the project's page on this site; `repo` is its GitHub repository.
+# `hidden: true` keeps a project (and its page) off the site entirely.
 - name: macOSLAPS
   page: /projects/macoslaps/
   repo: https://github.com/joshua-d-miller/macOSLAPS
@@ -19,6 +20,7 @@
     edited from a tablet. Self-hosted, with chores, meal plans and photos.
   tags: [TypeScript, Node.js, Self-hosted, Docker]
   featured: true
+  hidden: true   # not public yet: remove this line to publish its page and list it everywhere
 
 - name: munki-promote
   repo: https://github.com/joshua-d-miller/munki-promote

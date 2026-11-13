@@ -13,7 +13,7 @@ eleventyExcludeFromCollections: true
     "text": {{ post.content | text | jsonify }}
   },
 {%- endfor -%}
-{%- for p in projects -%}{%- if p.page -%}
+{%- assign shown = projects | visible -%}{%- for p in shown -%}{%- if p.page -%}
   {
     "title": {{ p.name | append: " (project)" | jsonify }},
     "url": {{ p.page | relative_url | jsonify }},

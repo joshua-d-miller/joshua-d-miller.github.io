@@ -19,7 +19,8 @@ permalink: "{% if pagination.pageNumber > 0 %}/page/{{ pagination.pageNumber | p
     <a href="{{ '/projects/' | relative_url }}">All projects</a>
   </div>
   <div class="project-grid">
-    {%- assign featured = projects | where: "featured", true -%}
+    {%- assign shown = projects | visible -%}
+    {%- assign featured = shown | where: "featured", true -%}
     {%- for p in featured -%}
       {% include project-card.html project=p level=3 %}
     {%- endfor -%}

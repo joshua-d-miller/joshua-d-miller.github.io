@@ -2,7 +2,7 @@
 export default {
   title: "System Administrator Musings",
   description:
-    "Notes from managing macOS and iOS devices, plus the open-source tools that came out of it: macOSLAPS and Family Chalk Planner.",
+    "Notes from managing macOS and iOS devices, plus the open-source tools that came out of them, like macOSLAPS.",
   url: "https://www.joshua-d-miller.com",
   baseurl: "", // kept so old posts' {{ site.baseurl }} links still work
   lang: "en-US",
