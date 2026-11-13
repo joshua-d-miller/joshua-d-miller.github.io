@@ -1,21 +1,40 @@
 ---
-layout: main
+layout: default
 ---
+{%- if paginator.page == 1 -%}
+<section class="intro" aria-labelledby="intro-title">
+  <h1 id="intro-title">Hi, I'm Joshua.</h1>
+  <p class="lede">I manage Macs and other devices for a living and write about it here. Some of that work turned into open-source tools you can use.</p>
+</section>
 
-<!-- cf-verify: 3AG3owfkZ8PUbwd7Viwx -->
-{% for post in paginator.posts %}
-<article class="post">
-  {% if post.img %}
-    <a class="post-thumbnail" style="background-image: url({{"/assets/img/" | prepend: site.baseurl | append : post.img}})" href="{{post.url | prepend: site.baseurl}}"></a>
-  {% else %}
-  {% endif %}
-  <div class="post-content">
-    <h2 class="post-title"><a href="{{post.url | prepend: site.baseurl}}">{{post.title}}</a></h2>
-    <p>{{ post.content | strip_html | truncatewords: 65 }}</p>
-    <span class="post-date">{{post.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;—&nbsp;</span>
-    <span class="post-words">{% capture words %}{{ post.content | number_of_words }}{% endcapture %}{% unless words contains "-" %}{{ words | plus: 250 | divided_by: 250 | append: " minute read" }}{% endunless %}</span>
+<section aria-labelledby="featured-projects">
+  <div class="section-head">
+    <h2 id="featured-projects">Projects</h2>
+    <a href="{{ '/projects/' | relative_url }}">All projects</a>
   </div>
-</article>
-{% endfor %}
+  <div class="project-grid">
+    {%- assign featured = site.data.projects | where: "featured", true -%}
+    {%- for p in featured -%}
+      {% include project-card.html project=p level=3 %}
+    {%- endfor -%}
+  </div>
+</section>
+{%- endif -%}
 
-{% include pagination.html %}
+<section aria-labelledby="latest-posts">
+  <div class="section-head">
+    {%- if paginator.page == 1 -%}
+    <h2 id="latest-posts">Latest posts</h2>
+    {%- else -%}
+    <h1 id="latest-posts">Posts, page {{ paginator.page }}</h1>
+    {%- endif -%}
+    <a href="{{ '/blog/' | relative_url }}">All posts by year</a>
+  </div>
+  <div class="post-list">
+    {%- assign level = 3 -%}{%- if paginator.page > 1 -%}{%- assign level = 2 -%}{%- endif -%}
+    {%- for post in paginator.posts -%}
+      {% include post-card.html post=post level=level %}
+    {%- endfor -%}
+  </div>
+  {% include pagination.html %}
+</section>

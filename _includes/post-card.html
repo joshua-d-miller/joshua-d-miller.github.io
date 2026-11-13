@@ -1,0 +1,20 @@
+{%- assign post = include.post -%}
+{%- assign words = post.content | strip_html | number_of_words -%}
+{%- assign minutes = words | divided_by: 220 | at_least: 1 -%}
+<article class="post-card">
+  {%- if post.img -%}
+  <img class="post-card-thumb" src="{{ '/assets/img/thumbs/' | append: post.img | relative_url }}" alt="" width="64" height="64" loading="lazy" decoding="async">
+  {%- else -%}
+  <span class="post-card-thumb post-card-thumb--blank" aria-hidden="true"></span>
+  {%- endif -%}
+  <div class="post-card-body">
+    <h{{ include.level | default: 2 }} class="post-card-title"><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h{{ include.level | default: 2 }}>
+    <p class="post-meta">
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%B %-d, %Y' }}</time>
+      <span aria-hidden="true">·</span> {{ minutes }} min read
+    </p>
+    {%- unless include.compact -%}
+    <p class="post-card-excerpt">{{ post.content | replace: '</', ' </' | replace: '<br', ' <br' | strip_html | normalize_whitespace | truncatewords: 40 }}</p>
+    {%- endunless -%}
+  </div>
+</article>

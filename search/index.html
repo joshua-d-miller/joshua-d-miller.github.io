@@ -1,0 +1,15 @@
+---
+layout: page
+title: Search
+sitemap: false
+---
+<form class="search-page-form" action="" method="get" role="search" aria-label="Search page" data-index="{{ '/search.json' | relative_url }}">
+  <label for="search-q">Search posts and projects</label>
+  <div class="search-row">
+    <input id="search-q" name="q" type="search" autocomplete="off">
+    <button class="button button--primary" type="submit">Search</button>
+  </div>
+</form>
+<p id="search-status" class="search-status" role="status" aria-live="polite"></p>
+<ol id="search-results" class="search-results"></ol>
+<noscript><p>Search needs JavaScript. You can browse <a href="{{ '/blog/' | relative_url }}">all posts</a> or <a href="{{ '/tags/' | relative_url }}">posts by tag</a> instead.</p></noscript>

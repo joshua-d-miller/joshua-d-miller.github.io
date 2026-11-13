@@ -1,8 +1,5 @@
-group :jekyll_plugins do
-  gem "jekyll-sitemap"
-  gem "jekyll-paginate"
-  gem "jemoji"
-  gem 'jekyll-gist'
-  gem 'jekyll-auto-image'
-  gem 'jekyll-remote-theme'
-end
+source "https://rubygems.org"
+
+# Matches the Jekyll version and plugins GitHub Pages uses
+gem "github-pages", group: :jekyll_plugins
+gem "webrick" # needed for `jekyll serve` on Ruby 3+

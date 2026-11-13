@@ -1,40 +1,56 @@
 ---
-layout: main
+layout: default
 ---
-<article class="article-page">
-  <div class="page-content">
-    {% if page.img %}
-    <div class="page-cover-image">
-      <figure>
-        <img class="page-image" src={{ "/assets/img/" | prepend: site.baseurl | append : page.img}} alt="{{page.title}}">
-        {% if page.fig-caption %}
-          <figcaption>{{page.fig-caption}}</figcaption>
-        {% endif %}
-      </figure>
-    </div> <!-- End Page Cover Image -->
-    {% else %}
-    {% endif %}
-    <div class="wrap-content">
-      <header class="header-page">
-        <h1 class="page-title">{{page.title}}</h1>
-        <div class="page-date"><span>{{page.date | date: '%Y, %b %d'}}&nbsp;&nbsp;&nbsp;&nbsp;</span></div>
-      </header>
-      {{content | markdownify}}
-      <div class="page-footer">
-        <div class="page-share">
-            <a href="https://facebook.com/sharer.php?u={{ site.url }}{{ page.url }}" rel="nofollow" title="Share on Facebook" target="_blank"><i class="fa fa-facebook-square fa-2x"></i></a>
-            <a href="https://twitter.com/intent/tweet?text={{ page.title }}&url={{ site.url }}{{ page.url }}&via={{ site.author.twitter_username }}&related={{ site.author.twitter_username }}" rel="nofollow" title="Share on Twitter"><i class="fa fa-twitter fa-2x"></i></a>
-            <a href="http://www.reddit.com/submit?url={{ site.url }}{{ page.url }}&title={{ page.title }}" target="_blank" title="Submit to Reddit"><i class="fa fa-reddit fa-2x"></i></a>
-            <a href="http://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url }}&title={{ page.title }}&summary=&source={{ site.url }}" target="_blank" title="Share on LinkedIn"><i class="fa fa-linkedin fa-2x"></i></a>
-            <a href="mailto:?subject={{ page.title }}&body={{ site.url }}{{ page.url }}" title="Email this post"><i class="fa fa-envelope fa-2x"></i></a>
-        </div>
-        <div class="page-tag">
-          {% for tag in page.tags %}
-            <a href="{{site.baseurl}}/tags#{{tag}}" class="tag">&#35; {{ tag }}</a>
-          {% endfor %}
-        </div>
-      </div>
-      {% include disqus.html %}
-    </div> <!-- End Wrap Content -->
-  </div> <!-- End Page Content -->
-</article> <!-- End Article Page -->
+{%- assign words = content | strip_html | number_of_words -%}
+{%- assign minutes = words | divided_by: 220 | at_least: 1 -%}
+{%- assign this_year = site.time | date: '%Y' | plus: 0 -%}
+{%- assign post_year = page.date | date: '%Y' | plus: 0 -%}
+{%- assign age = this_year | minus: post_year -%}
+<article class="post" itemscope itemtype="https://schema.org/BlogPosting">
+  <header class="post-header">
+    {%- if page.img -%}
+    <img class="post-icon" src="{{ '/assets/img/thumbs/' | append: page.img | relative_url }}" alt="" width="72" height="72">
+    {%- endif -%}
+    <div>
+      <h1 class="post-title" itemprop="headline">{{ page.title }}</h1>
+      <p class="post-meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: '%B %-d, %Y' }}</time>
+        <span aria-hidden="true">·</span> {{ minutes }} min read
+      </p>
+    </div>
+  </header>
+
+  {%- if age >= 5 -%}
+  <p class="notice" role="note"><strong>Heads up:</strong> this post is from {{ post_year }}. The tools and versions it covers may have changed since.</p>
+  {%- endif -%}
+
+  <div class="prose" itemprop="articleBody">
+    {{ content }}
+  </div>
+
+  {%- if page.tags.size > 0 -%}
+  <footer class="post-footer">
+    <h2 class="visually-hidden">Tags</h2>
+    <ul class="chips">
+      {%- for tag in page.tags -%}
+      <li><a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </footer>
+  {%- endif -%}
+</article>
+
+<nav class="post-nav" aria-label="More posts">
+  {%- if page.next -%}
+  <a class="post-nav-link" rel="next" href="{{ page.next.url | relative_url }}">
+    <span class="post-nav-label">{% include icon.html name="arrow-left" %} Newer</span>
+    <span class="post-nav-title">{{ page.next.title }}</span>
+  </a>
+  {%- else -%}<span></span>{%- endif -%}
+  {%- if page.previous -%}
+  <a class="post-nav-link post-nav-link--older" rel="prev" href="{{ page.previous.url | relative_url }}">
+    <span class="post-nav-label">Older {% include icon.html name="arrow-right" %}</span>
+    <span class="post-nav-title">{{ page.previous.title }}</span>
+  </a>
+  {%- endif -%}
+</nav>
