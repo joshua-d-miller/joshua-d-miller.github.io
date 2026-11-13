@@ -27,7 +27,101 @@ The last one I added because I was tired of users always getting the crash repor
 
 <h3>PreInstall Script</h3>
 
-{% gist joshua-d-miller/4dba3c9e231a819d73d0511b36858d69 %}
+{% highlight python %}
+#!/usr/bin/python
+# pylint:disable=C0103, W0703, E0611, W0107
+'''TeamViewer 12 PreInstall'''
+# This will configure our initial settings for
+# TeamViewer version 12 and prepare for install
+# Joshua D. Miller - josh@psu.edu
+# December 2, 2016 - The Pennsylvania State University
+
+from Foundation import (CFPreferencesSetValue,
+                        CFPreferencesSynchronize,
+                        kCFPreferencesAnyUser,
+                        kCFPreferencesCurrentHost)
+from os import listdir, path, remove
+from shutil import rmtree
+from time import strftime
+
+
+def main():
+    '''Main function that will lay down a configuration
+    using pyObjC's CFPreferencesSetValue and CFPreferencesAppSynchronize
+    so that these settings will be applied when TeamViewer first runs'''
+    teamviewer_bundle = 'com.teamviewer.teamviewer.preferences'
+    tv_prefs = {}
+    # Set the password Binary decoded from Hex
+    # Obtain this by setting the password manually on
+    # TeamViewer 8 and using /usr/bin/defaults read
+    # on SecurityPasswordAES.  You will of course need
+    # to remove all the spaces and the brackets
+    tv_prefs['SecurityPasswordAES'] = (
+        'YourBinaryHere').decode('hex')  # #gitignore
+    # tv_prefs['SecurityPasswordAES'] = ('passwordbinaryhere').decode('hex')
+    # Set the Options Password Binary decoded from Hex
+    # Use same method as above to obatain but look for
+    # OptionsPasswordAES
+    tv_prefs['OptionsPasswordAES'] = (
+        'YourBinaryHere').decode('hex')  # #gitignore
+    # tv_prefs['OptionsPasswordAES'] = ('optionbinaryhere').decode('hex')
+    # Create a timestamp
+    tv_prefs['Date'] = strftime("%a %b %e %X %Z %Y")
+    # Remove initial Dialog
+    tv_prefs['HostInfoDialog'] = 0
+    # Full Access even when logged out
+    tv_prefs['ACFullAccessOnLoginScreen'] = 1
+    # Always Send Crash Reports so users don't see this dialog
+    tv_prefs['SendAlwaysCrashLogReport'] = 1
+    # Old TeamViewer configs to look for
+    old_config_names = ['com.TeamViewer8.Settings',
+                        'com.teamviewer.teamviewer9',
+                        'com.teamviewer.teamviewer10']
+
+    # Remove old TeamViewer Config Files
+    # from /Library/Preferences should they exist
+    for item in old_config_names:
+        for filename in listdir('/Library/Preferences/'):
+            if item in filename:
+                try:
+                    old_config = path.join(
+                        '/Library/Preferences/', filename)
+                    remove(old_config)
+                except Exception:
+                    continue
+    # Remove TeamViewer 8 Application folder if it
+    # was left behind
+    try:
+        rmtree('/Applications/TeamViewer 8/')
+    except Exception:
+        pass
+
+    try:
+        remove('{0:}{1:}{2:}'.format(
+            '/Library/Preferences/', teamviewer_bundle, '.plist'))
+    except StandardError:
+        pass
+
+    try:
+        for key, value in tv_prefs.items():
+            if 'AES' in key:
+                CFPreferencesSetValue(key, buffer(value), teamviewer_bundle,
+                                      kCFPreferencesAnyUser,
+                                      kCFPreferencesCurrentHost)
+            else:
+                CFPreferencesSetValue(key, value, teamviewer_bundle,
+                                      kCFPreferencesAnyUser,
+                                      kCFPreferencesCurrentHost)
+        CFPreferencesSynchronize('com.teamviewer.teamviewer.preferences',
+                                 kCFPreferencesAnyUser, kCFPreferencesCurrentHost)
+    except Exception as error:
+        print error
+        exit(1)
+
+
+if __name__ == '__main__':
+    main()
+{% endhighlight %}
 
 Once the installation completes we want to set our **attribute** that will allow the customization pieces we defined in the management console to download and be applied to the client. (**Note**: The attribute part is completely optional as if you import your package into Munki with the IDC attached in the name you do not need to use the **xattr** command.) These include:
 
@@ -39,7 +133,63 @@ Before I was modifying the **MainMenuHost.nib** file to remove the ability to ex
 
 <h3>PostInstall Script</h3>
 
-{% gist joshua-d-miller/ecbaa65e3bb317144a56b3672f405469 %}
+{% highlight python %}
+#!/usr/bin/python
+# pylint:disable=C0103
+'''TeamViewer 12 PostInstall Script'''
+# This will add our congifuration ID to the application
+# bundle so that any custom host module visual modifications
+# will be downloaded from the site for each user. It will
+# also create a launchagent that will keep the TeamViewer
+# client running when a user is logged in even if they exit.
+# Joshua D. Miller - josh@psu.edu
+# December 2, 2016 - The Pennsylvania State University
+
+from __future__ import print_function
+from os import path
+from plistlib import writePlist
+from xattr import setxattr
+
+
+def main():
+    '''This function will apply our configuration ID so that
+    customizations are added to TeamViewer from our module created
+    in the management console. It will also create our persistant
+    launchagent.'''
+    tv_app_path = '/Applications/TeamViewerHost.app'
+    # TeamViewer Config ID
+    tv_conf_id = 'com.TeamViewer.ConfigurationId'
+    # Custom Attribute from custom pkg
+    attribute = 'idcYourIDHere'  # gitignore
+    # attribute = 'idcYourIDHere'
+    # Apply the xattr to TeamViewer's App file for customization
+    try:
+        setxattr(tv_app_path, tv_conf_id, attribute)
+    except StandardError as error:
+        print(error)
+        exit(1)
+    # Create LaunchAgent if it doesn't already exist
+    service_la = ('/Library/LaunchAgents/com.teamviewer.client.plist')
+    if path.isfile(service_la):
+        print('LaunchAgent exists. No creation is needed...')
+    else:
+        la_plist = dict(
+            Disabled=False,
+            KeepAlive=True,
+            Label='com.teamviewer.client',
+            ProgramArguments=[
+                '/bin/launchctl', 'load',
+                'com.teamviewer.teamviewer.plist',
+                'com.teamviewer.teamviewer_desktop.plist'],
+            RunAtLoad=True,
+            WorkingDirectory='/Library/LaunchAgents',
+        )
+        writePlist(la_plist, service_la)
+
+
+if __name__ == '__main__':
+    main()
+{% endhighlight %}
 
 With the changes made above, we no longer need to require a logout to install TeamViewer. Thanks to [Greg Neagle](https://twitter.com/gregneagle) and [Michael Lynn](https://twitter.com/mikeymikey) it was recommended to use **CFPrefs** instead of **plistlib** when modifying the preferences of TeamViewer. This means that the changes we make are immediately committed to the system. Now we move to the activation that will assign the device to your account which includes:
 

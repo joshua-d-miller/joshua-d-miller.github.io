@@ -28,11 +28,171 @@ tags: []
 
 <p><em style="font-weight:bold; font-style:normal">TeamViewer 11 Pre Install Script</em></p>
 
-{% gist joshua-d-miller/465352a8ab3a91a41c51cb967d0da51d %}
+{% highlight python %}
+#!/usr/bin/python
+'''This python script is going to create the TeamViewer
+Preferences plist to prepare it for enterprise use
+Joshua D. Miller - josh@psu.edu - The Pennsylvania
+State University - March 3, 2016'''
+
+import os
+import plistlib
+import sys
+import time
+
+
+def main():
+    '''main function'''
+    # TeamViewer 11 PLIST
+    tv11_plist_path = ('/Library/Preferences/'
+                       'com.teamviewer.teamviewer.preferences.plist')
+    # Remove the TeamViewer 11 PLIST just to stay clean
+    # should revisions of 11 come out.
+    try:
+        os.remove(tv11_plist_path)
+    except StandardError as error:
+        pass
+    # Creating the TeamViewer Plist file
+    try:
+        # Set the password Binary decoeed from Hex
+        # Obtain this by setting the password manually on
+        # TeamViewer 8 and using /usr/bin/defaults read
+        # on SecurityPasswordAES.  You will of course need
+        # to remove all the spaces and the brackets
+        pass_binary = ('Your binary here').decode('hex')
+        # Set the Options Password Binary decoded from Hex
+        # Use same method as above to obatain but look for
+        # OptionsPasswordAES
+        option_binary = ('Your binary here').decode('hex')
+        # Set the Managers Data array so that users
+        # are not prompted.  Granted this means that
+        # the machine will not be automaticaly added
+        # to a group but it keeps the installation silent
+        # Use the same method to obtain this as the
+        # passwords from version 8
+        managers_binary = ('Your Binary here').decode('Hex')
+        # Now let's build the PLIST file
+        tv_plist = dict(
+            # Host Password for unattended acces
+            SecurityPasswordAES=plistlib.Data(pass_binary),
+            # Options password to lock the preferences file
+            OptionsPasswordAES=plistlib.Data(option_binary),
+            Security_Adminrights=1,
+            # Accept Connections from LAN
+            General_DirectLAN=1,
+            # Never Check for Updates
+            UpdateCheckInterval=1,
+            AutoUpdateMode=3,
+            # Don't show the initial screen after install
+            HostInfoDialog=0,
+            # Add account info that will keep the install
+            # silent.  Keeps the ID from being automatically
+            # added though
+            Managers=plistlib.Data(managers_binary),
+            Device_Auto_Assigned_To_Account=1,
+            OwningManagerAccountName='Account Name',
+            OwningManagerCompanyName='Account Company',
+            # Allow access from the Login Screen
+            ACFullAccessOnLoginScreen=1,
+            # Mark the plist as we installed it
+            InstalledBy='EDUC',
+            # The key that will allow the password to be converted
+            # Discovered in TeamViewer 9's Postinstall pkg
+            # script, setting a date string in the plist file
+            # will trigger this change.
+            Date=time.strftime('%a %b %e %X %Z %Y'),
+            )
+        plistlib.writePlist(tv_plist, tv11_plist_path)
+    except StandardError as error:
+        print error
+        sys.exit(1)
+				
+
+if __name__ == '__main__':
+    main()
+{% endhighlight %}
 
 <p><em style="font-weight:bold; font-style:normal">TeamViewer 11 Post Install Script</em></p>
 
-{% gist joshua-d-miller/6d197f69ac5ab0eb93ce0b1b6c5038a5 %}
+{% highlight python %}
+#!/usr/bin/python
+'''This will set our attribute for TeamViewer
+so that customizations can be received such
+as logo, text, etc.. Joshua D. Miller - josh@psu.edu
+March 3, 2016 - The Pennsylvania State University'''
+
+
+import os
+import shutil
+import subprocess
+import time
+import sys
+import xattr
+
+
+def main():
+    '''main function'''
+    # Set TeamViewer Host Application
+    # path so we can apply the xattr
+    # This can be obtained from your
+    # custom download pkg in the name
+    tv_app_path = '/Applications/TeamViewerHost.app'
+    # TeamViewer Config ID
+    tv_conf_id = 'com.TeamViewer.ConfigurationId'
+    # Custom Attribute from custom pkg
+    attribute = 'Your ID Here - Starts with id'
+    # Old TeamViewer configs to look for
+    old_config_names = ['com.TeamViewer8.Settings',
+                        'com.teamviewer.teamviewer9',
+                        'com.teamviewer.teamviewer10']
+    # Library Preferences Path
+    lib_pref_path = '/Library/Preferences/'</p>
+    # Remove old TeamViewer Config Files
+    # from /Library/Preferences should they
+    # exist
+    for filename in os.listdir(lib_pref_path):
+        if filename in old_config_names:
+            try:
+                path = os.path.join(lib_pref_path, filename)
+                os.remove(path)
+            except StandardError as error:
+                pass
+    # Remove TeamViewer 8 Application folder if it
+    # was left behind
+    try:
+        shutil.rmtree('/Applications/TeamViewer 8/')
+    except StandardError as error:
+        pass
+    # Apply the xattr to TeamViewer's App file for customization
+    try:
+        xattr.setxattr(tv_app_path, tv_conf_id, attribute)
+    except StandardError as error:
+        print error
+        sys.exit(1)
+    # Start TeamViewer LaunchDaemon then run the app
+    # so that custom configs can be applied and the user
+    # is not prompted to install a helper
+    try:
+        subprocess.check_output(['/bin/launchctl',
+                                 'load',
+                                 '/Library/LaunchDaemons/',
+                                 'com.teamviewer.teamviewer_service.plist'],
+                                stderr=subprocess.PIPE)
+        tv_process = subprocess.Popen(['/Applications/TeamViewerHost.app/'
+                                       'Contents/MacOS/TeamViewerHost',
+                                       '-RunAsAgent',
+                                       'YES'],
+                                      stderr=subprocess.PIPE)
+        time.sleep(5)
+        tv_process.kill()
+    except StandardError as error:
+        print error
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
+{% endhighlight %}
 
 <p>Upon testing these scripts within Munki and a silent install, TeamViewer was able to correctly change the password. No longer, do we need to install previous versions before installing this version. Now that this install is finished you can apply your customization that we highlighted in the previous post. You can get the modified <em style="font-weight:bold; font-style:normal">MainMenuHost.NIB</em> file <a href="http://1drv.ms/21gUbLe" target="_blank">here</a>. Once you have this file you can build a DMG file for use within Munki. This file will remove the following from the TeamViewer Menu Bar item:</p>
 
