@@ -4,7 +4,7 @@ published: true
 comments: true
 title: "macOSLAPS Update with secureToken"
 date: 2019-08-15T08:56:36-04:00
-img: LAPS.png
+img: macOSLAPS.png
 tags:
     - Active Directory
     - Mac Management

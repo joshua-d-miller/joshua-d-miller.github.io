@@ -4,7 +4,7 @@ published: true
 comments: true
 title: "What's New in macOSLAPS"
 date: 2021-06-24T13:50:00-04:00
-img: LAPS.png
+img: macOSLAPS.png
 tags:
     - Active Directory
     - Mac Management
