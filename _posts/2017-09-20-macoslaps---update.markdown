@@ -5,7 +5,7 @@ type: post
 published: true
 comments: true
 date: 2017-09-20T12:35:25-04:00
-img: LAPS.png
+img: macOSLAPS.png
 status: publish
 categories:
 - Security
