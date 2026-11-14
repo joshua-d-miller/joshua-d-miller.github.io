@@ -6,8 +6,9 @@
   repo: https://github.com/joshua-d-miller/macOSLAPS
   icon: /assets/img/projects/macoslaps-icon.png
   summary: >-
-    Rotates the password of a local administrator account on macOS and
-    escrows it to Active Directory or keeps it for your MDM. LAPS, for Macs.
+    Rotates the password of a local administrator account on your Macs and
+    keeps it in your MDM, on the Mac behind a reveal code, or in Active
+    Directory. LAPS, for Macs.
   tags: [Swift, macOS, Active Directory, MDM]
   featured: true
 
