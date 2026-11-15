@@ -16,14 +16,16 @@ actions:
   - label: Source on GitHub
     url: https://github.com/joshua-d-miller/family-chalk-planner
     icon: github
-  - label: User guide
-    url: https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/user-guide.md
+  - label: Getting started
+    url: https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/getting-started.md
     icon: book
 facts:
+  - label: Version
+    value: 1.0.0
   - label: Runs on
-    value: Docker, Debian or Ubuntu
+    value: Home Assistant, Docker, Debian or Ubuntu
   - label: Calendars
-    value: Google Calendar and CalDAV
+    value: Google, iCloud and CalDAV, Outlook links, Home Assistant's calendars
   - label: Written in
     value: TypeScript (Node.js 22)
   - label: License
@@ -39,8 +41,9 @@ toc: true
 
 ## What it does
 
-- **Your real calendar.** Events come from Google Calendar or any CalDAV
-  calendar (iCloud, Nextcloud, Fastmail, Radicale). Add, change and delete
+- **Your real calendar.** Events come from Google Calendar, any CalDAV
+  calendar (iCloud, Nextcloud, Fastmail, Radicale) or the calendars already in
+  Home Assistant, with Outlook and school calendars added by link. Add, change and delete
   them from the tablet, including repeating events, and make birthdays and big
   days stand out in large writing.
 - **Draw on it.** Chalk and paint-marker drawing, hand-lettered month titles in
@@ -61,23 +64,26 @@ toc: true
   and whiteboard, board styles, per-event colors and a choice of today markers.
 - **Live.** Changes on the tablet show up on the wall within a second, and the
   wall updates itself when you install a new version.
+- **Part of Home Assistant.** Install it as a Home Assistant app and it lives
+  in the sidebar: your Home Assistant login is your board login, its calendars
+  and to-do lists show up on the board, and Home Assistant updates and backs it up.
 - **Safe for a family.** Screens pair with a code, people sign in with a
   passkey or a password and authenticator app, and an admin console shows every
   sign-in, screen and change.
 
 <div class="gallery">
   <figure>
-    <img src="{{ '/assets/img/projects/family-chalk-planner/tablet.jpg' | relative_url }}" width="1600" height="900" loading="lazy"
-         alt="The board on a tablet in a wooden frame, with editing tools along the bottom: Draw, Month title, Border, photos, style and Add event.">
-    <figcaption>Editing on a tablet.</figcaption>
+    <img src="{{ '/assets/img/projects/family-chalk-planner/tablet.jpg' | relative_url }}" width="1800" height="1013" loading="lazy"
+         alt="The board on a family touch screen, with the menu, Edit the calendar and Add event along the bottom.">
+    <figcaption>A family touch screen.</figcaption>
   </figure>
   <figure>
-    <img src="{{ '/assets/img/projects/family-chalk-planner/chores.jpg' | relative_url }}" width="1600" height="697" loading="lazy"
+    <img src="{{ '/assets/img/projects/family-chalk-planner/chores.jpg' | relative_url }}" width="2083" height="908" loading="lazy"
          alt="Today's chores grouped by person on a tablet and on a phone, with finished chores crossed out.">
     <figcaption>Chores on a tablet and a phone.</figcaption>
   </figure>
   <figure>
-    <img src="{{ '/assets/img/projects/family-chalk-planner/backgrounds.jpg' | relative_url }}" width="1600" height="904" loading="lazy"
+    <img src="{{ '/assets/img/projects/family-chalk-planner/backgrounds.jpg' | relative_url }}" width="1610" height="910" loading="lazy"
          alt="The same month shown on four backgrounds: green chalkboard, cork, kraft paper and whiteboard.">
     <figcaption>A few of the backgrounds.</figcaption>
   </figure>
@@ -90,16 +96,28 @@ toc: true
 
 ## What you need
 
-- An always-on machine on your home network: anything that runs Docker (a NAS,
-  a Raspberry Pi, a server), or Debian 12/13 or Ubuntu 22.04/24.04 on amd64 or
-  arm64. A Proxmox container with 1 CPU, 512 MB of RAM and 4 GB of disk is plenty.
-  No server at home? It also runs on a small cloud server behind a free
-  Cloudflare Tunnel.
-- A Google or CalDAV calendar.
+- Something always on at home: **Home Assistant** (OS or Supervised), anything
+  that runs Docker (a NAS, a Raspberry Pi, a server), or Debian 12/13 or Ubuntu
+  22.04/24.04 on amd64 or arm64. A Proxmox container with 1 CPU, 512 MB of RAM
+  and 4 GB of disk is plenty. A rented cloud server works too, kept behind
+  Cloudflare Access or Tailscale.
+- A calendar: Google, iCloud or another CalDAV calendar, or the ones in Home
+  Assistant.
 - A screen for the wall (any browser in kiosk mode; Fully Kiosk Browser on
   Android works well) and a tablet or phone for editing.
 
 ## Install
+
+The [Getting started guide](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/getting-started.md)
+goes from nothing to the calendar on the wall, step by step.
+
+**In Home Assistant:** add the app repository, then install **Family Chalk
+Planner** from the app store.
+
+[![Add the repository to my Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fjoshua-d-miller%2Ffamily-chalk-planner-ha)
+
+Turn on **Show in sidebar**, start it, and open **Family Board**. There's no
+setup code: Home Assistant's admins are the board's admins.
 
 **With Docker:**
 
@@ -120,18 +138,20 @@ sudo bash /opt/family-chalk-planner/deploy/install.sh
 The installer adds Node.js 22 if it's missing, a locked-down service user,
 a systemd service, and the optional face finder used to frame photos.
 
-Then open `http://<server>:3002/admin`, enter the setup code to create the
+With Docker or Linux, open `http://<server>:3002/admin`, enter the setup code to create the
 admin account, and use **⚙️ Board** to connect your calendar, weather town and
 photo album. There are no files to edit.
 
-**Updating:** `docker compose pull && docker compose up -d`, or
-`sudo /opt/family-chalk-planner/deploy/update.sh`, which installs the newest
-release and rolls back by itself if it doesn't start.
+**Updating:** Home Assistant shows **Update** on the app. With Docker,
+`docker compose pull && docker compose up -d`. On Linux, the board installs new
+releases overnight by itself (a new major version waits for **Update now** in the
+admin console) and rolls back if one doesn't start.
 
 ## Using it
 
 | Where | Address |
 | --- | --- |
+| In Home Assistant | **Family Board** in the sidebar |
 | Wall display | `http://<server>:3002/` |
 | Admin console (pair screens, invite people) | `http://<server>:3002/admin` |
 | Tablet editor | `http://<server>:3002/edit` |
@@ -143,12 +163,14 @@ Add the tablet and phone pages to the home screen so they open like apps.
 
 | Guide | What's in it |
 | --- | --- |
+| [Getting started](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/getting-started.md) | From nothing to the calendar on the wall: Home Assistant, Docker or Linux |
+| [Calendars](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/calendars.md) | Home Assistant, iCloud, Google, other CalDAV, Outlook and calendar links |
 | [User guide](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/user-guide.md) | The tablet, family screens, kids' tablets, chores and the wall display |
 | [Install](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/install.md) | Debian, Ubuntu and Proxmox, HTTPS, screens and people, backups, troubleshooting |
 | [Docker](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/docker.md) | Running it with Docker Compose |
 | [Google Calendar](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/google-calendar.md) | Connecting a Google calendar |
 | [Photos](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/photos.md) | iCloud and Google Photos shared albums, face framing |
-| [Cloud](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/cloud.md) | A small cloud server behind a Cloudflare Tunnel |
+| [Cloud](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/docs/cloud.md) | A rented server: what's on it, how to limit it, Cloudflare Access or Tailscale |
 | [Changelog](https://github.com/joshua-d-miller/family-chalk-planner/blob/main/CHANGELOG.md) | What changed in each release |
 
 ## License
