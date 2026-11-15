@@ -18,10 +18,10 @@
   icon: /assets/img/projects/family-chalk-planner-icon.png
   summary: >-
     A chalkboard-style family wall calendar for a wall-mounted screen,
-    edited from a tablet. Self-hosted, with chores, meal plans and photos.
-  tags: [TypeScript, Node.js, Self-hosted, Docker]
+    edited from a tablet. Self-hosted or a Home Assistant app, with chores,
+    meal plans and photos.
+  tags: [TypeScript, Node.js, Self-hosted, Docker, Home Assistant]
   featured: true
-  hidden: true   # not public yet: remove this line to publish its page and list it everywhere
 
 - name: munki-promote
   repo: https://github.com/joshua-d-miller/munki-promote
