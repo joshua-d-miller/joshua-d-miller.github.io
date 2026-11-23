@@ -34,7 +34,9 @@ toc: true
 
 ## macOSLAPS 4.0 is in prerelease
 
-macOSLAPS 4.0 is the biggest update since the tool began. It's a prerelease, so
+macOSLAPS 4.0 is the biggest update since the tool began. It's a prerelease
+(the newest build is on the
+[releases page](https://github.com/joshua-d-miller/macOSLAPS/releases)), so
 try it on test Macs first and tell me how it goes in
 [#laps](https://macadmins.slack.com/archives/C68F4NLFL) on the MacAdmins Slack
 or in a [GitHub issue](https://github.com/joshua-d-miller/macOSLAPS/issues).
@@ -72,6 +74,14 @@ changes the password.
   Intune, Workspace ONE and other MDMs.
 - Admin group protection, which recognizes the admin your MDM created during
   enrollment.
+- Better Active Directory support: `PreferredDC` now works, and a Mac bound to a
+  read-only domain controller finds a writable one by itself. `Method` defaults
+  to `auto`, which picks Active Directory on bound Macs and Local on the rest.
+- The password is never handed out in plaintext on the Mac unless your MDM's
+  profile allows it (`AllowRead`), so `-escrow` is the way your MDM collects it.
+- Clearer command names: `-rotate` and `-currentPassword` (the old
+  `-resetPassword` and `-firstPass` still work), plus `-newPassword` to set a
+  password you choose (if the profile allows it with `AllowNewPassword`).
 - New identifiers (`com.joshua-d-miller.macoslaps`), with a one-way migration
   of the stored password. Read
   [Upgrading from 3.x](/macOSLAPS/upgrading/) before you upgrade.
